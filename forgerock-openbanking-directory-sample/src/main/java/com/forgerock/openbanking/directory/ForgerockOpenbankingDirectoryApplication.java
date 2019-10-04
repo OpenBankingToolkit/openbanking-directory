@@ -9,6 +9,7 @@ package com.forgerock.openbanking.directory;
 
 import brave.Tracer;
 import com.forgerock.openbanking.authentication.configurers.MultiAuthenticationCollectorConfigurer;
+import com.forgerock.openbanking.authentication.configurers.collectors.CustomJwtCookieCollector;
 import com.forgerock.openbanking.authentication.configurers.collectors.StaticUserCollector;
 import com.forgerock.openbanking.directory.error.ErrorHandler;
 import com.forgerock.openbanking.directory.repository.ForgeRockApplicationsRepository;
@@ -63,9 +64,17 @@ public class ForgerockOpenbankingDirectoryApplication {
 					.authenticationProvider(new CustomAuthProvider())
 					.apply(new MultiAuthenticationCollectorConfigurer<HttpSecurity>()
 							.collector(StaticUserCollector.builder()
-									.usernameCollector( () -> "anonymous")
+									.usernameCollector( () -> "demo")
 									.grantedAuthorities(Stream.of(
-											OBRIRole.ROLE_ANONYMOUS
+											OBRIRole.ROLE_SOFTWARE_STATEMENT,
+											OBRIRole.ROLE_USER
+									).collect(Collectors.toSet()))
+									.build())
+							.collector(CustomJwtCookieCollector.builder()
+									.cookieName("obri-session")
+									.authoritiesCollector(t -> Stream.of(
+											OBRIRole.ROLE_SOFTWARE_STATEMENT,
+											OBRIRole.ROLE_USER
 									).collect(Collectors.toSet()))
 									.build())
 					)
