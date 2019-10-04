@@ -65,8 +65,7 @@ public class ForgerockOpenbankingDirectoryApplication {
 							.collector(StaticUserCollector.builder()
 									.usernameCollector( () -> "anonymous")
 									.grantedAuthorities(Stream.of(
-											OBRIRole.ROLE_FORGEROCK_EXTERNAL_APP,
-											OBRIRole.UNREGISTERED_TPP
+											OBRIRole.ROLE_ANONYMOUS
 									).collect(Collectors.toSet()))
 									.build())
 					)
