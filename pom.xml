@@ -14,7 +14,7 @@
     <name>ForgeRock OpenBanking Directory</name>
     <groupId>com.forgerock.openbanking.directory</groupId>
     <artifactId>forgerock-openbanking-reference-implementation-directory</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.5</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -99,6 +99,6 @@
         <connection>scm:git:https://github.com/ForgeCloud/ob-directory.git</connection>
         <developerConnection>scm:git:https://github.com/ForgeCloud/ob-directory.git</developerConnection>
         <url>https://github.com/ForgeCloud/ob-directory.git</url>
-        <tag>HEAD</tag>
+        <tag>forgerock-openbanking-reference-implementation-directory-1.0.5</tag>
     </scm>
 </project>
