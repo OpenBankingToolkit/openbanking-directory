@@ -9,6 +9,7 @@ package com.forgerock.openbanking.directory.api.organisation;
 
 import com.forgerock.openbanking.analytics.model.entries.DirectoryCounterType;
 import com.forgerock.openbanking.analytics.services.DirectoryCountersKPIService;
+import com.forgerock.openbanking.authentication.model.authentication.PasswordLessUserNameAuthentication;
 import com.forgerock.openbanking.directory.model.Organisation;
 import com.forgerock.openbanking.directory.model.User;
 import com.forgerock.openbanking.directory.repository.OrganisationRepository;
@@ -19,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,9 +68,9 @@ public class OrganisationApiController implements OrganisationApi {
             @PathVariable String organisationId,
             Principal principal) {
         LOGGER.debug("principal :" + principal);
-        UserDetails userDetails = (UserDetails) ((Authentication) principal).getPrincipal();
-        Optional<User> isUser = userRepository.findById(userDetails.getUsername());
-        if (!isUser.isPresent()) {
+        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
+        Optional<User> isUser = userRepository.findById(userDetails.getPrincipal().toString());
+        if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
         User user = isUser.get();
@@ -80,7 +79,7 @@ public class OrganisationApiController implements OrganisationApi {
         }
 
         Optional<Organisation> isOrganisation = organisationRepository.findById(organisationId);
-        if (!isOrganisation.isPresent()) {
+        if (isOrganisation.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organisation not found");
         }
         Organisation organisation = isOrganisation.get();
@@ -104,10 +103,10 @@ public class OrganisationApiController implements OrganisationApi {
             @PathVariable String organisationId,
             Principal principal
     ) {
-        UserDetails userDetails = (UserDetails) ((Authentication) principal).getPrincipal();
+        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
 
-        Optional<User> isUser = userRepository.findById(userDetails.getUsername());
-        if (!isUser.isPresent()) {
+        Optional<User> isUser = userRepository.findById(userDetails.getPrincipal().toString());
+        if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
         User user = isUser.get();
@@ -116,7 +115,7 @@ public class OrganisationApiController implements OrganisationApi {
         }
 
         Optional<Organisation> isOrganisation = organisationRepository.findById(organisationId);
-        if (!isOrganisation.isPresent()) {
+        if (isOrganisation.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organisation not found");
         }
         Organisation organisation = isOrganisation.get();
@@ -129,10 +128,9 @@ public class OrganisationApiController implements OrganisationApi {
             @PathVariable String organisationId,
             Principal principal
     ) {
-        UserDetails userDetails = (UserDetails) ((Authentication) principal).getPrincipal();
-
-        Optional<User> isUser = userRepository.findById(userDetails.getUsername());
-        if (!isUser.isPresent()) {
+        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
+        Optional<User> isUser = userRepository.findById(userDetails.getPrincipal().toString());
+        if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
         User user = isUser.get();
@@ -141,7 +139,7 @@ public class OrganisationApiController implements OrganisationApi {
         }
 
         Optional<Organisation> isOrganisation = organisationRepository.findById(organisationId);
-        if (!isOrganisation.isPresent()) {
+        if (isOrganisation.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organisation not found");
         }
         Organisation organisation = isOrganisation.get();

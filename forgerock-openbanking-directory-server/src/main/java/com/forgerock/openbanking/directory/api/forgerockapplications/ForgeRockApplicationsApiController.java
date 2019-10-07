@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,7 @@ public class ForgeRockApplicationsApiController implements ForgeRockApplications
 
     @Override
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity<List<ForgeRockApplication>> getForgeRockApplications(
-            Principal principal
-    ) {
+    public ResponseEntity<List<ForgeRockApplication>> getForgeRockApplications() {
         return ResponseEntity.ok(forgeRockApplicationsRepository.findAll());
     }
 
@@ -42,16 +39,15 @@ public class ForgeRockApplicationsApiController implements ForgeRockApplications
     @RequestMapping(value = "/{applicationId}/connect-software-statement/{softwareStatementId}", method = RequestMethod.POST)
     public ResponseEntity connect(
             @PathVariable("applicationId") String applicationId,
-            @PathVariable("softwareStatementId") String softwareStatementId,
-            Principal principal
+            @PathVariable("softwareStatementId") String softwareStatementId
     ) {
         Optional<ForgeRockApplication> isForgeRockApp = forgeRockApplicationsRepository.findById(applicationId);
-        if (!isForgeRockApp.isPresent()) {
+        if (isForgeRockApp.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ForgeRock app not found");
         }
         ForgeRockApplication forgeRockApplication = isForgeRockApp.get();
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();

@@ -30,6 +30,10 @@
             <artifactId>forgerock-openbanking-directory-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.forgerock</groupId>
+            <artifactId>spring-security-multi-auth-starter</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

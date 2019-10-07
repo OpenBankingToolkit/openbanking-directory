@@ -7,6 +7,7 @@
  */
 package com.forgerock.openbanking.directory.api.user;
 
+import com.forgerock.openbanking.authentication.model.authentication.PasswordLessUserNameAuthentication;
 import com.forgerock.openbanking.directory.model.Organisation;
 import com.forgerock.openbanking.directory.model.User;
 import com.forgerock.openbanking.directory.repository.OrganisationRepository;
@@ -15,14 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/user/monitoring")
 public class DirectoryUserApiController {
-
 
     @Autowired
     private OrganisationRepository organisationRepository;
@@ -42,19 +41,19 @@ public class DirectoryUserApiController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity getUser(
             HttpServletResponse response,
-            Authentication authentication
+            Principal principal
     ) {
-        log.debug("Attempt to get user: {}", authentication);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Optional<User> isUser = userRepository.findById(userDetails.getUsername());
+        log.debug("Attempt to get user: {}", principal);
+        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
+        Optional<User> isUser = userRepository.findById(userDetails.getPrincipal().toString());
         User user;
-        if (!isUser.isPresent()) {
+        if (isUser.isEmpty()) {
             user = new User();
-            user.setId(userDetails.getUsername());
-            user.setAuthorities(authentication.getAuthorities().stream().map(a -> ((GrantedAuthority) a).getAuthority()).collect(Collectors.toList()));
-            user.setId(userDetails.getUsername());
+            user.setId(userDetails.getPrincipal().toString());
+            user.setAuthorities(userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+            user.setId(userDetails.getPrincipal().toString());
             Organisation organisation = new Organisation();
-            organisation.setName(userDetails.getUsername());
+            organisation.setName(userDetails.getPrincipal().toString());
             organisation = organisationRepository.save(organisation);
             user.setOrganisationId(organisation.getId());
             user = userRepository.save(user);

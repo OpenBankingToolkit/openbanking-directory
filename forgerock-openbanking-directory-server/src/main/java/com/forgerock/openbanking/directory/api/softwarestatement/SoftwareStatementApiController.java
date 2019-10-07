@@ -14,6 +14,7 @@ import com.forgerock.cert.utils.CertificateConfiguration;
 import com.forgerock.cert.utils.CertificateUtils;
 import com.forgerock.openbanking.analytics.model.entries.DirectoryCounterType;
 import com.forgerock.openbanking.analytics.services.DirectoryCountersKPIService;
+import com.forgerock.openbanking.authentication.model.authentication.PasswordLessUserNameAuthentication;
 import com.forgerock.openbanking.constants.OIDCConstants;
 import com.forgerock.openbanking.constants.OpenBankingConstants;
 import com.forgerock.openbanking.core.model.Application;
@@ -30,7 +31,6 @@ import com.forgerock.openbanking.directory.service.ASDiscoveryService;
 import com.forgerock.openbanking.directory.service.OIDCDiscoveryResponse;
 import com.forgerock.openbanking.directory.service.SSAService;
 import com.forgerock.openbanking.jwt.services.CryptoApiClient;
-import com.forgerock.openbanking.model.JwtAuthenticationToken;
 import com.forgerock.openbanking.model.OBRIRole;
 import com.forgerock.openbanking.model.SoftwareStatement;
 import com.forgerock.openbanking.model.SoftwareStatementRole;
@@ -54,8 +54,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,6 +61,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.KeyStoreException;
 import java.security.Principal;
@@ -70,6 +69,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -127,7 +127,6 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
     @Override
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<List<SoftwareStatement>> getAllSoftwareStatement(
-            Principal principal
     ) {
         return ResponseEntity.ok(softwareStatementRepository.findAll());
     }
@@ -141,14 +140,13 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
         softwareStatement = softwareStatementRepository.save(softwareStatement);
 
         //Add it to the organisation
-        UserDetails userDetails = (UserDetails) ((Authentication) principal).getPrincipal();
-        Optional<User> isUser = userRepository.findById(userDetails.getUsername());
-        if (!isUser.isPresent()) {
+        Optional<User> isUser = userRepository.findById(principal.getName());
+        if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
         User user = isUser.get();
         Optional<Organisation> isOrganisation = organisationRepository.findById(user.getOrganisationId());
-        if (!isOrganisation.isPresent()) {
+        if (isOrganisation.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organisation not found");
         }
         Organisation organisation = isOrganisation.get();
@@ -167,9 +165,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
         for(SoftwareStatementRole role : tppRoles){
             try{
                 Optional<Psd2Role> psd2Role = role.getPsd2Role();
-                if(psd2Role.isPresent()) {
-                    eidasInfo.addRole(psd2Role.get());
-                }
+                psd2Role.ifPresent(eidasInfo::addRole);
             } catch (IllegalArgumentException e ){
                 LOGGER.error("Failed to get Psd2Role.", e);
             }
@@ -206,7 +202,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
     public ResponseEntity read(
             @PathVariable String softwareStatementId,
             Principal principal) {
-        UserDetails userDetails = (UserDetails) ((Authentication) principal).getPrincipal();
+        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
 
         LOGGER.debug("Read Software statement '{}'", softwareStatementId);
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
@@ -214,13 +210,11 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             softwareStatementId = principal.getName();
         }
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
-        ResponseEntity denied = isAllowed(principal, softwareStatementId);
-        if (denied != null) {
-            return denied;
-        }
+        isAllowed(principal, softwareStatementId);
+
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
         return ResponseEntity.ok(softwareStatement);
     }
@@ -233,10 +227,8 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             Principal principal) {
         LOGGER.debug("Update Software statement '{}'", softwareStatementId);
 
-        ResponseEntity denied = isAllowed(principal, softwareStatementId);
-        if (denied != null) {
-            return denied;
-        }
+        isAllowed(principal, softwareStatementId);
+
         return ResponseEntity.ok(softwareStatementRepository.save(softwareStatement));
     }
 
@@ -247,12 +239,9 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             Principal principal) {
         LOGGER.debug("Delete Software statement '{}'", softwareStatementId);
 
-        ResponseEntity denied = isAllowed(principal, softwareStatementId);
-        if (denied != null) {
-            return denied;
-        }
+        isAllowed(principal, softwareStatementId);
         Optional<SoftwareStatement> byId = softwareStatementRepository.findById(softwareStatementId);
-        if (!byId.isPresent()) {
+        if (byId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement '" + softwareStatementId + "' not found");
         }
 
@@ -269,12 +258,10 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             Principal principal) {
         LOGGER.debug("Read Software statement application '{}'", softwareStatementId);
 
-        ResponseEntity denied = isAllowed(principal, softwareStatementId);
-        if (denied != null) {
-            return denied;
-        }
+        isAllowed(principal, softwareStatementId);
+
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
@@ -289,7 +276,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
         LOGGER.debug("Read Software statement jwkuri '{}'", softwareStatementId);
 
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
@@ -303,12 +290,9 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             Principal principal) {
         LOGGER.debug("Rotate transport keys for Software statement '{}'", softwareStatementId);
 
-        ResponseEntity denied = isAllowed(principal, softwareStatementId);
-        if (denied != null) {
-            return denied;
-        }
+        isAllowed(principal, softwareStatementId);
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
@@ -320,12 +304,9 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable String softwareStatementId,
             Principal principal) {
         LOGGER.debug("Software statement '{}' is resetting its key", softwareStatementId);
-        ResponseEntity denied = isAllowed(principal, softwareStatementId);
-        if (denied != null) {
-            return denied;
-        }
+        isAllowed(principal, softwareStatementId);
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
@@ -340,7 +321,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
         LOGGER.debug("Get Software statement jwkuri for sig/enc keys '{}'", softwareStatementId);
 
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
@@ -352,14 +333,11 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
     public ResponseEntity rotateSigningEncryptionKeys(
             @PathVariable String softwareStatementId,
             Principal principal) {
-        ResponseEntity denied = isAllowed(principal, softwareStatementId);
-        if (denied != null) {
-            return denied;
-        }
+        isAllowed(principal, softwareStatementId);
         LOGGER.debug("Rotate Software statement sign/enc keys '{}'", softwareStatementId);
 
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
@@ -370,14 +348,11 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
     public ResponseEntity resetSigningEncryptionKeys(
             @PathVariable String softwareStatementId,
             Principal principal) {
-        ResponseEntity denied = isAllowed(principal, softwareStatementId);
-        if (denied != null) {
-            return denied;
-        }
+        isAllowed(principal, softwareStatementId);
         LOGGER.debug("Reset Software statement sign/enc keys '{}'", softwareStatementId);
 
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
@@ -391,7 +366,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable String kid,
             Principal principal) {
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
@@ -410,7 +385,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable String kid,
             Principal principal) {
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
@@ -429,7 +404,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable String kid,
             Principal principal) {
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return "Software statement not found";
         }
         LOGGER.debug("Download public cert '{}' of Software statement '{}'", kid, softwareStatementId);
@@ -445,7 +420,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable String kid,
             Principal principal) {
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return "Software statement not found";
         }
         LOGGER.debug("Download private cert '{}' of Software statement '{}'", kid, softwareStatementId);
@@ -459,7 +434,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable String softwareStatementId,
             Principal principal) {
 
-        UserDetails userDetails = (UserDetails) ((Authentication) principal).getPrincipal();
+        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
                 && userDetails.getAuthorities().contains(OBRIRole.ROLE_SOFTWARE_STATEMENT)) {
             softwareStatementId = principal.getName();
@@ -467,7 +442,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
         LOGGER.debug("Generate SSA for Software statement '{}'", softwareStatementId);
 
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
@@ -494,14 +469,14 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable("aspspId") String aspspId,
             Principal principal) {
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
         LOGGER.debug("Test MATLS for Software statement '{}'", softwareStatementId);
 
         Optional<Aspsp> isAspsp = aspspRepository.findById(aspspId);
-        if (!isAspsp.isPresent()) {
+        if (isAspsp.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ASPSP not found");
         }
         Aspsp aspsp = isAspsp.get();
@@ -541,20 +516,20 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable("aspspId") String aspspId,
             Principal principal) {
 
-        UserDetails userDetails = (UserDetails) ((Authentication) principal).getPrincipal();
+        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
                 && userDetails.getAuthorities().contains(OBRIRole.ROLE_SOFTWARE_STATEMENT)) {
             softwareStatementId = principal.getName();
         }
 
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
 
         Optional<Aspsp> isAspsp = aspspRepository.findById(aspspId);
-        if (!isAspsp.isPresent()) {
+        if (isAspsp.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ASPSP not found");
         }
         Aspsp aspsp = isAspsp.get();
@@ -601,20 +576,20 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @ApiParam(value = "The ASPSP ID", required = true)
             @PathVariable("aspspId") String aspspId,
             Principal principal) {
-        UserDetails userDetails = (UserDetails) ((Authentication) principal).getPrincipal();
+        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
                 && userDetails.getAuthorities().contains(OBRIRole.ROLE_SOFTWARE_STATEMENT)) {
             softwareStatementId = principal.getName();
         }
 
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
 
         Optional<Aspsp> isAspsp = aspspRepository.findById(aspspId);
-        if (!isAspsp.isPresent()) {
+        if (isAspsp.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ASPSP not found");
         }
         Aspsp aspsp = isAspsp.get();
@@ -683,20 +658,20 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @ApiParam(value = "The ASPSP ID", required = true)
             @PathVariable("aspspId") String aspspId,
             Principal principal) {
-        UserDetails userDetails = (UserDetails) ((Authentication) principal).getPrincipal();
+        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
                 && userDetails.getAuthorities().contains(OBRIRole.ROLE_SOFTWARE_STATEMENT)) {
             softwareStatementId = principal.getName();
         }
 
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
-        if (!isSoftwareStatement.isPresent()) {
+        if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
         }
         SoftwareStatement softwareStatement = isSoftwareStatement.get();
 
         Optional<Aspsp> isAspsp = aspspRepository.findById(aspspId);
-        if (!isAspsp.isPresent()) {
+        if (isAspsp.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ASPSP not found");
         }
         Aspsp aspsp = isAspsp.get();
@@ -739,41 +714,32 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
 
     /**
      * Verify if the current user is allowed to modify the current resource
-     * @param principal
-     * @param softwareStatementId
-     * @return null if all good, otherwise return the reponse entity with the proper error message
      */
-    private ResponseEntity isAllowed(Principal principal, String softwareStatementId) {
-        UserDetails userDetails = (UserDetails) ((Authentication) principal).getPrincipal();
-        if (userDetails.getUsername() == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
+    private void isAllowed(Principal principal, String softwareStatementId) {
+        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
+        if (userDetails.getAuthorities().contains(OBRIRole.ROLE_FORGEROCK_INTERNAL_APP)) {
+            LOGGER.trace("ForgeRock internal applications are allowed to access any software statement");
+            return;
+        }
+        if (userDetails.getPrincipal() == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not authenticated");
         }
 
-        if (principal instanceof JwtAuthenticationToken) {
-            Optional<User> isUser = userRepository.findById(userDetails.getUsername());
-            if (!isUser.isPresent()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
-            }
-            User user = isUser.get();
-
-            Optional<Organisation> isOrganisation = organisationRepository.findById(user.getOrganisationId());
-            if (!isOrganisation.isPresent()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organisation not found");
-            }
-            Organisation organisation = isOrganisation.get();
-
-            if (!organisation.getSoftwareStatementIds().contains(softwareStatementId)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised to access this software statement");
-            }
-        } else if (((Authentication) principal).getAuthorities().contains(OBRIRole.ROLE_FORGEROCK_INTERNAL_APP)) {
-            LOGGER.debug("ForgeRock internal applications are allowed to access any software statement");
-        } else {
-            if (!userDetails.getUsername().equals(softwareStatementId)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are authenticated as '" + userDetails.getUsername() + "' software statement, you can't" +
-                        " access '" + softwareStatementId + "' software statement.");
-            }
+        Optional<User> isUser = userRepository.findById(userDetails.getPrincipal().toString());
+        if (isUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorised");
         }
-        return null;
+        User user = isUser.get();
+
+        Optional<Organisation> isOrganisation = organisationRepository.findById(user.getOrganisationId());
+        if (isOrganisation.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Organisation not found");
+        }
+        Organisation organisation = isOrganisation.get();
+
+        if (!organisation.getSoftwareStatementIds().contains(softwareStatementId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorised to access this software statement");
+        }
     }
 
 
@@ -793,7 +759,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
                 OIDCConstants.GrantType.REFRESH_TOKEN.type,
                 OIDCConstants.GrantType.CLIENT_CREDENTIAL.type));
 
-        oidcRegistrationRequest.setResponseTypes(Arrays.asList(
+        oidcRegistrationRequest.setResponseTypes(Collections.singletonList(
                 OIDCConstants.ResponseType.CODE + " " + OIDCConstants.ResponseType.ID_TOKEN));
         oidcRegistrationRequest.setApplicationType(OpenBankingConstants.RegistrationTppRequestClaims.APPLICATION_TYPE_WEB);
 

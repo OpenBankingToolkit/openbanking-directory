@@ -33,7 +33,6 @@
         <dependency>
             <groupId>com.forgerock</groupId>
             <artifactId>spring-security-multi-auth-starter</artifactId>
-            <version>0.0.9</version>
         </dependency>
     </dependencies>
 

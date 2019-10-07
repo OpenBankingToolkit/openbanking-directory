@@ -14,12 +14,17 @@ am:
     endpoint:
       authentication: "${am.internal.root}/json/authenticate"
       oidc-client: "${am.internal.root}/json/realms/root/realms/openbanking/realm-config/agents/OAuth2Client"
+      accesstoken: ${am.internal.root}/oauth2/realms/root/realms/openbanking/access_token
     root: "https://openam:443"
+    oidc:
+      endpoint:
+        accesstoken: ${am.internal.root}/oauth2/realms/root/realms/openbanking/access_token
   matls-hostname: "matls.as.aspsp.${dns.hosts.root}"
   oidc:
     audiences: "https://${am.matls-hostname}/oauth2, ${am.root}/oauth2, https://${am.matls-hostname}/oauth2/access_token\""
     endpoint:
       registration: "${am.internal.root}/oauth2/realms/root/realms/openbanking/register"
+      accesstoken: ${am.internal.root}/oauth2/realms/root/realms/openbanking/access_token
     issuerid: "${am.root}/oauth2"
     jwksuri: "${am.internal.root}/oauth2/realms/root/realms/openbanking/connect/jwk_uri"
   realm:
@@ -62,7 +67,8 @@ forgerockdirectory:
   port: 443
 
 jwkms:
-  internal-port: 8443
+  port: ${scgw.port}
+  internal-port: 8097
   root: "https://jwkms:${jwkms.internal-port}/"
 
 metrics:
@@ -75,6 +81,22 @@ metrics:
       add-entries: "${metrics.endpoints.root}/api/kpi/jwts/jwts-validation/add-entries"
     root: "https://metrics-services:${metrics.port}"
   port: 8444
+
+ob:
+  auth:
+    session:
+      token-lifetime: 7 #days
+      issuer-id: ${spring.application.name}
+      cookie:
+        domains: ${dns.hosts.root}
+    oidc:
+      idp:
+        issuerid: "https://am.${dns.hosts.root}/oauth2/realms/root/realms/auth"
+        jwk-uri: ${am.internal.root}/oauth2/realms/root/realms/auth/connect/jwk_uri
+        authorize: ${am.internal.root}/oauth2/realms/root/realms/auth/authorize
+      client:
+        client-id: directory
+        redirect-uri: "https://${dns.hosts.root}:4206/redirectOpenId"
 
 openbankingdirectory:
   certificate:
@@ -106,7 +128,7 @@ scgw:
 
 server:
   hostname: "${dns.hosts.root}"
-  port: 8443
+  port: 8076
   ssl:
     client-auth: WANT
     client-certs-key-alias: "${server.hostname}"

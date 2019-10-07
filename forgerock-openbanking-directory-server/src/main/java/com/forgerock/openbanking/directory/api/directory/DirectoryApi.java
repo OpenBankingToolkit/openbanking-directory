@@ -9,7 +9,11 @@ package com.forgerock.openbanking.directory.api.directory;
 
 import com.forgerock.openbanking.model.ApplicationIdentity;
 import com.nimbusds.jose.jwk.JWKSet;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

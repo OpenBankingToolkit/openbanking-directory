@@ -8,14 +8,19 @@
 package com.forgerock.openbanking.directory.api.forgerockapplications;
 
 import com.forgerock.openbanking.core.model.ForgeRockApplication;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.AuthorizationScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.security.Principal;
 import java.util.List;
 
 
@@ -38,9 +43,7 @@ public interface ForgeRockApplicationsApi {
     })
     @PreAuthorize("hasAnyAuthority('GROUP_FORGEROCK')")
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    ResponseEntity<List<ForgeRockApplication>> getForgeRockApplications(
-            Principal principal
-    );
+    ResponseEntity<List<ForgeRockApplication>> getForgeRockApplications();
 
     @ApiOperation(value = "Connect a ForgeRock app to an existing software statement",
             authorizations = {
@@ -59,8 +62,7 @@ public interface ForgeRockApplicationsApi {
             @PathVariable("applicationId") String applicationId,
 
             @ApiParam(value = "The software statement ID.", required = true)
-            @PathVariable("softwareStatementId") String softwareStatementId,
-            Principal principal
+            @PathVariable("softwareStatementId") String softwareStatementId
     );
 
 }

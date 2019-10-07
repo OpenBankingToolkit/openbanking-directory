@@ -7,14 +7,13 @@
  */
 package com.forgerock.openbanking.directory.api.matls;
 
+import com.forgerock.openbanking.authentication.model.authentication.PasswordLessUserNameAuthentication;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,9 +46,8 @@ public class MtlsTest {
         if (principal == null) {
             return ResponseEntity.ok(response);
         }
-
-        UserDetails currentUser = (UserDetails) ((Authentication) principal).getPrincipal();
-        response.issuerId = currentUser.getUsername();
+        PasswordLessUserNameAuthentication currentUser = (PasswordLessUserNameAuthentication) principal;
+        response.issuerId = currentUser.getPrincipal().toString();
         response.authorities = currentUser.getAuthorities();
         return ResponseEntity.ok(response);
     }

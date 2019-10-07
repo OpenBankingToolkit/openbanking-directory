@@ -12,10 +12,15 @@ import com.forgerock.openbanking.authentication.configurers.MultiAuthenticationC
 import com.forgerock.openbanking.authentication.configurers.collectors.CustomJwtCookieCollector;
 import com.forgerock.openbanking.authentication.configurers.collectors.StaticUserCollector;
 import com.forgerock.openbanking.directory.error.ErrorHandler;
+import com.forgerock.openbanking.directory.model.Organisation;
+import com.forgerock.openbanking.directory.model.User;
 import com.forgerock.openbanking.directory.repository.ForgeRockApplicationsRepository;
+import com.forgerock.openbanking.directory.repository.OrganisationRepository;
+import com.forgerock.openbanking.directory.repository.UserRepository;
 import com.forgerock.openbanking.directory.security.FormValueSanitisationFilter;
 import com.forgerock.openbanking.directory.security.JsonRequestSanitisiationFilter;
 import com.forgerock.openbanking.model.OBRIRole;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,6 +32,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
@@ -46,72 +52,92 @@ import java.util.stream.Stream;
 @ComponentScan(basePackages = {"com.forgerock"})
 @EnableMongoRepositories(basePackages = "com.forgerock")
 public class ForgerockOpenbankingDirectoryApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(ForgerockOpenbankingDirectoryApplication.class, args);
-	}
-	@Configuration
-	static class CookieWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    public static void main(String[] args) {
+        SpringApplication.run(ForgerockOpenbankingDirectoryApplication.class, args);
+    }
 
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http
+    @Configuration
+    static class CookieWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
-					.csrf().disable() // We don't need CSRF for JWT based authentication
-					.authorizeRequests()
-					.anyRequest()
-					.permitAll()//.authenticated()
-					.and()
-					.authenticationProvider(new CustomAuthProvider())
-					.apply(new MultiAuthenticationCollectorConfigurer<HttpSecurity>()
-							.collector(StaticUserCollector.builder()
-									.usernameCollector( () -> "demo")
-									.grantedAuthorities(Stream.of(
-											OBRIRole.ROLE_SOFTWARE_STATEMENT,
-											OBRIRole.ROLE_USER
-									).collect(Collectors.toSet()))
-									.build())
-							.collector(CustomJwtCookieCollector.builder()
-									.cookieName("obri-session")
-									.authoritiesCollector(t -> Stream.of(
-											OBRIRole.ROLE_SOFTWARE_STATEMENT,
-											OBRIRole.ROLE_USER
-									).collect(Collectors.toSet()))
-									.build())
-					)
-			;
-		}
-	}
+        @Autowired
+        private UserRepository userRepository;
+        @Autowired
+        private OrganisationRepository organisationRepository;
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+        @Override
+        public void init(WebSecurity web) throws Exception {
+            super.init(web);
+            User demoUser = User.builder()
+                    .id("demo")
+                    .authorities(Sets.newHashSet(
+                            OBRIRole.ROLE_SOFTWARE_STATEMENT.toString(),
+                            OBRIRole.ROLE_USER.toString()))
+                    .organisationId("forgerock")
+                    .build();
+            userRepository.save(demoUser);
+            organisationRepository.save(Organisation.builder().id("forgerock").name("demo").build());
+        }
 
-	public static class CustomAuthProvider implements AuthenticationProvider {
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
 
-		@Autowired
-		private ForgeRockApplicationsRepository forgeRockApplicationsRepository;
+                    .csrf().disable() // We don't need CSRF for JWT based authentication
+                    .authorizeRequests()
+                    .anyRequest()
+                    .permitAll()//.authenticated()
+                    .and()
+                    .authenticationProvider(new CustomAuthProvider())
+                    .apply(new MultiAuthenticationCollectorConfigurer<HttpSecurity>()
+                            .collector(StaticUserCollector.builder()
+                                    .usernameCollector(() -> "demo")
+                                    .grantedAuthorities(Sets.newHashSet(
+                                            OBRIRole.ROLE_SOFTWARE_STATEMENT,
+                                            OBRIRole.ROLE_USER
+                                    ))
+                                    .build())
+                            .collector(CustomJwtCookieCollector.builder()
+                                    .cookieName("obri-session")
+                                    .authoritiesCollector(t -> Stream.of(
+                                            OBRIRole.ROLE_SOFTWARE_STATEMENT,
+                                            OBRIRole.ROLE_USER
+                                    ).collect(Collectors.toSet()))
+                                    .build())
+                    )
+            ;
+        }
+    }
 
-		@Override
-		public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-			//You can load more GrantedAuthority based on the user subject, like loading the TPP details from the software ID
-			return authentication;
-		}
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
-		@Override
-		public boolean supports(Class<?> aClass) {
-			return true;
-		}
-	}
+    public static class CustomAuthProvider implements AuthenticationProvider {
 
-	@Bean
-	public Filter jsonSanitisationFilter(ErrorHandler errorHandler, Tracer tracer) {
-		return new JsonRequestSanitisiationFilter(errorHandler, tracer);
-	}
+        @Autowired
+        private ForgeRockApplicationsRepository forgeRockApplicationsRepository;
 
-	@Bean
-	public Filter formSanitisationFilter(ErrorHandler errorHandler, Tracer tracer) {
-		return new FormValueSanitisationFilter(errorHandler, tracer);
-	}
+        @Override
+        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+            //You can load more GrantedAuthority based on the user subject, like loading the TPP details from the software ID
+            return authentication;
+        }
+
+        @Override
+        public boolean supports(Class<?> aClass) {
+            return true;
+        }
+    }
+
+    @Bean
+    public Filter jsonSanitisationFilter(ErrorHandler errorHandler, Tracer tracer) {
+        return new JsonRequestSanitisiationFilter(errorHandler, tracer);
+    }
+
+    @Bean
+    public Filter formSanitisationFilter(ErrorHandler errorHandler, Tracer tracer) {
+        return new FormValueSanitisationFilter(errorHandler, tracer);
+    }
 
 }
