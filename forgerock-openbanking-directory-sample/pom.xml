@@ -13,7 +13,7 @@
 
     <groupId>com.forgerock.openbanking.directory</groupId>
     <artifactId>forgerock-openbanking-directory-sample</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
