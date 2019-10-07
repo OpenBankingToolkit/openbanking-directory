@@ -1,7 +1,7 @@
 version: '3'
 services:
   mongo:
-    container_name: mongo-jwkms
+    container_name: mongo-directory
     image: mongo
     ports:
     - "27017:27017"
