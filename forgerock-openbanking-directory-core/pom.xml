@@ -13,13 +13,13 @@
 
     <groupId>com.forgerock.openbanking.directory</groupId>
     <artifactId>forgerock-openbanking-directory-core</artifactId>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>1.4.1</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>com.forgerock.openbanking.directory</groupId>
         <artifactId>forgerock-openbanking-reference-implementation-directory</artifactId>
-        <version>1.0.4-SNAPSHOT</version>
+        <version>1.0.4</version>
     </parent>
 
     <dependencies>
