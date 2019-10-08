@@ -7,16 +7,17 @@
  */
 package com.forgerock.openbanking.directory.api.user;
 
-import com.forgerock.openbanking.authentication.model.authentication.PasswordLessUserNameAuthentication;
 import com.forgerock.openbanking.directory.model.Organisation;
-import com.forgerock.openbanking.directory.model.User;
+import com.forgerock.openbanking.directory.model.DirectoryUser;
 import com.forgerock.openbanking.directory.repository.OrganisationRepository;
-import com.forgerock.openbanking.directory.repository.UserRepository;
+import com.forgerock.openbanking.directory.repository.DirectoryUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class DirectoryUserApiController {
     @Autowired
     private OrganisationRepository organisationRepository;
     @Autowired
-    private UserRepository userRepository;
+    private DirectoryUserRepository directoryUserRepository;
 
 
     @PreAuthorize("hasAnyAuthority('ROLE_FORGEROCK_INTERNAL_APP')")
@@ -44,22 +45,21 @@ public class DirectoryUserApiController {
             Principal principal
     ) {
         log.debug("Attempt to get user: {}", principal);
-        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
-        Optional<User> isUser = userRepository.findById(userDetails.getPrincipal().toString());
-        User user;
+        User userDetails = (User) ((Authentication) principal).getPrincipal();
+        Optional<DirectoryUser> isUser = directoryUserRepository.findById(userDetails.getUsername());
+        DirectoryUser directoryUser;
         if (isUser.isEmpty()) {
-            user = new User();
-            user.setId(userDetails.getPrincipal().toString());
-            user.setAuthorities(userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
-            user.setId(userDetails.getPrincipal().toString());
+            directoryUser = new DirectoryUser();
+            directoryUser.setId(userDetails.getUsername());
+            directoryUser.setAuthorities(userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
             Organisation organisation = new Organisation();
-            organisation.setName(userDetails.getPrincipal().toString());
+            organisation.setName(userDetails.getUsername());
             organisation = organisationRepository.save(organisation);
-            user.setOrganisationId(organisation.getId());
-            user = userRepository.save(user);
+            directoryUser.setOrganisationId(organisation.getId());
+            directoryUser = directoryUserRepository.save(directoryUser);
         } else {
-            user = isUser.get();
+            directoryUser = isUser.get();
         }
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(directoryUser);
     }
 }

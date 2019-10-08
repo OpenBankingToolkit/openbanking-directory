@@ -9,24 +9,24 @@ package com.forgerock.openbanking.directory.api.organisation;
 
 import com.forgerock.openbanking.analytics.model.entries.DirectoryCounterType;
 import com.forgerock.openbanking.analytics.services.DirectoryCountersKPIService;
-import com.forgerock.openbanking.authentication.model.authentication.PasswordLessUserNameAuthentication;
 import com.forgerock.openbanking.directory.model.Organisation;
-import com.forgerock.openbanking.directory.model.User;
+import com.forgerock.openbanking.directory.model.DirectoryUser;
 import com.forgerock.openbanking.directory.repository.OrganisationRepository;
 import com.forgerock.openbanking.directory.repository.SoftwareStatementRepository;
-import com.forgerock.openbanking.directory.repository.UserRepository;
+import com.forgerock.openbanking.directory.repository.DirectoryUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +36,7 @@ public class OrganisationApiController implements OrganisationApi {
     private static final Logger LOGGER = LoggerFactory.getLogger(OrganisationApiController.class);
 
     @Autowired
-    private UserRepository userRepository;
+    private DirectoryUserRepository directoryUserRepository;
     @Autowired
     private OrganisationRepository organisationRepository;
     @Autowired
@@ -47,7 +47,7 @@ public class OrganisationApiController implements OrganisationApi {
     @Override
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<List<Organisation>> getAllOrganisation(
-            Principal principal
+            Authentication authentication
     ) {
         return ResponseEntity.ok(organisationRepository.findAll());
     }
@@ -56,8 +56,8 @@ public class OrganisationApiController implements OrganisationApi {
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<Organisation> create(
             @RequestBody Organisation organisation,
-            Principal principal) {
-        LOGGER.debug("principal :" + principal);
+            Authentication authentication) {
+        LOGGER.debug("authentication :" + authentication);
         directoryCountersKPIService.incrementTokenUsage(DirectoryCounterType.ORGANISATION_REGISTERED);
         return ResponseEntity.status(HttpStatus.CREATED).body(organisationRepository.save(organisation));
     }
@@ -66,15 +66,15 @@ public class OrganisationApiController implements OrganisationApi {
     @RequestMapping(value = "/{organisationId}", method = RequestMethod.GET)
     public ResponseEntity read(
             @PathVariable String organisationId,
-            Principal principal) {
-        LOGGER.debug("principal :" + principal);
-        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
-        Optional<User> isUser = userRepository.findById(userDetails.getPrincipal().toString());
+            Authentication authentication) {
+        LOGGER.debug("authentication :" + authentication);
+        User userDetails = (User) authentication.getPrincipal();
+        Optional<DirectoryUser> isUser = directoryUserRepository.findById(userDetails.getUsername());
         if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
-        User user = isUser.get();
-        if (!user.getOrganisationId().equals(organisationId)) {
+        DirectoryUser directoryUser = isUser.get();
+        if (!directoryUser.getOrganisationId().equals(organisationId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
 
@@ -91,8 +91,8 @@ public class OrganisationApiController implements OrganisationApi {
     public ResponseEntity<Organisation> update(
             @PathVariable String organisationId,
             @RequestBody Organisation organisation,
-            Principal principal) {
-        LOGGER.debug("principal :" + principal);
+            Authentication authentication) {
+        LOGGER.debug("authentication :" + authentication);
         return ResponseEntity.ok(organisationRepository.save(organisation));
     }
 
@@ -101,16 +101,16 @@ public class OrganisationApiController implements OrganisationApi {
     @RequestMapping(value = "/{organisationId}/software-statements", method = RequestMethod.GET)
     public ResponseEntity readSoftwareStatements(
             @PathVariable String organisationId,
-            Principal principal
+            Authentication authentication
     ) {
-        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
+        User userDetails = (User) authentication.getPrincipal();
 
-        Optional<User> isUser = userRepository.findById(userDetails.getPrincipal().toString());
+        Optional<DirectoryUser> isUser = directoryUserRepository.findById(userDetails.getUsername());
         if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
-        User user = isUser.get();
-        if (user.getId().equals(organisationId)) {
+        DirectoryUser directoryUser = isUser.get();
+        if (directoryUser.getId().equals(organisationId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
 
@@ -126,15 +126,15 @@ public class OrganisationApiController implements OrganisationApi {
     @RequestMapping(value = "/{organisationId}/software-statements", method = RequestMethod.DELETE)
     public ResponseEntity deleteSoftwareStatements(
             @PathVariable String organisationId,
-            Principal principal
+            Authentication authentication
     ) {
-        PasswordLessUserNameAuthentication userDetails = (PasswordLessUserNameAuthentication) principal;
-        Optional<User> isUser = userRepository.findById(userDetails.getPrincipal().toString());
+        User userDetails = (User) authentication.getPrincipal();
+        Optional<DirectoryUser> isUser = directoryUserRepository.findById(userDetails.getUsername());
         if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
-        User user = isUser.get();
-        if (user.getId().equals(organisationId)) {
+        DirectoryUser directoryUser = isUser.get();
+        if (directoryUser.getId().equals(organisationId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
 

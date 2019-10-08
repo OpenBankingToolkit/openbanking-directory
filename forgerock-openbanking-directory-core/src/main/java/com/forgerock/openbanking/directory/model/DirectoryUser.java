@@ -20,7 +20,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @Builder
 @Document
-public class User {
+public class DirectoryUser {
     @Id
     private String id;
     private String organisationId;

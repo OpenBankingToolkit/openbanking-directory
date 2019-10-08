@@ -9,9 +9,8 @@ package com.forgerock.openbanking.directory.service;
 
 import com.forgerock.openbanking.auth.services.UserProvider;
 import com.forgerock.openbanking.directory.model.Organisation;
-import com.forgerock.openbanking.directory.model.User;
 import com.forgerock.openbanking.directory.repository.OrganisationRepository;
-import com.forgerock.openbanking.directory.repository.UserRepository;
+import com.forgerock.openbanking.directory.repository.DirectoryUserRepository;
 import lombok.Getter;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
@@ -27,16 +26,16 @@ import java.util.stream.Collectors;
 public class DirectoryUserProvider implements UserProvider {
 
     private OrganisationRepository organisationRepository;
-    private UserRepository userRepository;
+    private DirectoryUserRepository directoryUserRepository;
 
-    public DirectoryUserProvider(OrganisationRepository organisationRepository, UserRepository userRepository) {
+    public DirectoryUserProvider(OrganisationRepository organisationRepository, DirectoryUserRepository directoryUserRepository) {
         this.organisationRepository = organisationRepository;
-        this.userRepository = userRepository;
+        this.directoryUserRepository = directoryUserRepository;
     }
 
     @Override
     public Object getUser(Authentication authentication) {
-        Optional<User> user = userRepository.findById(authentication.getName());
+        Optional<com.forgerock.openbanking.directory.model.DirectoryUser> user = directoryUserRepository.findById(authentication.getName());
         if (user.isEmpty()) {
             return authentication.getDetails();
         }

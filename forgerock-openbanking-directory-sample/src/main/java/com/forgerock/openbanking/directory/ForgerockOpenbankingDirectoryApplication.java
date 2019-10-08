@@ -13,10 +13,10 @@ import com.forgerock.openbanking.authentication.configurers.collectors.CustomJwt
 import com.forgerock.openbanking.authentication.configurers.collectors.StaticUserCollector;
 import com.forgerock.openbanking.directory.error.ErrorHandler;
 import com.forgerock.openbanking.directory.model.Organisation;
-import com.forgerock.openbanking.directory.model.User;
+import com.forgerock.openbanking.directory.model.DirectoryUser;
 import com.forgerock.openbanking.directory.repository.ForgeRockApplicationsRepository;
 import com.forgerock.openbanking.directory.repository.OrganisationRepository;
-import com.forgerock.openbanking.directory.repository.UserRepository;
+import com.forgerock.openbanking.directory.repository.DirectoryUserRepository;
 import com.forgerock.openbanking.directory.security.FormValueSanitisationFilter;
 import com.forgerock.openbanking.directory.security.JsonRequestSanitisiationFilter;
 import com.forgerock.openbanking.model.OBRIRole;
@@ -60,21 +60,21 @@ public class ForgerockOpenbankingDirectoryApplication {
     static class CookieWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
         @Autowired
-        private UserRepository userRepository;
+        private DirectoryUserRepository directoryUserRepository;
         @Autowired
         private OrganisationRepository organisationRepository;
 
         @Override
         public void init(WebSecurity web) throws Exception {
             super.init(web);
-            User demoUser = User.builder()
+            DirectoryUser demoDirectoryUser = DirectoryUser.builder()
                     .id("demo")
                     .authorities(Sets.newHashSet(
                             OBRIRole.ROLE_SOFTWARE_STATEMENT.toString(),
                             OBRIRole.ROLE_USER.toString()))
                     .organisationId("forgerock")
                     .build();
-            userRepository.save(demoUser);
+            directoryUserRepository.save(demoDirectoryUser);
             organisationRepository.save(Organisation.builder().id("forgerock").name("demo").build());
         }
 

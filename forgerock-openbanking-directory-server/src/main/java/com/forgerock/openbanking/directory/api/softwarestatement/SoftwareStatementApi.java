@@ -19,6 +19,7 @@ import io.swagger.annotations.Authorization;
 import io.swagger.annotations.AuthorizationScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,7 +65,7 @@ public interface SoftwareStatementApi {
     ResponseEntity<SoftwareStatement> create(
             @ApiParam(value = "The software statement.", required = true)
             @RequestBody SoftwareStatement softwareStatement,
-            Principal principal);
+            Authentication authentication);
 
 
 
@@ -84,7 +85,7 @@ public interface SoftwareStatementApi {
     ResponseEntity<SoftwareStatement> read(
             @ApiParam(value = "The software statement ID", required = true)
             @PathVariable String softwareStatementId,
-            Principal principal);
+            Authentication authentication);
 
 
 
@@ -107,7 +108,7 @@ public interface SoftwareStatementApi {
 
             @ApiParam(value = "The software statement", required = true)
             @RequestBody SoftwareStatement softwareStatement,
-            Principal principal);
+            Authentication authentication);
 
 
 
@@ -127,7 +128,7 @@ public interface SoftwareStatementApi {
     ResponseEntity<SoftwareStatement> delete(
             @ApiParam(value = "The software statement ID", required = true)
             @PathVariable String softwareStatementId,
-            Principal principal);
+            Authentication authentication);
 
 
 
@@ -147,7 +148,7 @@ public interface SoftwareStatementApi {
     ResponseEntity<Application> getApplication(
             @ApiParam(value = "The software statement ID", required = true)
             @PathVariable String softwareStatementId,
-            Principal principal);
+            Authentication authentication);
 
 
 
@@ -166,7 +167,7 @@ public interface SoftwareStatementApi {
     ResponseEntity<String> transportKeysJwkUri(
             @ApiParam(value = "The software statement ID", required = true)
             @PathVariable String softwareStatementId,
-            Principal principal);
+            Authentication authentication);
 
 
     @ApiOperation(value = "Rotate the transport keys",
@@ -185,7 +186,7 @@ public interface SoftwareStatementApi {
     ResponseEntity<Application> rotateTransportKeys(
             @ApiParam(value = "The software statement ID", required = true)
             @PathVariable String softwareStatementId,
-            Principal principal);
+            Authentication authentication);
 
 
     @ApiOperation(value = "Reset the transport keys",
@@ -204,7 +205,7 @@ public interface SoftwareStatementApi {
     ResponseEntity<Application> resetTransportKeys(
             @ApiParam(value = "The software statement ID", required = true)
             @PathVariable String softwareStatementId,
-            Principal principal);
+            Authentication authentication);
 
 
     @ApiOperation(value = "Get the signing and encryption JWKs",
@@ -222,7 +223,7 @@ public interface SoftwareStatementApi {
     ResponseEntity<String> signingEncryptionKeysJwkUri(
             @ApiParam(value = "The software statement ID", required = true)
             @PathVariable String softwareStatementId,
-            Principal principal);
+            Authentication authentication);
 
 
     @ApiOperation(value = "Rotate the signing and encryption keys",
@@ -241,7 +242,7 @@ public interface SoftwareStatementApi {
     ResponseEntity<Application> rotateSigningEncryptionKeys(
             @ApiParam(value = "The software statement ID", required = true)
             @PathVariable String softwareStatementId,
-            Principal principal);
+            Authentication authentication);
 
 
     @ApiOperation(value = "Reset the signing and encryption keys",
@@ -260,7 +261,7 @@ public interface SoftwareStatementApi {
     ResponseEntity<Application> resetSigningEncryptionKeys(
             @ApiParam(value = "The software statement ID", required = true)
             @PathVariable String softwareStatementId,
-            Principal principal);
+            Authentication authentication);
 
 
     @ApiOperation(value = "Download a key as a public JWK",
@@ -281,7 +282,7 @@ public interface SoftwareStatementApi {
 
             @ApiParam(value = "The key ID", required = true)
             @PathVariable String kid,
-            Principal principal);
+            Authentication authentication);
 
 
     @ApiOperation(value = "Download a key as a private JWK",
@@ -303,7 +304,7 @@ public interface SoftwareStatementApi {
 
             @ApiParam(value = "The key ID", required = true)
             @PathVariable String kid,
-            Principal principal);
+            Authentication authentication);
 
     @ApiOperation(value = "Download a key as pem",
             authorizations = {
@@ -323,7 +324,7 @@ public interface SoftwareStatementApi {
 
             @ApiParam(value = "The key ID", required = true)
             @PathVariable String kid,
-            Principal principal);
+            Authentication authentication);
 
 
     @ApiOperation(value = "Download a key as private cert",
@@ -345,7 +346,7 @@ public interface SoftwareStatementApi {
 
             @ApiParam(value = "The key ID", required = true)
             @PathVariable String kid,
-            Principal principal);
+            Authentication authentication);
 
 
     @ApiOperation(value = "Generate a SSA for this software statement",
@@ -364,7 +365,7 @@ public interface SoftwareStatementApi {
     ResponseEntity<String> generateSSA(
             @ApiParam(value = "The software statement ID", required = true)
             @PathVariable String softwareStatementId,
-            Principal principal);
+            Authentication authentication);
 
 
     @ApiOperation(value = "Test MATLS between a software statement and an ASPSP",
@@ -386,7 +387,7 @@ public interface SoftwareStatementApi {
 
             @ApiParam(value = "The ASPSP ID", required = true)
             @PathVariable("aspspId") String aspspId,
-            Principal principal);
+            Authentication authentication);
 
 
     @ApiOperation(value = "Get on-boarding result",
@@ -407,7 +408,7 @@ public interface SoftwareStatementApi {
 
             @ApiParam(value = "The ASPSP ID", required = true)
             @PathVariable("aspspId") String aspspId,
-            Principal principal);
+            Authentication authentication);
 
     @ApiOperation(value = "On-boarding",
             authorizations = {
@@ -427,7 +428,7 @@ public interface SoftwareStatementApi {
 
             @ApiParam(value = "The ASPSP ID", required = true)
             @PathVariable("aspspId") String aspspId,
-            Principal principal);
+            Authentication authentication);
 
     @ApiOperation(value = "Off-boarding",
             authorizations = {
@@ -446,5 +447,5 @@ public interface SoftwareStatementApi {
 
             @ApiParam(value = "The ASPSP ID", required = true)
             @PathVariable("aspspId") String aspspId,
-            Principal principal);
+            Authentication authentication);
 }

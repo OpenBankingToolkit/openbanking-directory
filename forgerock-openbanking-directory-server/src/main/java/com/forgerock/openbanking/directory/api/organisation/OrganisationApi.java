@@ -18,6 +18,7 @@ import io.swagger.annotations.Authorization;
 import io.swagger.annotations.AuthorizationScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +45,7 @@ public interface OrganisationApi {
     @PreAuthorize("hasAnyAuthority('GROUP_FORGEROCK', 'GROUP_OB')")
     @RequestMapping(value = "/", method = RequestMethod.GET)
     ResponseEntity<List<Organisation>> getAllOrganisation(
-            Principal principal
+            Authentication authentication
     );
 
     @ApiOperation(value = "Read an organisation",
@@ -61,7 +62,7 @@ public interface OrganisationApi {
     ResponseEntity<Organisation> create(
             @ApiParam(value = "The organisation.", required = true)
             @RequestBody Organisation organisation,
-            Principal principal
+            Authentication authentication
     );
 
     @ApiOperation(value = "Read an organisation",
@@ -80,7 +81,7 @@ public interface OrganisationApi {
     ResponseEntity<Organisation> read(
             @ApiParam(value = "The organisation ID", required = true)
             @PathVariable String organisationId,
-            Principal principal
+            Authentication authentication
     );
 
     @ApiOperation(value = "Update the organisation",
@@ -102,7 +103,7 @@ public interface OrganisationApi {
 
             @ApiParam(value = "The organisation", required = true)
             @RequestBody Organisation organisation,
-            Principal principal);
+            Authentication authentication);
 
     @ApiOperation(value = "Read software statements linked to the organisation",
             authorizations = {
@@ -120,7 +121,7 @@ public interface OrganisationApi {
     ResponseEntity<List<SoftwareStatement>> readSoftwareStatements(
             @ApiParam(value = "The organisation ID", required = true)
             @PathVariable String organisationId,
-            Principal principal
+            Authentication authentication
     );
 
     @ApiOperation(value = "Delete software statements linked to the organisation",
@@ -139,6 +140,6 @@ public interface OrganisationApi {
     ResponseEntity<List<SoftwareStatement>> deleteSoftwareStatements(
             @ApiParam(value = "The organisation ID", required = true)
             @PathVariable String organisationId,
-            Principal principal
+            Authentication authentication
     );
 }
