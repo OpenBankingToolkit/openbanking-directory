@@ -13,7 +13,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,14 +42,14 @@ public class MtlsTest {
 
     })
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ResponseEntity<MtlsTestResponse> mtlsTest(Principal principal) {
+    public ResponseEntity<MtlsTestResponse> mtlsTest(Authentication authentication) {
 
         MtlsTestResponse response = new MtlsTestResponse();
-        if (principal == null) {
+        if (authentication == null) {
             return ResponseEntity.ok(response);
         }
-        PasswordLessUserNameAuthentication currentUser = (PasswordLessUserNameAuthentication) principal;
-        response.issuerId = currentUser.getPrincipal().toString();
+        User currentUser = (User) authentication.getPrincipal();
+        response.issuerId = currentUser.getUsername();
         response.authorities = currentUser.getAuthorities();
         return ResponseEntity.ok(response);
     }

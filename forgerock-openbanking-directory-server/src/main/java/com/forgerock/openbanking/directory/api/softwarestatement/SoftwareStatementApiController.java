@@ -719,22 +719,15 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
         if (authentication.getPrincipal() == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not authenticated");
         }
-        User userDetails = (User) authentication.getPrincipal();
-        if (userDetails.getAuthorities().contains(OBRIRole.ROLE_FORGEROCK_INTERNAL_APP)) {
-            LOGGER.trace("ForgeRock internal applications are allowed to access any software statement");
+        if (softwareStatementId.equals(authentication.getName())) {
+            LOGGER.trace("Username must be from transport certificate and matches software statement");
             return;
         }
+        Optional<DirectoryUser> isUser = directoryUserRepository.findById(authentication.getName());
+        DirectoryUser user = isUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorised"));
 
-        Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(userDetails.getUsername());
-        if (isSoftwareStatement.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Software statement not found");
-        }
-
-        List<Organisation> isOrganisation = organisationRepository.findBySoftwareStatementIds(userDetails.getUsername());
-        if (isOrganisation.size() != 1) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Single organisation not found");
-        }
-        Organisation organisation = isOrganisation.get(0);
+        Optional<Organisation> isOrganisation = organisationRepository.findById(user.getOrganisationId());
+        Organisation organisation = isOrganisation.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Organisation not found"));
 
         if (!organisation.getSoftwareStatementIds().contains(softwareStatementId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorised to access this software statement");

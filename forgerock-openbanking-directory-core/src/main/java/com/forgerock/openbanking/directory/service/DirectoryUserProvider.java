@@ -8,16 +8,16 @@
 package com.forgerock.openbanking.directory.service;
 
 import com.forgerock.openbanking.auth.services.UserProvider;
+import com.forgerock.openbanking.directory.model.DirectoryUser;
 import com.forgerock.openbanking.directory.model.Organisation;
-import com.forgerock.openbanking.directory.repository.OrganisationRepository;
 import com.forgerock.openbanking.directory.repository.DirectoryUserRepository;
-import lombok.Getter;
+import com.forgerock.openbanking.directory.repository.OrganisationRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -35,27 +35,23 @@ public class DirectoryUserProvider implements UserProvider {
 
     @Override
     public Object getUser(Authentication authentication) {
-        Optional<com.forgerock.openbanking.directory.model.DirectoryUser> user = directoryUserRepository.findById(authentication.getName());
-        if (user.isEmpty()) {
-            return authentication.getDetails();
-        }
-        Optional<Organisation> organisation = organisationRepository.findById(user.get().getOrganisationId());
+        User userDetails = (User) authentication.getPrincipal();
+        Optional<DirectoryUser> isUser = directoryUserRepository.findById(((User) authentication.getPrincipal()).getUsername());
+        DirectoryUser user = isUser.orElseGet(() -> {
+            DirectoryUser directoryUser = new DirectoryUser();
+            directoryUser.setId(userDetails.getUsername());
+            directoryUser.setAuthorities(userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+            Organisation organisation = new Organisation();
+            organisation.setName(userDetails.getUsername());
+            organisation = organisationRepository.save(organisation);
+            directoryUser.setOrganisationId(organisation.getId());
+            return directoryUserRepository.save(directoryUser);
+        });
+        Optional<Organisation> organisation = organisationRepository.findById(user.getOrganisationId());
         if (organisation.isEmpty()) {
             return authentication.getDetails();
         }
-        return new DirectoryUser(authentication.getName(), authentication.getAuthorities().stream().map(GrantedAuthority::toString).collect(Collectors.toList()), organisation.get().getId());
-    }
-
-    @Getter
-    static class DirectoryUser extends com.forgerock.openbanking.auth.model.User {
-
-        private String organisationId;
-
-        DirectoryUser(String id, Collection<String> authorities, String organisationId) {
-            super(id, authorities);
-            this.organisationId = organisationId;
-        }
-
+        return new DirectoryUser(authentication.getName(), organisation.get().getId(),  authentication.getAuthorities().stream().map(GrantedAuthority::toString).collect(Collectors.toList()));
     }
 
 }
