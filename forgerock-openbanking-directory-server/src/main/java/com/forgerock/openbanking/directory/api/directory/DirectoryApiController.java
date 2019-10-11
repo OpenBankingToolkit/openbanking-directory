@@ -69,4 +69,18 @@ public class DirectoryApiController implements DirectoryApi {
     public FileSystemResource getCAPem() throws IOException {
         return new FileSystemResource(obMitIssuingCertificatePem.getFile());
     }
+
+    @Override
+    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    public ResponseEntity authenticate(@RequestBody String jwk) {
+        try {
+            return ResponseEntity.ok(directoryUtilsService.authenticate(jwk));
+        } catch (ParseException e) {
+            LOGGER.warn("Can't parse JWK", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't parse JWK");
+        } catch (CertificateException e) {
+            LOGGER.warn("Can't parse JWK certificates chain", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't parse JWK X509 certificates chain");
+        }
+    }
 }

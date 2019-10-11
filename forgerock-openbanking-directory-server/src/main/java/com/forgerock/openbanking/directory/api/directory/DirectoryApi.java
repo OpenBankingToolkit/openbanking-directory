@@ -75,5 +75,17 @@ public interface DirectoryApi {
 
     @RequestMapping(value = "/keys/ca/publicCert", method = RequestMethod.GET,  produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     FileSystemResource getCAPem() throws IOException;
-    
+
+
+    @ApiOperation(value = "Identify an application based on the JWK")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "The identity behind the JWK", response = ApplicationIdentity.class),
+            @ApiResponse(code = 400, message = "JWK couldn't be parsed"),
+
+    })
+    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    ResponseEntity<ApplicationIdentity> authenticate(
+            @ApiParam(value = "The JWK serialised as a string.", required = true)
+            @RequestBody String jwk
+    );
 }
