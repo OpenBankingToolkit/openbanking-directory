@@ -37,7 +37,7 @@
         <javax.version>1.3.2</javax.version>
         <jwkms.version>1.1.13</jwkms.version>
         <spring-security-multi-auth-starter.version>0.0.9</spring-security-multi-auth-starter.version>
-        <forgerock-openbanking-auth.version>1.0.28</forgerock-openbanking-auth.version>
+        <forgerock-openbanking-auth.version>1.0.29</forgerock-openbanking-auth.version>
     </properties>
 
     <dependencyManagement>
