@@ -7,7 +7,6 @@
  */
 package com.forgerock.openbanking.directory.api.matls;
 
-import com.forgerock.openbanking.authentication.model.authentication.PasswordLessUserNameAuthentication;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -20,8 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.security.Principal;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Api(
         tags = "MATLS",
@@ -33,13 +32,12 @@ public class MtlsTest {
 
     public static class MtlsTestResponse {
         public String issuerId;
-        public Collection<? extends GrantedAuthority> authorities;
+        public Collection<String> authorities;
     }
 
     @ApiOperation(value = "Test your MATLS setup")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Your identity", response = MtlsTestResponse.class),
-
     })
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ResponseEntity<MtlsTestResponse> mtlsTest(Authentication authentication) {
@@ -50,7 +48,10 @@ public class MtlsTest {
         }
         User currentUser = (User) authentication.getPrincipal();
         response.issuerId = currentUser.getUsername();
-        response.authorities = currentUser.getAuthorities();
+        response.authorities = currentUser.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(response);
     }
 }
