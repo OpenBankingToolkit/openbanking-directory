@@ -1,0 +1,162 @@
+am:
+  cookie:
+    name: iPlanetDirectoryPro
+  endpoint:
+    login: "${am.root}/login"
+    logout: "${am.root}/logout"
+    registration: "${am.root}/json/realms/root/realms/openbanking/selfservice/userRegistration?_action=submitRequirements"
+    userprofile: "${am.root}/json/users?_action=idFromSession"
+    users: "${am.root}/json/realms/root/realms/openbanking/users/"
+  hostname: "as.aspsp.${dns.hosts.root}"
+  internal:
+    credential:
+      amadmin: sy95jyiquqvjbbquq845gncysh13eax6
+    endpoint:
+      authentication: "${am.internal.root}/json/authenticate"
+      oidc-client: "${am.internal.root}/json/realms/root/realms/openbanking/realm-config/agents/OAuth2Client"
+      accesstoken: ${am.internal.root}/oauth2/realms/root/realms/openbanking/access_token
+    root: "https://openam:443"
+    oidc:
+      endpoint:
+        accesstoken: ${am.internal.root}/oauth2/realms/root/realms/openbanking/access_token
+  matls-hostname: "matls.as.aspsp.${dns.hosts.root}"
+  oidc:
+    audiences: "https://${am.matls-hostname}/oauth2, ${am.root}/oauth2, https://${am.matls-hostname}/oauth2/access_token\""
+    endpoint:
+      registration: "${am.internal.root}/oauth2/realms/root/realms/openbanking/register"
+      accesstoken: ${am.internal.root}/oauth2/realms/root/realms/openbanking/access_token
+    issuerid: "${am.root}/oauth2"
+    jwksuri: "${am.internal.root}/oauth2/realms/root/realms/openbanking/connect/jwk_uri"
+  realm:
+    auth:
+      hostname: "am.${dns.hosts.root}"
+      oidc:
+        authorize: "https://${am.realm.auth.hostname}/oauth2/realms/root/realms/auth/authorize"
+        issuerid: "https://${am.realm.auth.hostname}/oauth2/realms/root/realms/auth"
+        jwk_uri: "https://${am.realm.auth.hostname}/oauth2/realms/root/realms/auth/connect/jwk_uri"
+  root: "https://${am.hostname}"
+  trusted-header-certificate: ebJ8Qo7p9MpAIVenixCsNiDySmWEKb
+  userprofile:
+    id: id
+
+directory:
+  ca:
+    pem: "classpath:directory-ca.crt"
+  endpoints:
+    authenticate: "${directory.endpoints.root}api/directory/authenticate"
+    external:
+      root: "https://service.directory.${dns.hosts.root}:${directory.port}/"
+    root: "https://directory-services:${directory.internal-port}/"
+  internal-port: 8443
+  port: 443
+  ui:
+    root: "https://directory.${dns.hosts.root}:${directory.port}/"
+    tos: "${directory.ui.root}tos/"
+
+dns:
+  hosts:
+    root: dev-ob.forgerock.financial
+forgerockdirectory:
+  certificate:
+    c: UK
+    l: Bristol
+    o: ForgeRock
+    st: Avon
+  id: ForgeRock
+  jwks_uri: "https://service.directory.${dns.hosts.root}:${forgerockdirectory.port}/api/directory/keys/jwk_uri"
+  port: 443
+
+jwkms:
+  port: ${scgw.port}
+  internal-port: 8097
+  root: "https://jwkms:${jwkms.internal-port}/"
+
+metrics:
+  endpoints:
+    endpoint-usage:
+      add-entries: "${metrics.endpoints.root}/api/kpi/endpoint-usage/add-entries"
+    jwts-generation:
+      add-entries: "${metrics.endpoints.root}/api/kpi/jwts/jwts-generation/add-entries"
+    jwts-validation:
+      add-entries: "${metrics.endpoints.root}/api/kpi/jwts/jwts-validation/add-entries"
+    root: "https://metrics-services:${metrics.port}"
+  port: 8444
+
+ob:
+  auth:
+    session:
+      token-lifetime: 7 #days
+      issuer-id: ${spring.application.name}
+      cookie:
+        domains: ${dns.hosts.root}
+    oidc:
+      idp:
+        issuerid: "https://am.${dns.hosts.root}/oauth2/realms/root/realms/auth"
+        jwk-uri: ${am.internal.root}/oauth2/realms/root/realms/auth/connect/jwk_uri
+        authorize: ${am.internal.root}/oauth2/realms/root/realms/auth/authorize
+      client:
+        client-id: directory
+        redirect-uri: "https://${dns.hosts.root}:4206/redirectOpenId"
+
+openbankingdirectory:
+  certificate:
+    c: GB
+    l: ~
+    o: OpenBanking
+    st: ~
+  certificates:
+    ob:
+      issuing: "classpath:obCertificates/OpenBankingIssuingCA.cer"
+      root: "classpath:obCertificates/OpenBankingRootCA.cer"
+  id: OpenBanking
+  issuerid: "OpenBanking Ltd"
+  jwks_uri: "https://keystore.openbankingtest.org.uk/keystore/openbanking.jwks"
+  mit:
+    certificates:
+      ob:
+        issuing: "classpath:obCertificates/obtestissuingca.cer"
+        root: "classpath:obCertificates/obtestrootca.cer"
+    enabled: true
+    id: OpenBankingMIT
+    issuerid: "OpenBanking Ltd"
+    jwks_uri: "https://keystore.mit.openbanking.qa/keystore/openbanking.jwks"
+    ocsp: "http://obtest.trustis.com/ocspI"
+  ocsp: "http://ob.trustis.com/ocsp"
+
+scgw:
+  port: 443
+
+server:
+  hostname: "directory.${dns.hosts.root}"
+  port: 8076
+  ssl:
+    client-auth: WANT
+    client-certs-key-alias: "${server.hostname}"
+    enabled: true
+    jwk-key-store: "classpath:keystore/jwksstore.pfx"
+    jwk-key-store-password: changeit
+    key-password: "${server.ssl.key-store-password}"
+    key-store: "classpath:keystore/keystore.jks"
+    key-store-password: changeit
+    self-signed:
+      ca-alias: obri-internal-ca
+    trust-store: "classpath:keystore/truststore.jks"
+    trust-store-password: changeit
+
+spring:
+  application:
+    name: directory
+
+swagger:
+  contact:
+    email: openbanking-support@forgerock.com
+    name: "ForgeRock AS"
+    url: "https://${dns.hosts.root}"
+  description: "Directory APIs Specification"
+  license: open-licence
+  license-url: "https://www.openbanking.org.uk/open-licence"
+  terms-of-service-url: "https://backstage.forgerock.com/knowledge/openbanking/article/a45894685"
+  title: "Directory APIs Specification"
+  version: v3.1.1
+
+trace: true

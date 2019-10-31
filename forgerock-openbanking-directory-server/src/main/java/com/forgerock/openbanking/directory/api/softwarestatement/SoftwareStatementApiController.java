@@ -136,14 +136,16 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
     public ResponseEntity create(
             @RequestBody SoftwareStatement softwareStatement,
             Authentication authentication) {
-        //Create software statement
-        softwareStatement = softwareStatementRepository.save(softwareStatement);
 
-        //Add it to the organisation
+        // Check user exists
         Optional<DirectoryUser> isUser = directoryUserRepository.findById(authentication.getName());
         if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
+        //Create software statement
+        softwareStatement = softwareStatementRepository.save(softwareStatement);
+
+        //Add it to the organisation
         DirectoryUser directoryUser = isUser.get();
         Optional<Organisation> isOrganisation = organisationRepository.findById(directoryUser.getOrganisationId());
         if (isOrganisation.isEmpty()) {
@@ -365,6 +367,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable String softwareStatementId,
             @PathVariable String kid,
             Authentication authentication) {
+        isAllowed(authentication, softwareStatementId);
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
         if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
@@ -384,6 +387,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable String softwareStatementId,
             @PathVariable String kid,
             Authentication authentication) {
+        isAllowed(authentication, softwareStatementId);
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
         if (isSoftwareStatement.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Software statement not found");
@@ -403,6 +407,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable String softwareStatementId,
             @PathVariable String kid,
             Authentication authentication) {
+        isAllowed(authentication, softwareStatementId);
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
         if (isSoftwareStatement.isEmpty()) {
             return "Software statement not found";
@@ -419,6 +424,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable String softwareStatementId,
             @PathVariable String kid,
             Authentication authentication) {
+        isAllowed(authentication, softwareStatementId);
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
         if (isSoftwareStatement.isEmpty()) {
             return "Software statement not found";
@@ -433,7 +439,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
     public ResponseEntity<String> generateSSA(
             @PathVariable String softwareStatementId,
             Authentication authentication) {
-
+        isAllowed(authentication, softwareStatementId);
         User userDetails = (User) authentication.getPrincipal();
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
                 && userDetails.getAuthorities().contains(OBRIRole.ROLE_SOFTWARE_STATEMENT)) {
