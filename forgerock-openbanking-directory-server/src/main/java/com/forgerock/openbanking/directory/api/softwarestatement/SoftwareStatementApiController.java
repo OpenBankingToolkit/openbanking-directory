@@ -439,12 +439,11 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
     public ResponseEntity<String> generateSSA(
             @PathVariable String softwareStatementId,
             Authentication authentication) {
-        isAllowed(authentication, softwareStatementId);
         User userDetails = (User) authentication.getPrincipal();
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
                 && userDetails.getAuthorities().contains(OBRIRole.ROLE_SOFTWARE_STATEMENT)) {
             softwareStatementId = authentication.getName();
-        }
+        } else isAllowed(authentication, softwareStatementId);
         LOGGER.debug("Generate SSA for Software statement '{}'", softwareStatementId);
 
         Optional<SoftwareStatement> isSoftwareStatement = softwareStatementRepository.findById(softwareStatementId);
