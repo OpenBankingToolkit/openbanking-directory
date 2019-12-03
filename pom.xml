@@ -32,7 +32,7 @@
     </modules>
 
     <properties>
-        <ob-build.version>1.0.32</ob-build.version>
+        <ob-build.version>1.0.38</ob-build.version>
         <ob-analytics.version>1.1.9</ob-analytics.version>
         <ob-jwkms.version>1.1.16</ob-jwkms.version>
         <ob-auth.version>1.0.32</ob-auth.version>
