@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -93,11 +94,11 @@ public class DirectoryUserApiController {
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity authenticate(
             @RequestParam(value = "username") String username,
-            @RequestParam(value = "password") String password
+            @RequestParam(value = "password") String password,
+            Authentication authentication
     ) throws OBErrorException {
         try {
-            Authentication authentication = new JwtAuthenticationToken(UserContext.create(username, Collections.emptyList(), UserContext.UserType.OIDC_CLIENT), Collections.emptyList());
-            return ResponseEntity.ok(sessionService.authenticate(username, password, authentication, SessionCounterType.DIRECTORY, amGateway, amAccessTokenEndpoint));
+            return ResponseEntity.ok(sessionService.authenticate(username, password, authentication, SessionCounterType.DIRECTORY, amGateway, amAccessTokenEndpoint, new X509Certificate[0], (User) authentication.getPrincipal()));
         } catch (OIDCException e) {
             log.error("OIDC exception", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
