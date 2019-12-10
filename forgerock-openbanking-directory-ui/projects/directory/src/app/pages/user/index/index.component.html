@@ -1,0 +1,24 @@
+<div fxLayout="column" fxLayout.gt-sm="row">
+  <div fxFlex.gt-sm="30" class="first-column">
+    <mat-card class="menu">
+      <mat-card-title> {{ username$ | async }}</mat-card-title>
+      <mat-card-content>
+        <mat-nav-list>
+          <button mat-menu-item role="menuitem" routerLink="messages" [routerLinkActive]="['active', 'mat-accent']">
+            <span>{{ 'MESSAGES' | translate }}</span>
+          </button>
+          <button mat-menu-item role="menuitem" routerLink="support" [routerLinkActive]="['active', 'mat-accent']">
+            <span>{{ 'SUPPORT' | translate }}</span>
+          </button>
+        </mat-nav-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxFlex fxFlex.gt-sm="70">
+    <mat-card>
+      <mat-card-content>
+        <router-outlet></router-outlet>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

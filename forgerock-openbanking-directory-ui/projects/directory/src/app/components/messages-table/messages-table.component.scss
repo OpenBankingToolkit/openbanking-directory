@@ -1,0 +1,18 @@
+:host {
+  table {
+    width: 100%;
+    margin-bottom: 20px;
+    tr.example-detail-row {
+      height: 0;
+    }
+
+    .example-element-detail {
+      overflow: hidden;
+      display: flex;
+    }
+
+    td[class*='cdk-column-action'] {
+      width: 40px;
+    }
+  }
+}

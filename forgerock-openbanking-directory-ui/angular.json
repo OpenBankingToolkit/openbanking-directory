@@ -1,0 +1,86 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "directory": {
+      "root": "projects/directory/",
+      "sourceRoot": "projects/directory/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": { "@schematics/angular:component": { "styleext": "scss" } },
+      "architect": {
+        "build": {
+          "builder": "ngx-build-plus:browser",
+          "options": {
+            "preserveSymlinks": true,
+            "outputPath": "dist/directory",
+            "index": "projects/directory/src/index.html",
+            "main": "projects/directory/src/main.ts",
+            "polyfills": "projects/directory/src/polyfills.ts",
+            "tsConfig": "projects/directory/tsconfig.app.json",
+            "assets": ["projects/directory/src/favicon.ico", "projects/directory/src/assets"],
+            "styles": ["node_modules/cookieconsent/build/cookieconsent.min.css", "projects/directory/src/styles.scss"],
+            "scripts": ["node_modules/cookieconsent/build/cookieconsent.min.js"],
+            "stylePreprocessorOptions": { "includePaths": ["utils/scss", "projects/directory/src/scss"] },
+            "es5BrowserSupport": true
+          },
+          "configurations": {
+            "forgerock": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/directory/src/environments/environment.ts",
+                  "with": "projects/directory/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "statsJson": true,
+              "es5BrowserSupport": true
+            },
+            "ui-integ": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/directory/src/environments/environment.ts",
+                  "with": "projects/directory/src/environments/environment.ui-integ.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "directory:build",
+            "host": "directory.dev-ob.forgerock.financial",
+            "ssl": true,
+            "port": 4202,
+            "sslCert": "ssl/all.dev-ob.forgerock.financial.crt",
+            "sslKey": "ssl/k-all.dev-ob.forgerock.financial.key"
+          },
+          "configurations": { "production": { "browserTarget": "directory:build:production" } }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": { "browserTarget": "directory:build" }
+        },
+        "test": { "builder": "@angular-builders/jest:run", "options": { "no-cache": true, "reporters": ["default"] } },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["projects/directory/tsconfig.app.json", "projects/directory/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "projects/@fuse/**", "**/*.spec.ts", "**/*.storybook.ts"]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "forgerock-openbanking-ui"
+}

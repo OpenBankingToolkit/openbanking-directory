@@ -1,0 +1,12 @@
+@import 'mixins/breakpoints';
+
+:host {
+  .first-column {
+    @include media-breakpoint-down('sm') {
+      margin-bottom: 16px;
+    }
+    @include media-breakpoint-up('md') {
+      margin-right: 16px;
+    }
+  }
+}

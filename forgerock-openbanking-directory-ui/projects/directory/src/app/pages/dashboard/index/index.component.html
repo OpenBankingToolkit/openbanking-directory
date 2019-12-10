@@ -1,0 +1,39 @@
+<h1>
+  Dashboard
+</h1>
+
+<div fxLayout="column" fxLayout.gt-sm="row">
+  <div fxFlex.gt-sm="30" class="first-column">
+    <mat-card>
+      <mat-card-title>Your organisation</mat-card-title>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item>
+            <h3 matLine>ID</h3>
+            <p matLine>{{ organisation?.id }}</p>
+          </mat-list-item>
+          <mat-list-item>
+            <h3 matLine>Name</h3>
+            <p matLine>{{ organisation?.name }}</p>
+          </mat-list-item>
+          <mat-list-item>
+            <h3 matLine>Status</h3>
+            <p matLine>{{ organisation?.status }}</p>
+          </mat-list-item>
+          <mat-list-item class="wrap">
+            <h3 matLine>Description</h3>
+            <p matLine>{{ organisation?.description }}</p>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button routerLink="/organisation" type="button" color="accent">
+          See more
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <div fxFlex fxFlex.gt-sm="70">
+    <software-statements-list fxFlex></software-statements-list>
+  </div>
+</div>

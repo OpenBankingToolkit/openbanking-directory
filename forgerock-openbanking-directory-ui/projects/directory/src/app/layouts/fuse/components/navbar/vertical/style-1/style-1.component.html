@@ -1,0 +1,22 @@
+<div class="navbar-top mat-indigo-700-bg">
+  <div class="logo">
+    <forgerock-customer-icon width="32"></forgerock-customer-icon>
+    <span class="logo-text">{{ clientName }}</span>
+  </div>
+
+  <div class="buttons">
+    <button mat-icon-button class="toggle-sidebar-folded" (click)="toggleSidebarFolded()" fxHide.lt-lg>
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <button mat-icon-button class="toggle-sidebar-opened" (click)="toggleSidebarOpened()" fxHide.gt-md>
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+</div>
+
+<div class="navbar-scroll-container" fusePerfectScrollbar [fusePerfectScrollbarOptions]="{ suppressScrollX: true }">
+  <div class="navbar-content">
+    <fuse-navigation layout="vertical"></fuse-navigation>
+  </div>
+</div>

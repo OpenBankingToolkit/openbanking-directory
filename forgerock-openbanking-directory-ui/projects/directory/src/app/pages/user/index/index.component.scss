@@ -1,0 +1,23 @@
+@import 'mixins/breakpoints';
+@import '_variables';
+
+@mixin forgerock-user-index-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  user-app-index {
+    .first-column {
+      @include media-breakpoint-up('md') {
+        margin-right: 16px;
+      }
+    }
+    .menu {
+      button.active {
+        background-color: mat-color($background, selected-button);
+      }
+    }
+  }
+}

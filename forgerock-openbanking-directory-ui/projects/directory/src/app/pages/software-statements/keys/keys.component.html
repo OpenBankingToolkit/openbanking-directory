@@ -1,0 +1,126 @@
+<mat-card>
+  <mat-card-title>Cryptography configuration</mat-card-title>
+  <mat-card-content *ngIf="application">
+    <h3>Global</h3>
+    <mat-list>
+      <mat-list-item>
+        <h3 matLine>Expiration window</h3>
+        <p matLine>{{ application.expirationWindow }} ms</p>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+    </mat-list>
+    <h3>Transport keys</h3>
+    <mat-list>
+      <mat-list-item>
+        <mat-icon matListIcon>link</mat-icon>
+        <h3 matLine>JWK_URI</h3>
+        <p matLine>
+          <a (click)="onNavigateToTransportJwtUri()">{{ transportJwkUri }}</a>
+        </p>
+      </mat-list-item>
+      <mat-list-item>
+        <h3 matLine>Default signing algorithm</h3>
+        <p matLine>{{ application.defaultTransportSigningAlgorithm }}</p>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+    </mat-list>
+    <h3>Signing and encryption keys</h3>
+    <mat-list>
+      <mat-list-item>
+        <mat-icon matListIcon>link</mat-icon>
+        <h3 matLine>JWK URI</h3>
+        <p matLine>
+          <a (click)="onNavigateToSigningAndEncryptionJwtUri()">{{ keysJwkUri }}</a>
+        </p>
+      </mat-list-item>
+      <mat-list-item>
+        <h3 matLine>Default signing algorithm</h3>
+        <p matLine>{{ application.defaultSigningAlgorithm }}</p>
+      </mat-list-item>
+      <mat-list-item>
+        <h3 matLine>Default encryption algorithm</h3>
+        <p matLine>{{ application.defaultEncryptionAlgorithm }}</p>
+      </mat-list-item>
+      <mat-list-item>
+        <h3 matLine>Default encryption method</h3>
+        <p matLine>{{ application.defaultEncryptionMethod }}</p>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
+<mat-card>
+  <mat-card-title>Keys</mat-card-title>
+  <button id="key-more-button" mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+  <mat-menu #menu="matMenu">
+    <span mat-menu-item disabled>Signing & encryption keys</span>
+    <button mat-menu-item (click)="rotateSigningEncryptionKeys()"><span> Rotate keys</span></button>
+    <button mat-menu-item (click)="resetSigningEncryptionKeys()"><span> Reset keys</span></button>
+    <span mat-menu-item disabled>Transport keys</span>
+    <button mat-menu-item (click)="rotateTransportKeys()"><span> Rotate keys</span></button>
+    <button mat-menu-item (click)="resetTransportKeys()"><span> Reset keys</span></button>
+    <span mat-menu-item disabled>Useful Links</span>
+    <button mat-menu-item (click)="onNavigateToKeyManagementDoc()"><span>Keys management doc</span></button>
+    <button mat-menu-item (click)="onNavigateToOBRIDoc()"><span>Support</span></button>
+  </mat-menu>
+  <mat-card-content>
+    <table mat-table [dataSource]="keys">
+      <ng-container matColumnDef="kid">
+        <th mat-header-cell *matHeaderCellDef>Key Id</th>
+        <td mat-cell *matCellDef="let element">
+          <span>{{ element.kid }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="keyUse">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Type</th>
+        <td mat-cell fxHide.xs fxHide.sm *matCellDef="let element">
+          <div [ngSwitch]="element.keyUse">
+            <span *ngSwitchCase="'TRANSPORT'" class="m--font-bold m--font-success"
+              >Transport <span class="eidas-tag">EIDAS | QWAC</span></span
+            >
+            <span *ngSwitchCase="'sig'" class="m--font-bold m--font-info"
+              >Signature <span class="eidas-tag">EIDAS | QSEAL</span></span
+            >
+            <span *ngSwitchCase="'enc'" class="m--font-bold m--font-brand">Encryption</span>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Status</th>
+        <td mat-cell fxHide.xs fxHide.sm *matCellDef="let element">
+          <mat-chip-list [ngSwitch]="getStatus(element)">
+            <mat-chip *ngSwitchCase="'ACTIVE'" color="accent">Active</mat-chip>
+            <mat-chip *ngSwitchCase="'REVOKED'">Revoked</mat-chip>
+            <mat-chip *ngSwitchCase="'EXPIRE_SOON'" color="warn">Expire soon</mat-chip>
+          </mat-chip-list>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="algo">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Algorithm</th>
+        <td mat-cell *matCellDef="let element" fxHide.xs fxHide.sm>{{ element.jwk?.alg }}</td>
+      </ng-container>
+      <ng-container matColumnDef="validity-start">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Validity start</th>
+        <td mat-cell *matCellDef="let element" fxHide.xs fxHide.sm>{{ element.validityWindowStart }}</td>
+      </ng-container>
+      <ng-container matColumnDef="validity-end">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Validity end</th>
+        <td mat-cell *matCellDef="let element" fxHide.xs fxHide.sm>{{ element.validityWindowStop }}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>cloud_download</mat-icon></button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="getPublicJwk(element.kid)"><span>Public JWK</span></button>
+            <button mat-menu-item (click)="getPrivateJwk(element.kid)"><span>Private JWK</span></button>
+            <button mat-menu-item (click)="getPublicCert(element.kid)"><span>Public certificate (.pem)</span></button>
+            <button mat-menu-item (click)="getPrivateCert(element.kid)"><span>Private certificate (.key)</span></button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

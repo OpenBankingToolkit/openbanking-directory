@@ -1,0 +1,36 @@
+{
+  "404": "The page you are looking for does not exist",
+  "HELLO": "Hello",
+  "SIGNOUT": "Sign out",
+  "MESSAGES": "Messages",
+  "SUPPORT": "Support",
+  "GDPR": {
+    "TITLE": "Access denied",
+    "TEXT": "In order to use this application, you must comply with our cookie policy."
+  },
+  "FOOTER": {
+    "ABOUT": "About",
+    "POLICY": "Privacy Policy",
+    "TERMS": "Terms of service"
+  },
+  "NAV": {
+    "HOME": "Home",
+    "ADMIN": "Admin",
+    "DASHBOARD": "Dashboard",
+    "ORGANISATION": "Organisation",
+    "ORGANISATIONS": "Organisations",
+    "ASPSPS": "ASPSPs",
+    "MESSAGES": "Messages",
+    "SOFTWARE_STATEMENTS": "Software Statements",
+    "FORGEROCK_APPLICATIONS": "Forgerock Applications",
+    "BANK": "Bank (ASPSPs)",
+    "DIRECTORY": "Directory"
+  },
+  "SOFTWARE_STATEMENTS": {
+    "TAB_GENERAL": "General",
+    "TAB_KEYS": "Transport/Signing/Encryption keys",
+    "TAB_ASSERTION": "Software Statement Assertion",
+    "TAB_ONBOARDING": "On Boarding",
+    "REMOVE_CONFIRM": "Are you sure you want to remove software statement \"{{id}}\"?"
+  }
+}

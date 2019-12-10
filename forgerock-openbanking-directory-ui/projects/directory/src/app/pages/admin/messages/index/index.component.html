@@ -1,0 +1,75 @@
+<mat-card>
+  <mat-card-title>Messages</mat-card-title>
+  <mat-card-content>
+    <table multiTemplateDataRows mat-table [dataSource]="messages?.content">
+      <ng-container matColumnDef="created">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.created | forgerockDateFormat: 'YYYY/MM/DD' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="author">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Author</th>
+        <td mat-cell fxHide.xs fxHide.sm *matCellDef="let element">{{ element.author }}</td>
+      </ng-container>
+      <ng-container matColumnDef="expiredDate">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Expiration</th>
+        <td mat-cell fxHide.xs fxHide.sm *matCellDef="let element">
+          {{ element.expiredDate | forgerockDateFormat: 'YYYY/MM/DD' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="audiences">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Audiences</th>
+        <td mat-cell fxHide.xs fxHide.sm *matCellDef="let element">{{ element.audiences }}</td>
+      </ng-container>
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let element">{{ element.title }}</td>
+      </ng-container>
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+          <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+            <p>{{ element.content }}</p>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="action-read">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button class="see-more-button">
+            <mat-icon *ngIf="expandedElement === element" aria-label="expand">arrow_drop_up</mat-icon>
+            <mat-icon *ngIf="expandedElement !== element" aria-label="expand">arrow_drop_down</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="action-edit">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button [routerLink]="'/admin/messages/edit-message/' + element.id" type="button" mat-icon-button>
+            <mat-icon aria-label="Delete Software Statement">edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="action-delete">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="warn" (click)="deleteMessage($event, element.id)">
+            <mat-icon aria-label="Delete Software Statement">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let element; columns: displayedColumns"
+        class="example-element-row"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="expandedElement = expandedElement === element ? null : element"
+      ></tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button type="button" routerLink="/admin/messages/new-message" color="accent">
+      Create a new message
+    </button>
+  </mat-card-actions>
+</mat-card>

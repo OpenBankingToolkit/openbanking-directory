@@ -1,0 +1,79 @@
+<h1>Banks (ASPSPs)</h1>
+<mat-card>
+  <mat-card-content>
+    <table mat-table [dataSource]="aspsps">
+      <ng-container matColumnDef="logo_uri">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element"><img [src]="element.logo_uri" alt="ASPSP logo" height="42" /></td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
+      <ng-container matColumnDef="financial_id">
+        <th mat-header-cell *matHeaderCellDef>Financial ID</th>
+        <td mat-cell *matCellDef="let element">{{ element.financial_id }}</td>
+      </ng-container>
+      <ng-container matColumnDef="as_discovery_endpoint">
+        <th mat-header-cell *matHeaderCellDef>OIDC discovery endpoint</th>
+        <td mat-cell *matCellDef="let element">
+          <a href="{{ element.rs_discovery_endpoint }}" target="_blank">OIDC Discovery</a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="rs_discovery_endpoint">
+        <th mat-header-cell *matHeaderCellDef>ASPSP-RS discovery endpoint</th>
+        <td mat-cell *matCellDef="let element">
+          <a href="{{ element.rs_discovery_endpoint }}" target="_blank">RS Discovery</a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="test_mtls_endpoint">
+        <th mat-header-cell *matHeaderCellDef>Test MTLS</th>
+        <td mat-cell *matCellDef="let element">
+          <button
+            *ngIf="element.test_mtls_endpoint"
+            (click)="testMtls(element)"
+            type="button"
+            mat-raised-button
+            color="accent"
+          >
+            Run
+          </button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="onboard">
+        <th mat-header-cell *matHeaderCellDef>Onboard</th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="element.isAlreadyOnboard; then isOnboard; else isNotOnboard"></div>
+          <ng-template #isNotOnboard>
+            <button (click)="onboard(element)" type="button" mat-raised-button color="accent">OnBoard</button>
+            <button (click)="isAlreadyOnboard(element)" type="button" mat-raised-button color="accent">
+              isAlreadyOnboard
+            </button>
+          </ng-template>
+          <ng-template #isOnboard>
+            <button (click)="readOnboarding(element)" type="button" mat-raised-button color="accent">Read</button>
+            <button (click)="updateOnboarding(element)" type="button" mat-raised-button color="accent">Update</button>
+            <button (click)="offboarding(element)" type="button" mat-raised-button color="accent">Off board</button>
+          </ng-template>
+        </td>
+      </ng-container>
+      <!-- <ng-container matColumnDef="applicationId">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                fxHide.xs
+                fxHide.sm
+              > applicationId </th>
+              <td
+                mat-cell
+                fxHide.xs
+                fxHide.sm
+                *matCellDef="let element"
+              > {{element.applicationId}} </td>
+            </ng-container> -->
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

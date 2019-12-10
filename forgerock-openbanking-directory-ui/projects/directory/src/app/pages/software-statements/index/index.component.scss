@@ -1,0 +1,15 @@
+:host {
+  table {
+    width: 100%;
+    margin-bottom: 20px;
+
+    .see-more-button {
+      margin-right: 20px;
+    }
+    .cdk-column-id {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
