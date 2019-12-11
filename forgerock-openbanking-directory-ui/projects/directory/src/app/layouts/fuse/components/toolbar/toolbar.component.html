@@ -1,0 +1,48 @@
+<mat-toolbar class="p-0 mat-elevation-z1 app-bar">
+  <div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center">
+    <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
+      <button
+        mat-icon-button
+        class="navbar-toggle-button"
+        *ngIf="!hiddenNavbar && !rightNavbar"
+        (click)="toggleSidebarOpen('navbar')"
+        fxHide.gt-md
+      >
+        <mat-icon class="secondary-text">menu</mat-icon>
+      </button>
+
+      <div class="toolbar-separator" *ngIf="!hiddenNavbar && !rightNavbar" fxHide.gt-md></div>
+
+      <div fxLayout="row" fxLayoutAlign="start center" *ngIf="horizontalNavbar">
+        <div class="logo ml-16">
+          <img class="logo-icon" src="assets/images/logos/fuse.svg" />
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="connected$ | async" class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <!-- <img class="avatar mr-0 mr-sm-16" src="assets/images/avatars/Velazquez.jpg"> -->
+          <span class="username mr-12" fxHide fxShow.gt-sm>{{ username$ | async }}</span>
+          <mat-icon class="s-16" fxHide.xs>keyboard_arrow_down</mat-icon>
+        </div>
+      </button>
+
+      <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
+        <button mat-menu-item routerLink="/user/messages">
+          <mat-icon>message</mat-icon>
+          <span>{{ 'MESSAGES' | translate }}</span>
+        </button>
+        <button mat-menu-item routerLink="/user/support">
+          <mat-icon>contact_support</mat-icon>
+          <span>{{ 'SUPPORT' | translate }}</span>
+        </button>
+        <button mat-menu-item (click)="logout($event)">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>{{ 'SIGNOUT' | translate }}</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>

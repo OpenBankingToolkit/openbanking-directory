@@ -1,0 +1,27 @@
+@import 'mixins/breakpoints';
+
+content {
+  position: relative;
+  display: flex;
+  z-index: 1;
+  flex: 1 0 auto;
+
+  > *:not(router-outlet) {
+    flex: 1 0 auto;
+    width: 100%;
+    min-width: 100%;
+  }
+
+  @include media-breakpoint-up('md') {
+    padding: 30px;
+  }
+  @include media-breakpoint-down('md') {
+    padding: 20px;
+  }
+  @include media-breakpoint-down('sm') {
+    padding: 10px;
+  }
+  @include media-breakpoint-down('xs') {
+    padding: 10px;
+  }
+}

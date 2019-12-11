@@ -1,0 +1,50 @@
+<button
+  mat-raised-button
+  color="accent"
+  id="generate-button"
+  type="button"
+  (click)="generateSSA()"
+  class="m-widget__detalis  btn m-btn--pill  btn-brand"
+>
+  Generate a new software statement assertions
+</button>
+<div *ngIf="ssa" fxLayout="column" fxLayout.gt-sm="row">
+  <div fxFlex.gt-sm="50" class="first-column">
+    <mat-card>
+      <button id="download-button" mat-icon-button (click)="downloadSSA()">
+        <mat-icon>cloud_download</mat-icon>
+      </button>
+      <mat-card-title>SSA <small>Software Statement Assertion</small></mat-card-title>
+      <mat-card-content>
+        <p *ngIf="ssa" class="ssa">
+          <span class="jwtHeader">{{ ssaHeader }}</span
+          >.<span class="jwtClaims">{{ ssaClaims }}</span
+          >.<span class="jwtSignature">{{ ssaSignature }}</span>
+        </p>
+
+        <p></p
+      ></mat-card-content>
+    </mat-card>
+  </div>
+  <div fxFlex fxFlex.gt-sm="50">
+    <mat-card>
+      <mat-card-title>Decoded SSA</mat-card-title>
+      <mat-card-content>
+        <div *ngIf="ssa" class="m-portlet__body">
+          <div class="jwtHeaderDecoded">
+            <div class="jwtHeaderDecoded__head-title">
+              <h4>JWT Header</h4>
+            </div>
+            <div class="jwtHeaderDecoded__body">{{ ssaHeaderDecodedJson | json }}</div>
+          </div>
+          <div class="jwtClaimsDecoded">
+            <div class="jwtClaimsDecoded__head-title">
+              <h4>JWT Claims</h4>
+            </div>
+            <div class="jwtClaimsDecoded__body">{{ ssaClaimsDecodedJson | json }}</div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

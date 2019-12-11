@@ -1,0 +1,29 @@
+@import 'mixins/breakpoints';
+@import '_variables';
+
+@mixin forgerock-navbar-horizontal-style-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  navbar {
+    &.horizontal-style-1 {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      width: 100%;
+      height: 56px;
+      max-height: 56px;
+      min-height: 56px;
+    }
+  }
+
+  navbar-horizontal-style-1 {
+    display: block;
+    background-color: mat-color($primary, 800) !important;
+    color: white;
+  }
+  fuse-nav-horizontal-collapsable .children {
+    background-color: mat-color($primary, 800) !important;
+  }
+}

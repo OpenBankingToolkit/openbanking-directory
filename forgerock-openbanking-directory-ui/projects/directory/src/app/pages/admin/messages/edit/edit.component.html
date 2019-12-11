@@ -1,0 +1,46 @@
+<mat-card>
+  <mat-card-title>Message {{ message?.title }}</mat-card-title>
+  <mat-card-content *ngIf="message">
+    <form (ngSubmit)="onSubmit()" #messageForm="ngForm" class="m-form m-form--label-align-right">
+      <mat-list>
+        <mat-list-item>
+          <h3>ID: {{ message?.id }}</h3>
+        </mat-list-item>
+        <mat-list-item>
+          <h3>Date: {{ message?.created }}</h3>
+        </mat-list-item>
+        <mat-list-item>
+          <h3>Author: {{ message?.author }}</h3>
+        </mat-list-item>
+        <mat-list-item>
+          <h3 matLine>Audiences: {{ message?.audiences }}</h3>
+        </mat-list-item>
+      </mat-list>
+
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Expiration"
+          [(ngModel)]="message.expiredDate"
+          type="name"
+          id="expiredDate"
+          name="expiredDate"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Title" [(ngModel)]="message.title" type="name" id="title" name="title" />
+      </mat-form-field>
+      <mat-form-field>
+        <textarea
+          matInput
+          placeholder="Content"
+          [(ngModel)]="message.content"
+          name="content"
+          id="content"
+          rows="15"
+        ></textarea>
+      </mat-form-field>
+      <button mat-raised-button type="submit" color="accent">Save</button>
+    </form>
+  </mat-card-content>
+</mat-card>

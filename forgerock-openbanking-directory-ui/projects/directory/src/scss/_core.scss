@@ -1,0 +1,13 @@
+// ngx-datatable
+@import '~@swimlane/ngx-datatable/release/themes/material';
+// Perfect scrollbar
+@import '~perfect-scrollbar/css/perfect-scrollbar';
+// Breakpoint mixins
+@import 'mixins/breakpoints';
+
+@import '_create-theme';
+// Include non-theme styles for core.
+@include mat-core();
+
+// Fuse
+@import '_fuse';

@@ -1,0 +1,38 @@
+<h1>ForgeRock Directory</h1>
+
+<div fxLayout="column" fxLayout.gt-sm="row">
+  <div fxFlex fxFlex.gt-sm="50" class="first-column">
+    <mat-card>
+      <mat-card-title>Public JWKs</mat-card-title>
+      <mat-card-content>
+        <span class="m-widget13__desc m--align-right">
+          jwk_uri
+        </span>
+        <span class="m-widget13__text m-widget13__text-bolder">
+          <a (click)="onNavigateToJwtUri()">{{ jwkUri }}</a>
+        </span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxFlex fxFlex.gt-sm="50">
+    <mat-card>
+      <mat-card-title>Certificates</mat-card-title>
+      <mat-card-content>
+        <span class="m-widget13__desc m--align-right">
+          Public CA certificate
+        </span>
+        <span class="m-widget13__text m-widget13__text-bolder">
+          <button
+            mat-raised-button
+            color="accent"
+            class="btn btn-primary"
+            (click)="downloadPublicIssuerCert()"
+            type="button"
+          >
+            Download
+          </button>
+        </span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
