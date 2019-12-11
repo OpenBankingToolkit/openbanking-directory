@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.forgerock.openbanking</groupId>
         <artifactId>forgerock-openbanking-starter-parent</artifactId>
-        <version>1.0.47</version>
+        <version>1.0.52</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
@@ -45,10 +45,9 @@
     </modules>
 
     <properties>
-        <ob-build.version>1.0.38</ob-build.version>
-        <ob-analytics.version>1.1.9</ob-analytics.version>
-        <ob-jwkms.version>1.1.16</ob-jwkms.version>
-        <ob-auth.version>1.0.37</ob-auth.version>
+        <ob-build.version>1.0.45</ob-build.version>
+        <ob-clients.version>1.0.1</ob-clients.version>
+        <ob-auth.version>1.0.39</ob-auth.version>
     </properties>
 
     <dependencyManagement>
@@ -65,14 +64,14 @@
                 <version>${ob-build.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.forgerock.openbanking.analytics</groupId>
+                <groupId>com.forgerock.openbanking.clients</groupId>
                 <artifactId>forgerock-openbanking-analytics-client</artifactId>
-                <version>${ob-analytics.version}</version>
+                <version>${ob-clients.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.forgerock.openbanking.jwkms</groupId>
+                <groupId>com.forgerock.openbanking.clients</groupId>
                 <artifactId>forgerock-openbanking-jwkms-client</artifactId>
-                <version>${ob-jwkms.version}</version>
+                <version>${ob-clients.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.forgerock.openbanking</groupId>
@@ -84,22 +83,223 @@
 
     <repositories>
         <repository>
-            <id>forgerock-private-releases</id>
-            <name>ForgeRock Private Releases Repository</name>
-            <url>http://maven.forgerock.org/repo/private-releases</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
+            <id>bintray-openbanking-toolkit-OpenBankingToolKit</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/openbanking-toolkit/OpenBankingToolKit</url>
+        </repository>
+        <repository>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com/</url>
         </repository>
     </repositories>
 
     <scm>
         <connection>scm:git:https://github.com/OpenBankingToolkit/openbanking-directory.git</connection>
         <developerConnection>scm:git:https://github.com/OpenBankingToolkit/openbanking-directory.git</developerConnection>
-        <url>https://github.com/ForgeRock/OpenBankingToolkit-directory.git</url>
+        <url>https://github.com/OpenBankingToolkit/OpenBankingToolkit-directory.git</url>
         <tag>HEAD</tag>
     </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-openbankingtoolkit-OpenBankingToolkit</id>
+            <name>OpenBankingToolkit Common</name>
+            <url>https://api.bintray.com/maven/openbanking-toolkit/OpenBankingToolKit/openbanking-directory/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>dockerfile-maven-plugin</artifactId>
+                    <version>1.4.12</version>
+                    <configuration>
+                        <skipPush>true</skipPush>
+                        <username>${env.BINTRAY_USERNAME}</username>
+                        <password>${env.BINTRAY_API_KEY}</password>
+                        <buildArgs>
+                            <SERVICE_FILE>target/SERVICE</SERVICE_FILE>
+                            <VERSION_FILE>target/VERSION</VERSION_FILE>
+                        </buildArgs>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>build</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>deploy</id>
+                            <phase>deploy</phase>
+                            <goals>
+                                <goal>push</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>ru.yaal.maven</groupId>
+                    <artifactId>write-text-files-maven-plugin</artifactId>
+                    <version>1.1</version>
+                    <configuration>
+                        <charset>UTF-8</charset>
+                        <files>
+                            <file>
+                                <path>${project.build.directory}/SERVICE</path>
+                                <lines>
+                                    <line>${project.name}</line>
+                                </lines>
+                            </file>
+                            <file>
+                                <path>${project.build.directory}/VERSION</path>
+                                <lines>
+                                    <line>${project.version}</line>
+                                </lines>
+                            </file>
+                        </files>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>write-text-files</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>write-text-files</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.dkanejs.maven.plugins</groupId>
+                    <artifactId>docker-compose-maven-plugin</artifactId>
+                    <version>${docker-compose-maven-plugin.version}</version>
+                    <configuration>
+                        <composeFile>${project.basedir}/docker-compose.yml</composeFile>
+                        <detachedMode>true</detachedMode>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>start</id>
+                            <phase>pre-integration-test</phase>
+                            <goals>
+                                <goal>up</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>stop</id>
+                            <phase>post-integration-test</phase>
+                            <goals>
+                                <goal>down</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <argLine>${argLine}</argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <argLine>${argLine}</argLine>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.5.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                    <fork>true</fork>
+                    <compilerArgs>
+                        <arg>-XDignore.symbol.file</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.2</version>
+                <executions>
+                    <execution>
+                        <id>prepare-unit-test-coverage</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>prepare-it-coverage</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>merge-reports</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <header>file://${maven.multiModuleProjectDirectory}/legal/LICENSE.txt</header>
+                    <includes>
+                        <include>**/*.java</include>
+                        <include>pom.xml</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>format</goal>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
