@@ -32,6 +32,9 @@ import com.forgerock.openbanking.directory.security.JsonRequestSanitisiationFilt
 import com.forgerock.openbanking.model.OBRIRole;
 import com.forgerock.openbanking.ssl.config.SslConfiguration;
 import com.google.common.collect.Sets;
+import dev.openbanking4.spring.security.multiauth.configurers.MultiAuthenticationCollectorConfigurer;
+import dev.openbanking4.spring.security.multiauth.configurers.collectors.CustomJwtCookieCollector;
+import dev.openbanking4.spring.security.multiauth.configurers.collectors.StaticUserCollector;
 import io.netty.handler.ssl.SslContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
