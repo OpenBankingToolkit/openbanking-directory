@@ -21,9 +21,6 @@
 package com.forgerock.openbanking.directory;
 
 import brave.Tracer;
-import com.forgerock.openbanking.authentication.configurers.MultiAuthenticationCollectorConfigurer;
-import com.forgerock.openbanking.authentication.configurers.collectors.CustomJwtCookieCollector;
-import com.forgerock.openbanking.authentication.configurers.collectors.StaticUserCollector;
 import com.forgerock.openbanking.directory.error.ErrorHandler;
 import com.forgerock.openbanking.directory.model.DirectoryUser;
 import com.forgerock.openbanking.directory.model.Organisation;
