@@ -21,19 +21,19 @@
 package com.forgerock.openbanking.directory;
 
 import brave.Tracer;
-import com.forgerock.openbanking.authentication.configurers.MultiAuthenticationCollectorConfigurer;
-import com.forgerock.openbanking.authentication.configurers.collectors.CustomJwtCookieCollector;
-import com.forgerock.openbanking.authentication.configurers.collectors.StaticUserCollector;
 import com.forgerock.openbanking.directory.error.ErrorHandler;
-import com.forgerock.openbanking.directory.model.Organisation;
 import com.forgerock.openbanking.directory.model.DirectoryUser;
+import com.forgerock.openbanking.directory.model.Organisation;
+import com.forgerock.openbanking.directory.repository.DirectoryUserRepository;
 import com.forgerock.openbanking.directory.repository.ForgeRockApplicationsRepository;
 import com.forgerock.openbanking.directory.repository.OrganisationRepository;
-import com.forgerock.openbanking.directory.repository.DirectoryUserRepository;
 import com.forgerock.openbanking.directory.security.FormValueSanitisationFilter;
 import com.forgerock.openbanking.directory.security.JsonRequestSanitisiationFilter;
 import com.forgerock.openbanking.model.OBRIRole;
 import com.google.common.collect.Sets;
+import dev.openbanking4.spring.security.multiauth.configurers.MultiAuthenticationCollectorConfigurer;
+import dev.openbanking4.spring.security.multiauth.configurers.collectors.CustomJwtCookieCollector;
+import dev.openbanking4.spring.security.multiauth.configurers.collectors.StaticUserCollector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
