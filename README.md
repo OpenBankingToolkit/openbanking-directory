@@ -10,28 +10,26 @@
 ForgeRock OpenBanking directory
 ========================
 
-The directory application offers similar features than the OBIE directory.
+The [Open Banking Implementation Entity (OBIE)](<https://www.openbanking.org.uk/about-us/>) ensure trust in the UK Open Banking ecosystem by providing a vetted enrolment process to banks, building societies and third party providers wishing to operate within the UK Open Banking ecosystem.
 
-The Open Banking Directory is a list of regulated third party providers (AISPs and PISPs) and account providers (ASPSPs)
- that operate in the Open Banking ecosystem.
- It enables account providers, such as banks, building societies and payment companies, to verify the identity of regulated third party providers.
- 
-This directory applications allows your organisation to host their own directory. It is very handy for development environments,
-as your developer would be able to act as TPP (getting keys, SSA, etc) directly, without any onboarding process etc.
-In a production context, you can also use this directory to add another source of trust. This is helpful for banks wishes to
-offer access to partner Fintechs, TPP or not, to dedicated APIs.
-As you host your own directory, you can add more TPP roles. Super handy if you have private APIs and you want to give this role
-to a subset of TPPs.
+Once a financial entity has enrolled with the OBIE it will appear in the [OBIE directory](<https://www.openbanking.org.uk/providers/directory/>) which acts as a 'Trust Hub' for the ecosystem. The directory enables an organisation to download Open Banking signed transport and signing certificates that may be used to either provide or consume Open Banking APIs. 
+
+Using these signed certificates allows account providers such as banks, building societies to;
+
+- Protect APIs with the OBIE signed certificates so that TPPs may know the bank's identity and that the bank is enrolled with the OBIE. 
+- Determine the identity of a TPP attempting to use their APIs and be sure that TPP has enrolled with the OBIE.
+
+The ForgeRock Open Banking Directory allows TPPs to register an Organisation, create a Software Statement and download signed transport and signing certificates without the need to go through the manual enrolment process with the OBIE. This allows already trusted developers, integrators and automated tests suites to quickly and conveniently obtain trusted transport and signing certificates required to make calls to the protected Open APIs. 
+
+This can be extremely convenient for internal deployments such as development/sandbox deployments where the APIs are not connected to real data. In these cases it is not necessary for the system to have the trust guarantees provided by a vetted enrolment process such as the one provided by the OBIE.
 
 ## Demo
 
 The directory is available here: 
 
-https://directory.demo.forgerock.financial/
+https://directory.ob.forgerock.financial/
 
-You can use:
-* login: `demo`
-* password: `changeit`
+You can create a new account using the create account link at the bottom of the Sign in dialog, then login using that account. 
 
 
 
