@@ -18,8 +18,7 @@ EXPOSE 80
 ARG BUILD_VERSION
 ENV BUILD_VERSION ${BUILD_VERSION}
 ENV DOMAIN ""
-ENV TEMPLATE ""
-ENV ENABLE_CUSTOMIZATION "false"
+ENV TEMPLATE "forgerock"
 
 RUN rm -rf /etc/nginx/conf.d
 COPY --from=build-ui /src/dist /usr/share/nginx

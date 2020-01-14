@@ -6,6 +6,5 @@ module.exports = {
   cookieDomain: '.DOMAIN',
   directoryBackend: 'https://service.directory.DOMAIN',
   authEndpoint: 'https://am.DOMAIN',
-  accountRequestsEndpoint: 'https://rs.aspsp.DOMAIN/api/account-requests',
-  enableCustomization: 'ENABLE_CUSTOMIZATION'
+  accountRequestsEndpoint: 'https://rs.aspsp.DOMAIN/api/account-requests'
 };
