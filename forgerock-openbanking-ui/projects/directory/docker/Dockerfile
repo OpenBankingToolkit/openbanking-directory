@@ -21,7 +21,7 @@ ENV BUILD_VERSION ${BUILD_VERSION}
 ENV TEMPLATE "forgerock"
 ENV DOMAIN ""
 ENV DIRECTORY_BACKEND_URL "https://service.directory.DOMAIN"
-ENV AUTH_BACKEND_URL "https://am.DOMAIN"
+ENV AUTHENTICATION_URL "https://am.DOMAIN"
 ENV ACCOUNT_REQUEST_BACKEND_URL "https://rs.aspsp.DOMAIN/api/account-requests"
 
 RUN rm -rf /etc/nginx/conf.d

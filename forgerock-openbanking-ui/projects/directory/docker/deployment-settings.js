@@ -5,6 +5,6 @@ module.exports = {
   },
   cookieDomain: '.DOMAIN',
   directoryBackend: 'DIRECTORY_BACKEND_URL',
-  authEndpoint: 'AUTH_BACKEND_URL',
+  authEndpoint: 'AUTHENTICATION_URL',
   accountRequestsEndpoint: 'ACCOUNT_REQUEST_BACKEND_URL'
 };
