@@ -4,7 +4,7 @@ module.exports = {
     template: 'TEMPLATE'
   },
   cookieDomain: '.DOMAIN',
-  directoryBackend: 'https://service.directory.DOMAIN',
-  authEndpoint: 'https://am.DOMAIN',
-  accountRequestsEndpoint: 'https://rs.aspsp.DOMAIN/api/account-requests'
+  directoryBackend: 'DIRECTORY_BACKEND_URL',
+  authEndpoint: 'AUTH_BACKEND_URL',
+  accountRequestsEndpoint: 'ACCOUNT_REQUEST_BACKEND_URL'
 };
