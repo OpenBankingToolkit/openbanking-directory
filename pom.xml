@@ -46,7 +46,7 @@
 
     <properties>
         <ob-build.version>1.0.60</ob-build.version>
-        <ob-clients.version>1.0.18</ob-clients.version>
+        <ob-clients.version>1.0.19</ob-clients.version>
         <ob-auth.version>1.0.53</ob-auth.version>
     </properties>
 
