@@ -23,7 +23,7 @@ package com.forgerock.openbanking.directory.api.user;
 import com.forgerock.openbanking.am.gateway.AMAuthGateway;
 import com.forgerock.openbanking.analytics.model.entries.SessionCounterType;
 import com.forgerock.openbanking.auth.services.SessionService;
-import com.forgerock.openbanking.directory.model.DirectoryUser;
+import com.forgerock.openbanking.directory.model.User;
 import com.forgerock.openbanking.directory.model.Organisation;
 import com.forgerock.openbanking.directory.repository.DirectoryUserRepository;
 import com.forgerock.openbanking.directory.repository.OrganisationRepository;
@@ -40,7 +40,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,11 +74,11 @@ public class DirectoryUserApiController {
             Authentication authentication
     ) {
         log.debug("Attempt to get user: {}", authentication);
-        User userDetails = (User) authentication.getPrincipal();
-        Optional<DirectoryUser> isUser = directoryUserRepository.findById(userDetails.getUsername());
-        DirectoryUser directoryUser;
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        Optional<User> isUser = directoryUserRepository.findById(userDetails.getUsername());
+        User directoryUser;
         if (isUser.isEmpty()) {
-            directoryUser = new DirectoryUser();
+            directoryUser = new User();
             directoryUser.setId(userDetails.getUsername());
             directoryUser.setAuthorities(userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
             Organisation organisation = new Organisation();
@@ -105,7 +104,7 @@ public class DirectoryUserApiController {
             Authentication authentication
     ) throws OBErrorException {
         try {
-            return ResponseEntity.ok(sessionService.authenticate(username, password, authentication, SessionCounterType.DIRECTORY, amGateway, amAccessTokenEndpoint, new X509Certificate[0], (User) authentication.getPrincipal()));
+            return ResponseEntity.ok(sessionService.authenticate(username, password, authentication, SessionCounterType.DIRECTORY, amGateway, amAccessTokenEndpoint, new X509Certificate[0], (org.springframework.security.core.userdetails.User) authentication.getPrincipal()));
         } catch (OIDCException e) {
             log.error("OIDC exception", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

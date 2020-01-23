@@ -21,14 +21,13 @@
 package com.forgerock.openbanking.directory.service;
 
 import com.forgerock.openbanking.auth.services.UserProvider;
-import com.forgerock.openbanking.directory.model.DirectoryUser;
+import com.forgerock.openbanking.directory.model.User;
 import com.forgerock.openbanking.directory.model.Organisation;
 import com.forgerock.openbanking.directory.repository.DirectoryUserRepository;
 import com.forgerock.openbanking.directory.repository.OrganisationRepository;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -48,10 +47,10 @@ public class DirectoryUserProvider implements UserProvider {
 
     @Override
     public Object getUser(Authentication authentication) {
-        User userDetails = (User) authentication.getPrincipal();
-        Optional<DirectoryUser> isUser = directoryUserRepository.findById(((User) authentication.getPrincipal()).getUsername());
-        DirectoryUser user = isUser.orElseGet(() -> {
-            DirectoryUser directoryUser = new DirectoryUser();
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        Optional<User> isUser = directoryUserRepository.findById(((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername());
+        User user = isUser.orElseGet(() -> {
+            User directoryUser = new User();
             directoryUser.setId(userDetails.getUsername());
             directoryUser.setAuthorities(userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
             Organisation organisation = new Organisation();
@@ -64,7 +63,7 @@ public class DirectoryUserProvider implements UserProvider {
         if (organisation.isEmpty()) {
             return authentication.getDetails();
         }
-        return new DirectoryUser(authentication.getName(), organisation.get().getId(),  authentication.getAuthorities().stream().map(GrantedAuthority::toString).collect(Collectors.toList()));
+        return new User(authentication.getName(), organisation.get().getId(),  authentication.getAuthorities().stream().map(GrantedAuthority::toString).collect(Collectors.toList()));
     }
 
 }

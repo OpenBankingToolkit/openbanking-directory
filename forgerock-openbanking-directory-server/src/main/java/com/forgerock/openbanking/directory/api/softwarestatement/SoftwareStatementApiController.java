@@ -34,7 +34,7 @@ import com.forgerock.openbanking.core.services.ApplicationApiClient;
 import com.forgerock.openbanking.directory.config.Aspsp;
 import com.forgerock.openbanking.directory.model.Organisation;
 import com.forgerock.openbanking.directory.model.SSA;
-import com.forgerock.openbanking.directory.model.DirectoryUser;
+import com.forgerock.openbanking.directory.model.User;
 import com.forgerock.openbanking.directory.repository.AspspRepository;
 import com.forgerock.openbanking.directory.repository.OrganisationRepository;
 import com.forgerock.openbanking.directory.repository.SoftwareStatementRepository;
@@ -67,7 +67,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -151,7 +150,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             Authentication authentication) {
 
         // Check user exists
-        Optional<DirectoryUser> isUser = directoryUserRepository.findById(authentication.getName());
+        Optional<User> isUser = directoryUserRepository.findById(authentication.getName());
         if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
@@ -159,7 +158,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
         softwareStatement = softwareStatementRepository.save(softwareStatement);
 
         //Add it to the organisation
-        DirectoryUser directoryUser = isUser.get();
+        User directoryUser = isUser.get();
         Optional<Organisation> isOrganisation = organisationRepository.findById(directoryUser.getOrganisationId());
         if (isOrganisation.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organisation not found");
@@ -217,7 +216,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
     public ResponseEntity read(
             @PathVariable String softwareStatementId,
             Authentication authentication) {
-        User userDetails = (User) authentication.getPrincipal();
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
         LOGGER.debug("Read Software statement '{}'", softwareStatementId);
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
@@ -452,7 +451,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
     public ResponseEntity<String> generateSSA(
             @PathVariable String softwareStatementId,
             Authentication authentication) {
-        User userDetails = (User) authentication.getPrincipal();
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
                 && userDetails.getAuthorities().contains(OBRIRole.ROLE_SOFTWARE_STATEMENT)) {
             softwareStatementId = authentication.getName();
@@ -534,7 +533,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @PathVariable("aspspId") String aspspId,
             Authentication authentication) {
 
-        User userDetails = (User) authentication.getPrincipal();
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
                 && userDetails.getAuthorities().contains(OBRIRole.ROLE_SOFTWARE_STATEMENT)) {
             softwareStatementId = authentication.getName();
@@ -594,7 +593,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @ApiParam(value = "The ASPSP ID", required = true)
             @PathVariable("aspspId") String aspspId,
             Authentication authentication) {
-        User userDetails = (User) authentication.getPrincipal();
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
                 && userDetails.getAuthorities().contains(OBRIRole.ROLE_SOFTWARE_STATEMENT)) {
             softwareStatementId = authentication.getName();
@@ -676,7 +675,7 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             @ApiParam(value = "The ASPSP ID", required = true)
             @PathVariable("aspspId") String aspspId,
             Authentication authentication) {
-        User userDetails = (User) authentication.getPrincipal();
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
         if (CURRENT_SOFTWARE_STATEMENT_ID.equals(softwareStatementId)
                 && userDetails.getAuthorities().contains(OBRIRole.ROLE_SOFTWARE_STATEMENT)) {
             softwareStatementId = userDetails.getUsername();
@@ -741,8 +740,8 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             LOGGER.trace("Username must be from transport certificate and matches software statement");
             return;
         }
-        Optional<DirectoryUser> isUser = directoryUserRepository.findById(authentication.getName());
-        DirectoryUser user = isUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorised"));
+        Optional<User> isUser = directoryUserRepository.findById(authentication.getName());
+        User user = isUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not authorised"));
 
         Optional<Organisation> isOrganisation = organisationRepository.findById(user.getOrganisationId());
         Organisation organisation = isOrganisation.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Organisation not found"));

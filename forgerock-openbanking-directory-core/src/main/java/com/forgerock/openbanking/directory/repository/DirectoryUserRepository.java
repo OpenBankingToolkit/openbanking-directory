@@ -20,12 +20,12 @@
  */
 package com.forgerock.openbanking.directory.repository;
 
-import com.forgerock.openbanking.directory.model.DirectoryUser;
+import com.forgerock.openbanking.directory.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
 
-public interface DirectoryUserRepository extends MongoRepository<DirectoryUser, String> {
+public interface DirectoryUserRepository extends MongoRepository<User, String> {
 
-    Optional<DirectoryUser> findByOrganisationId(String organisationId);
+    Optional<User> findByOrganisationId(String organisationId);
 }
