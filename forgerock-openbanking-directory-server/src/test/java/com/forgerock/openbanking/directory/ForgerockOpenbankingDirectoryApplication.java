@@ -22,7 +22,7 @@ package com.forgerock.openbanking.directory;
 
 import brave.Tracer;
 import com.forgerock.openbanking.directory.error.ErrorHandler;
-import com.forgerock.openbanking.directory.model.DirectoryUser;
+import com.forgerock.openbanking.directory.model.User;
 import com.forgerock.openbanking.directory.model.Organisation;
 import com.forgerock.openbanking.directory.repository.DirectoryUserRepository;
 import com.forgerock.openbanking.directory.repository.ForgeRockApplicationsRepository;
@@ -106,7 +106,7 @@ public class ForgerockOpenbankingDirectoryApplication {
         @Override
         public void init(WebSecurity web) throws Exception {
             super.init(web);
-            DirectoryUser demoDirectoryUser = DirectoryUser.builder()
+            User demoDirectoryUser = User.builder()
                     .id(userId)
                     .authorities(Sets.newHashSet(
                             OBRIRole.ROLE_SOFTWARE_STATEMENT.toString(),

@@ -33,7 +33,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @Builder
 @Document
-public class DirectoryUser {
+public class User {
     @Id
     private String id;
     private String organisationId;

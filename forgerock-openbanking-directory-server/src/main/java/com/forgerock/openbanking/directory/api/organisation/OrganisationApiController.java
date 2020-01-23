@@ -23,7 +23,7 @@ package com.forgerock.openbanking.directory.api.organisation;
 import com.forgerock.openbanking.analytics.model.entries.DirectoryCounterType;
 import com.forgerock.openbanking.analytics.services.DirectoryCountersKPIService;
 import com.forgerock.openbanking.directory.model.Organisation;
-import com.forgerock.openbanking.directory.model.DirectoryUser;
+import com.forgerock.openbanking.directory.model.User;
 import com.forgerock.openbanking.directory.repository.OrganisationRepository;
 import com.forgerock.openbanking.directory.repository.SoftwareStatementRepository;
 import com.forgerock.openbanking.directory.repository.DirectoryUserRepository;
@@ -33,7 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -81,12 +80,12 @@ public class OrganisationApiController implements OrganisationApi {
             @PathVariable String organisationId,
             Authentication authentication) {
         LOGGER.debug("authentication :" + authentication);
-        User userDetails = (User) authentication.getPrincipal();
-        Optional<DirectoryUser> isUser = directoryUserRepository.findById(userDetails.getUsername());
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        Optional<User> isUser = directoryUserRepository.findById(userDetails.getUsername());
         if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
-        DirectoryUser directoryUser = isUser.get();
+        User directoryUser = isUser.get();
         if (!directoryUser.getOrganisationId().equals(organisationId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
@@ -116,13 +115,13 @@ public class OrganisationApiController implements OrganisationApi {
             @PathVariable String organisationId,
             Authentication authentication
     ) {
-        User userDetails = (User) authentication.getPrincipal();
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
 
-        Optional<DirectoryUser> isUser = directoryUserRepository.findById(userDetails.getUsername());
+        Optional<User> isUser = directoryUserRepository.findById(userDetails.getUsername());
         if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
-        DirectoryUser directoryUser = isUser.get();
+        User directoryUser = isUser.get();
         if (directoryUser.getId().equals(organisationId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
@@ -141,12 +140,12 @@ public class OrganisationApiController implements OrganisationApi {
             @PathVariable String organisationId,
             Authentication authentication
     ) {
-        User userDetails = (User) authentication.getPrincipal();
-        Optional<DirectoryUser> isUser = directoryUserRepository.findById(userDetails.getUsername());
+        org.springframework.security.core.userdetails.User userDetails = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+        Optional<User> isUser = directoryUserRepository.findById(userDetails.getUsername());
         if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
-        DirectoryUser directoryUser = isUser.get();
+        User directoryUser = isUser.get();
         if (directoryUser.getId().equals(organisationId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
