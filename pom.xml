@@ -47,7 +47,7 @@
     <properties>
         <ob-build.version>1.0.62</ob-build.version>
         <ob-clients.version>1.0.22</ob-clients.version>
-        <ob-auth.version>1.0.53</ob-auth.version>
+        <ob-auth.version>1.0.54</ob-auth.version>
     </properties>
 
     <dependencyManagement>
