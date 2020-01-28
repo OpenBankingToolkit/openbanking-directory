@@ -15,12 +15,12 @@ const log = debug('Aspsps:AspspsIndexComponent');
 export class AspspsIndexComponent implements OnInit {
   aspsps: IAspsps[];
   displayedColumns: string[] = [
-    'logo_uri',
+    'logoUri',
     'name',
-    'financial_id',
-    'as_discovery_endpoint',
-    'rs_discovery_endpoint',
-    'transport_keys'
+    'financialId',
+    'asDiscoveryEndpoint',
+    'rsDiscoveryEndpoint',
+    'transportKeys'
   ];
 
   constructor(private _aspspService: AspspService, private _router: Router, private cdr: ChangeDetectorRef) {}
