@@ -45,7 +45,7 @@
     </modules>
 
     <properties>
-        <ob-build.version>1.0.66</ob-build.version>
+        <ob-build.version>1.0.67</ob-build.version>
         <ob-clients.version>1.0.26</ob-clients.version>
         <ob-auth.version>1.0.55</ob-auth.version>
     </properties>
