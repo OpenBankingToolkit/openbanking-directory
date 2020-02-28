@@ -31,7 +31,7 @@
     <parent>
         <groupId>com.forgerock.openbanking.directory</groupId>
         <artifactId>forgerock-openbanking-reference-implementation-directory</artifactId>
-        <version>1.4.55-SNAPSHOT</version>
+        <version>1.4.55</version>
     </parent>
 
     <dependencies>
