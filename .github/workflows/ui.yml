@@ -7,7 +7,6 @@ on:
       - "forgerock-openbanking-ui/**"
 
 env:
-  GITHUB_ACCESS_TOKEN: ${{ secrets.FORGECLOUD_ACCESS_TOKEN }}
   GITHUB_SHA: ${{ github.sha }}
 
 jobs:
@@ -25,7 +24,7 @@ jobs:
           ./node_modules/@angular/cli/bin/ng lint
       - name: Prepare customers
         working-directory: ./forgerock-openbanking-ui
-        run: git clone https://$GITHUB_ACCESS_TOKEN@github.com/ForgeCloud/ob-customers.git customers
+        run: git clone https://${{ secrets.FORGECLOUD_ACCESS_TOKEN }}@github.com/ForgeCloud/ob-customers.git customers
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
@@ -75,7 +74,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: "forgeCloud/ob-deploy"
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ secrets.FORGECLOUD_ACCESS_TOKEN }}
           path: ob-deploy
       - name: Commit ob-deploy version update
         working-directory: ./ob-deploy
@@ -90,14 +89,14 @@ jobs:
         uses: benjefferies/branch-protection-bot@master
         if: always()
         with:
-          access-token: ${{ secrets.ACCESS_TOKEN }}
+          access-token: ${{ secrets.FORGECLOUD_ACCESS_TOKEN }}
           enforce_admins: false
           owner: forgeCloud
           repo: ob-deploy
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.ACCESS_TOKEN }}
+          github_token: ${{ secrets.FORGECLOUD_ACCESS_TOKEN }}
           directory: ./ob-deploy
           repository: "forgeCloud/ob-deploy"
           branch: master
@@ -105,7 +104,7 @@ jobs:
         uses: benjefferies/branch-protection-bot@master
         if: always()
         with:
-          access-token: ${{ secrets.ACCESS_TOKEN }}
+          access-token: ${{ secrets.FORGECLOUD_ACCESS_TOKEN }}
           enforce_admins: true
           owner: forgeCloud
           repo: ob-deploy
