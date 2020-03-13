@@ -11,7 +11,6 @@ import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
 import { navigation, admin } from './navigation/navigation';
 import { Router, NavigationEnd } from '@angular/router';
-import { ForgerockConfigService } from '@forgerock/openbanking-ngx-common/services/forgerock-config';
 import { ForgerockSplashscreenService } from '@forgerock/openbanking-ngx-common/services/forgerock-splashscreen';
 import { ForgerockGDPRService } from '@forgerock/openbanking-ngx-common/gdpr';
 
@@ -33,7 +32,6 @@ import { ForgerockGDPRService } from '@forgerock/openbanking-ngx-common/gdpr';
 export class AppComponent implements OnInit, OnDestroy {
   fuseConfig: any;
   navigation: any;
-  enableCustomization: string = this.configService.get('enableCustomization');
 
   // Private
   private _unsubscribeAll: Subject<any>;
@@ -47,7 +45,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private platform: Platform,
     private router: Router,
-    private configService: ForgerockConfigService,
     private gdprService: ForgerockGDPRService
   ) {
     this.splashscreenService.init();
