@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import debug from 'debug';
 
 import { AspspService } from 'directory/src/app/services/aspsp.service';
+import { IAspsp } from 'directory/src/models';
 
 const log = debug('admin:AdminAspspIndexComponent');
 
@@ -12,13 +13,13 @@ const log = debug('admin:AdminAspspIndexComponent');
   styleUrls: ['./index.component.scss']
 })
 export class AdminAspspIndexComponent implements OnInit {
-  aspsps;
+  aspsps: IAspsp[];
   displayedColumns: string[] = [
-    'logo_uri',
+    'logoUri',
     'name',
-    'financial_id',
-    'as_discovery_endpoint',
-    'rs_discovery_endpoint',
+    'financialId',
+    'asDiscoveryEndpoint',
+    'rsDiscoveryEndpoint',
     'seeMore'
   ];
 

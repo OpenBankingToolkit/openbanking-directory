@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import debug from 'debug';
 
 import { AspspService } from 'directory/src/app/services/aspsp.service';
-import { IAspsps } from 'directory/src/models';
+import { IAspsp } from 'directory/src/models';
 
 const log = debug('Aspsps:AspspsIndexComponent');
 
@@ -13,7 +13,7 @@ const log = debug('Aspsps:AspspsIndexComponent');
   styleUrls: ['./index.component.scss']
 })
 export class AspspsIndexComponent implements OnInit {
-  aspsps: IAspsps[];
+  aspsps: IAspsp[];
   displayedColumns: string[] = [
     'logoUri',
     'name',

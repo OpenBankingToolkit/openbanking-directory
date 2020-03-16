@@ -3,6 +3,7 @@ import { ForgerockMessagesService } from '@forgerock/openbanking-ngx-common/serv
 import { ActivatedRoute, Params } from '@angular/router';
 import { AspspService } from 'directory/src/app/services/aspsp.service';
 import debug from 'debug';
+import { IAspsp } from 'directory/src/models';
 
 const log = debug('admin:AdminAspspEditComponent');
 
@@ -12,8 +13,8 @@ const log = debug('admin:AdminAspspEditComponent');
   styleUrls: ['./edit.component.scss']
 })
 export class AdminAspspEditComponent implements OnInit {
-  aspspId;
-  aspsp;
+  aspspId: string;
+  aspsp: IAspsp;
 
   // @ViewChild('alertSignin', { read: ViewContainerRef })
   // alertSignin: ViewContainerRef;

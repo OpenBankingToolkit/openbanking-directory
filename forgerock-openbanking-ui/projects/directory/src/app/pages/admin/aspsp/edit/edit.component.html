@@ -9,59 +9,48 @@
       </mat-list>
 
       <mat-form-field>
-        <input matInput placeholder="Logo" [(ngModel)]="aspsp.logo_uri" type="name" id="logo_uri" name="logo_uri" />
+        <input matInput placeholder="Logo" [(ngModel)]="aspsp.logoUri" type="text" name="logo_uri" />
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="Name" [(ngModel)]="aspsp.name" type="name" id="name" name="name" />
+        <input matInput placeholder="Name" [(ngModel)]="aspsp.name" type="text" name="name" />
       </mat-form-field>
       <mat-form-field>
-        <input
-          matInput
-          placeholder="Financial ID"
-          [(ngModel)]="aspsp.financial_id"
-          type="name"
-          id="financial_id"
-          name="financial_id"
-        />
+        <input matInput placeholder="Financial ID" [(ngModel)]="aspsp.financialId" type="text" name="financialId" />
       </mat-form-field>
       <mat-form-field>
         <input
           matInput
           placeholder="ASPSP-AS discovery endpoint"
-          [(ngModel)]="aspsp.as_discovery_endpoint"
-          type="name"
-          id="as_discovery_endpoint"
-          name="as_discovery_endpoint"
+          [(ngModel)]="aspsp.asDiscoveryEndpoint"
+          type="text"
+          name="asDiscoveryEndpoint"
         />
       </mat-form-field>
       <mat-form-field>
         <input
           matInput
           placeholder="ASPSP-RS discovery endpoint"
-          [(ngModel)]="aspsp.rs_discovery_endpoint"
-          type="name"
-          id="rs_discovery_endpoint"
-          name="rs_discovery_endpoint"
+          [(ngModel)]="aspsp.rsDiscoveryEndpoint"
+          type="text"
+          name="rsDiscoveryEndpoint"
         />
       </mat-form-field>
       <mat-form-field>
         <input
           matInput
           placeholder="Test MTLS endpoint"
-          [(ngModel)]="aspsp.test_mtls_endpoint"
-          type="name"
-          id="test_mtls_endpoint"
-          name="test_mtls_endpoint"
+          [(ngModel)]="aspsp.testMtlsEndpoint"
+          type="text"
+          name="testMtlsEndpoint"
         />
       </mat-form-field>
       <mat-form-field>
         <input
           matInput
           placeholder="Transport keys"
-          [(ngModel)]="aspsp.transport_keys"
-          type="name"
-          id="transport_keys"
-          name="transport_keys"
+          [(ngModel)]="aspsp.transportKeys"
+          type="text"
+          name="transportKeys"
         />
       </mat-form-field>
       <button mat-raised-button type="submit" color="accent">Save</button>

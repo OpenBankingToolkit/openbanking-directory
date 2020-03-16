@@ -2,28 +2,28 @@
   <mat-card-title>Banks (ASPSPs)</mat-card-title>
   <mat-card-content>
     <table mat-table [dataSource]="aspsps">
-      <ng-container matColumnDef="logo_uri">
+      <ng-container matColumnDef="logoUri">
         <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let element"><img [src]="element.logo_uri" alt="ASPSP logo" height="42" /></td>
+        <td mat-cell *matCellDef="let element"><img [src]="element.logoUri" alt="ASPSP logo" height="42" /></td>
       </ng-container>
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Name</th>
         <td mat-cell *matCellDef="let element">{{ element.name }}</td>
       </ng-container>
-      <ng-container matColumnDef="financial_id">
+      <ng-container matColumnDef="financialId">
         <th mat-header-cell *matHeaderCellDef>Financial ID</th>
-        <td mat-cell *matCellDef="let element">{{ element.financial_id }}</td>
+        <td mat-cell *matCellDef="let element">{{ element.financialId }}</td>
       </ng-container>
-      <ng-container matColumnDef="as_discovery_endpoint">
+      <ng-container matColumnDef="asDiscoveryEndpoint">
         <th mat-header-cell *matHeaderCellDef>ASPSP-AS discovery endpoint</th>
         <td mat-cell *matCellDef="let element">
-          <a href="{{ element.as_discovery_endpoint }}" target="_blank">OIDC Discovery</a>
+          <a href="{{ element.asDiscoveryEndpoint }}" target="_blank">OIDC Discovery</a>
         </td>
       </ng-container>
-      <ng-container matColumnDef="rs_discovery_endpoint">
+      <ng-container matColumnDef="rsDiscoveryEndpoint">
         <th mat-header-cell *matHeaderCellDef>ASPSP-RS discovery endpoint</th>
         <td mat-cell *matCellDef="let element">
-          <a href="{{ element.rs_discovery_endpoint }}" target="_blank">RS Discovery</a>
+          <a href="{{ element.rsDiscoveryEndpoint }}" target="_blank">RS Discovery</a>
         </td>
       </ng-container>
 

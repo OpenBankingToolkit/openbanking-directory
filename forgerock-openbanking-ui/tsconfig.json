@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "strict": false,
     "baseUrl": "./",
     "importHelpers": true,
     "outDir": "./dist/out-tsc",
@@ -26,5 +27,10 @@
       "forgerock": ["projects/forgerock"],
       "forgerock/*": ["projects/forgerock/*"]
     }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true,
+    "strictTemplates": true
   }
 }
