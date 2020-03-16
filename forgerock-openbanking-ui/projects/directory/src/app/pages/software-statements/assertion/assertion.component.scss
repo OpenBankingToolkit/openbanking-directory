@@ -25,12 +25,13 @@
   .jwtClaimsDecoded__body {
     white-space: pre-wrap;
   }
-  #generate-button {
-    margin-bottom: 16px;
+  .generate {
+    margin: 16px 0;
+    text-align: center;
   }
   #download-button {
     position: absolute;
-    right: 24px;
-    top: 24px;
+    right: 15px;
+    top: 3px;
   }
 }
