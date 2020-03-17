@@ -2,14 +2,14 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestro
 import { ActivatedRoute } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import _get from 'lodash-es/get';
-
-import { SoftwareStatementService } from 'directory/src/app/services/software-statement.service';
-import { ISoftwareStatement } from 'directory/src/models';
-import { ForgerockMessagesService } from '@forgerock/openbanking-ngx-common/services/forgerock-messages';
 import { validateMultipleUrls, validateUrl } from '@utils/forms';
 import { switchMap, catchError, finalize, takeUntil, retry } from 'rxjs/operators';
 import { of, Subject, pipe } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+
+import { SoftwareStatementService } from 'directory/src/app/services/software-statement.service';
+import { ISoftwareStatement } from 'directory/src/models';
+import { ForgerockMessagesService } from '@forgerock/openbanking-ngx-common/services/forgerock-messages';
 
 @Component({
   // tslint:disable-next-line

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrganisationService } from 'directory/src/app/services/organisation.service';
 import debug from 'debug';
+import { IOrganisation } from 'directory/src/models';
 
 const log = debug('admin:AdminOrganisationsComponent');
 
@@ -10,7 +11,7 @@ const log = debug('admin:AdminOrganisationsComponent');
   styleUrls: ['./organisations.component.scss']
 })
 export class AdminOrganisationsComponent implements OnInit {
-  organisations;
+  organisations: IOrganisation[];
   displayedColumns: string[] = ['id', 'name', 'description'];
 
   constructor(private _organisationService: OrganisationService) {}

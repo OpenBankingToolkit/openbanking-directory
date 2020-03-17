@@ -1,12 +1,8 @@
 <h1>Your organisation</h1>
-<mat-card>
+<mat-progress-bar [style.visibility]="isLoading ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>
+<mat-card *ngIf="organisation">
   <mat-card-content>
-    <form
-      *ngIf="organisation"
-      (ngSubmit)="onSubmit()"
-      #organisationForm="ngForm"
-      class="m-form m-form--label-align-right"
-    >
+    <form (ngSubmit)="onSubmit()" #organisationForm="ngForm" class="m-form m-form--label-align-right">
       <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
           <mat-form-field>
