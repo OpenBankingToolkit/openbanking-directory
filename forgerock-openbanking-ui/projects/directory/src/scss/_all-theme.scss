@@ -6,6 +6,7 @@
 @import 'projects/directory/src/app/layouts/fuse/components/toolbar/toolbar.component';
 @import 'projects/directory/src/app/layouts/fuse/components/navbar/vertical/style-1/style-1.component';
 @import 'projects/directory/src/app/pages/user/index/index.component';
+@import 'projects/directory/src/app/components/software-statement-list/software-statement-list.component';
 @import '~@forgerock/openbanking-ngx-common/components/main.scss';
 @import 'mixins/cssvars';
 @import '~@forgerock/openbanking-ngx-common/gdpr/main.scss';
@@ -73,7 +74,8 @@
   @include forgerock-navbar-vertical-style-theme($theme);
   @include forgerock-footer-theme($theme);
   @include forgerock-directory-app-toolbar-theme($theme);
-  @include forgerock-user-index-theme($theme);
+  @include directory-user-index-theme($theme);
   @include forgerock-gdpr-theme($theme);
   @include forgerock-alert-component-theme($theme);
+  @include directory-software-statement-table-theme($theme);
 }

@@ -6,6 +6,7 @@ import { DashboardIndexComponent } from './index/index.component';
 import { SoftwareStatementsListModule } from '../software-statements/index/index.module';
 import { ForgerockSharedModule } from '@forgerock/openbanking-ngx-common/shared';
 import { DirectoryOrganisationCardModule } from '../../components/organisation-card/organisation-card.module';
+import { DirectorySoftwareStatementListModule } from '../../components/software-statement-list/software-statement-list.module';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { DirectoryOrganisationCardModule } from '../../components/organisation-c
     DashboardRoutingModule,
     SoftwareStatementsListModule,
     ForgerockSharedModule,
-    DirectoryOrganisationCardModule
+    DirectoryOrganisationCardModule,
+    DirectorySoftwareStatementListModule
   ],
   declarations: [DashboardIndexComponent]
 })

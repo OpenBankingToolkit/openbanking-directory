@@ -1,12 +1,11 @@
-<h1>
-  Dashboard
-</h1>
-
 <div fxLayout="column" fxLayout.gt-sm="row">
   <div fxFlex.gt-sm="30" class="first-column">
     <app-organisation-card></app-organisation-card>
   </div>
   <div fxFlex fxFlex.gt-sm="70">
-    <software-statements-list fxFlex></software-statements-list>
+    <app-software-statement-list
+      fxFlex
+      [displayedColumns]="['id', 'applicationId', 'name', 'delete']"
+    ></app-software-statement-list>
   </div>
 </div>

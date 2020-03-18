@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { take, switchMap, catchError, finalize, takeUntil, retry } from 'rxjs/operators';
 import { of, Subject, pipe, combineLatest } from 'rxjs';
@@ -20,7 +20,7 @@ const log = debug('Organisation:OrganisationIndexComponent');
   styleUrls: ['./index.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganisationIndexComponent implements OnInit {
+export class OrganisationIndexComponent implements OnInit, OnDestroy {
   organisation: IOrganisation;
   isLoading = false;
   private _unsubscribeAll: Subject<any> = new Subject();
@@ -41,6 +41,11 @@ export class OrganisationIndexComponent implements OnInit {
       .getOrganisation(organisationId)
       .pipe(this.updatePipe())
       .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 
   startLoading() {

@@ -1,0 +1,62 @@
+<mat-card>
+  <mat-card-title
+    >Software statements
+    <span fxFlex></span>
+    <button
+      mat-icon-button
+      [disabled]="isLoading"
+      (click)="createSoftwareStatement()"
+      aria-label="Create a new Software statement"
+    >
+      <mat-icon>add</mat-icon>
+    </button></mat-card-title
+  >
+  <mat-card-content>
+    <mat-progress-bar [style.visibility]="isLoading ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>
+    <table *ngIf="softwareStatements" mat-table [dataSource]="softwareStatements">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>Id</th>
+        <td mat-cell *matCellDef="let element">
+          <span>{{ element.id }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="applicationId">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>applicationId</th>
+        <td mat-cell fxHide.xs fxHide.sm *matCellDef="let element">
+          <span>{{ element.applicationId }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Name</th>
+        <td mat-cell *matCellDef="let element" fxHide.xs fxHide.sm>
+          <span>{{ element.name }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm>Description</th>
+        <td mat-cell *matCellDef="let element" fxHide.xs fxHide.sm>
+          <span>{{ element.description }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button [disabled]="isLoading" mat-icon-button (click)="deleteSoftwareStatement($event, element.id)">
+            <mat-icon aria-label="Delete Software Statement">delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        tabindex="0"
+        role="button"
+        aria-label="see more"
+        (keydown.enter)="goToSoftwareStatement(row.id)"
+        (click)="goToSoftwareStatement(row.id)"
+        *matRowDef="let row; columns: displayedColumns"
+      ></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

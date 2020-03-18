@@ -35,7 +35,7 @@
       <div class="m-portlet__foot m-portlet__foot--fit">
         <div class="m-form__actions m-form__actions--solid m-form__actions--left">
           <div class="col m--align-center">
-            <button mat-raised-button color="accent" type="submit" class="btn btn-brand">
+            <button [disabled]="isLoading" mat-raised-button color="accent" type="submit" class="btn btn-brand">
               Save
             </button>
           </div>

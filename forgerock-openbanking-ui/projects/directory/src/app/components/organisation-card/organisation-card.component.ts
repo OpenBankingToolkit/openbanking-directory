@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { take, switchMap, catchError, finalize, takeUntil, retry } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
@@ -21,7 +21,11 @@ const log = debug('Organisation:OrganisationIndexComponent');
       <mat-card-title
         >Your organisation
         <span fxFlex></span>
-        <button mat-icon-button routerLink="/organisation" aria-label="Edit organisation">
+        <button
+          mat-icon-button
+          routerLink="/organisation"
+          aria-label="Edit organisation"
+        >
           <mat-icon>edit</mat-icon>
         </button></mat-card-title
       >
@@ -62,7 +66,7 @@ const log = debug('Organisation:OrganisationIndexComponent');
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DirectoryOrganisationCardComponent implements OnInit {
+export class DirectoryOrganisationCardComponent implements OnInit, OnDestroy {
   organisation: IOrganisation;
   isLoading = false;
   private _unsubscribeAll: Subject<any> = new Subject();
@@ -98,5 +102,10 @@ export class DirectoryOrganisationCardComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 }

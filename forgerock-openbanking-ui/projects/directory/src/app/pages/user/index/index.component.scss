@@ -1,7 +1,7 @@
 @import 'mixins/breakpoints';
 @import '_variables';
 
-@mixin forgerock-user-index-theme($theme) {
+@mixin directory-user-index-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);

@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ForgerockSharedModule } from '@forgerock/openbanking-ngx-common/shared';
 import { SoftwareStatementsListComponent } from './index.component';
-import { MatSharedModule } from 'directory/src/app/mat-shared.module';
-import { ForgerockConfirmDialogModule } from '@forgerock/openbanking-ngx-common/components/forgerock-confirm-dialog';
+import { DirectorySoftwareStatementListModule } from 'directory/src/app/components/software-statement-list/software-statement-list.module';
 
 @NgModule({
-  imports: [CommonModule, MatSharedModule, ForgerockSharedModule, ForgerockConfirmDialogModule],
+  imports: [
+    CommonModule,
+    DirectorySoftwareStatementListModule
+  ],
   declarations: [SoftwareStatementsListComponent],
   exports: [SoftwareStatementsListComponent]
 })
