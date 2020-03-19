@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { take, switchMap, catchError, finalize, takeUntil, retry } from 'rxjs/operators';
-import { of, Subject, pipe, combineLatest } from 'rxjs';
+import { of, Subject, pipe } from 'rxjs';
 import _get from 'lodash-es/get';
 
 import debug from 'debug';

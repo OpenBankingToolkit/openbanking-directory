@@ -52,9 +52,13 @@
           Malformed <strong>URL</strong>
         </mat-error>
       </mat-form-field>
-      <button mat-raised-button type="submit" color="accent" [disabled]="formGroup.invalid">
-        {{ 'SAVE' | translate }}
-      </button>
+
+      <div fxLayout="row">
+        <div fxFlex></div>
+        <button mat-raised-button type="submit" color="accent" [disabled]="formGroup.invalid">
+          {{ 'SAVE' | translate }}
+        </button>
+      </div>
     </form>
   </mat-card-content>
 </mat-card>

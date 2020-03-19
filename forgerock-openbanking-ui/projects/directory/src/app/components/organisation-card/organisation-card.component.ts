@@ -37,19 +37,19 @@ const log = debug('Organisation:OrganisationIndexComponent');
         <div *ngIf="organisation">
           <mat-list>
             <mat-list-item>
-              <h3 mat-line>ID</h3>
+              <div mat-line>ID</div>
               <p mat-line>{{ organisation?.id }}</p>
             </mat-list-item>
             <mat-list-item>
-              <h3 mat-line>Name</h3>
+              <div mat-line>Name</div>
               <p mat-line>{{ organisation?.name }}</p>
             </mat-list-item>
             <mat-list-item>
-              <h3 mat-line>Status</h3>
+              <div mat-line>Status</div>
               <p mat-line>{{ organisation?.status }}</p>
             </mat-list-item>
             <mat-list-item class="wrap">
-              <h3 mat-line>Description</h3>
+              <div mat-line>Description</div>
               <p mat-line>{{ organisation?.description }}</p>
             </mat-list-item>
           </mat-list>

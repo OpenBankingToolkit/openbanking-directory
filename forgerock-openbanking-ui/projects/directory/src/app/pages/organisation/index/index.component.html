@@ -1,8 +1,13 @@
-<h1>Your organisation</h1>
-<mat-progress-bar [style.visibility]="isLoading ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>
-<mat-card *ngIf="organisation">
-  <mat-card-content>
-    <form (ngSubmit)="onSubmit()" #organisationForm="ngForm" class="m-form m-form--label-align-right">
+<mat-card>
+  <mat-card-content
+    ><h1>Your organisation</h1>
+    <mat-progress-bar [style.visibility]="isLoading ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>
+    <form
+      *ngIf="organisation"
+      (ngSubmit)="onSubmit()"
+      #organisationForm="ngForm"
+      class="m-form m-form--label-align-right"
+    >
       <div class="m-portlet__body">
         <div class="m-form__section m-form__section--first">
           <mat-form-field>
@@ -32,14 +37,11 @@
           </mat-form-field>
         </div>
       </div>
-      <div class="m-portlet__foot m-portlet__foot--fit">
-        <div class="m-form__actions m-form__actions--solid m-form__actions--left">
-          <div class="col m--align-center">
-            <button [disabled]="isLoading" mat-raised-button color="accent" type="submit" class="btn btn-brand">
-              Save
-            </button>
-          </div>
-        </div>
+      <div fxLayout="row">
+        <div fxFlex></div>
+        <button [disabled]="isLoading" mat-raised-button color="accent" type="submit" class="btn btn-brand">
+          Save
+        </button>
       </div>
     </form>
   </mat-card-content>

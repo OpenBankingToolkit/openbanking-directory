@@ -1,5 +1,22 @@
 <div fxLayout="column" fxLayout.gt-sm="row">
   <div fxFlex.gt-sm="30" class="first-column">
+    <mat-card>
+      <mat-card-title>Directory</mat-card-title>
+      <mat-card-content>
+        <mat-list>
+          <mat-list-item>
+            <mat-icon mat-list-icon>vpn_key</mat-icon>
+            <div mat-line>JSON Web Key</div>
+            <a mat-line [href]="jwkUri" target="_blank">{{ jwkUri }}</a>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon mat-list-icon>vpn_lock</mat-icon>
+            <div mat-line>Public CA certificate</div>
+            <a mat-line href="javascript:void(0)" (click)="downloadPublicIssuerCert()">Download</a>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
     <app-organisation-card></app-organisation-card>
   </div>
   <div fxFlex fxFlex.gt-sm="70">

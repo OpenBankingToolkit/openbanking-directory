@@ -33,14 +33,6 @@ export const navigation: FuseNavigation[] = [
     icon: 'card_travel',
     url: '/aspsps'
   },
-  {
-    id: 'directory',
-    title: 'Directory',
-    translate: 'NAV.DIRECTORY',
-    type: 'item',
-    icon: 'folder',
-    url: '/forgerock-directory'
-  }
 ];
 
 export const admin: FuseNavigation[] = [
