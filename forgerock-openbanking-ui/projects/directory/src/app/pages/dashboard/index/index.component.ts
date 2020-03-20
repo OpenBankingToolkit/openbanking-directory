@@ -3,18 +3,19 @@ import debug from 'debug';
 import { take, switchMap, catchError, finalize, takeUntil, retry } from 'rxjs/operators';
 import { of, Subject, pipe } from 'rxjs';
 import _get from 'lodash-es/get';
+import { MatDialog } from '@angular/material/dialog';
 
 import { ForgerockMessagesService } from '@forgerock/openbanking-ngx-common/services/forgerock-messages';
 import { ForgerockConfigService } from '@forgerock/openbanking-ngx-common/services/forgerock-config';
 import { DirectoryService } from 'directory/src/app/services/directory.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DirectorySupportDialogComponent } from './support-dialog.component';
 
 const log = debug('Dashboard:DashboardIndexComponent');
 
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
-  styleUrls: ['./index.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardIndexComponent implements OnInit, OnDestroy {
@@ -27,7 +28,8 @@ export class DashboardIndexComponent implements OnInit, OnDestroy {
     private renderer: Renderer2,
     private directoryService: DirectoryService,
     private messages: ForgerockMessagesService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit() {}
@@ -86,5 +88,11 @@ export class DashboardIndexComponent implements OnInit, OnDestroy {
 
     anchor.click();
     anchor.remove();
+  }
+
+  openSupportDialog(): void {
+    this.dialog.open(DirectorySupportDialogComponent, {
+      width: '400px'
+    });
   }
 }

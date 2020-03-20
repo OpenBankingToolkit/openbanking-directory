@@ -1,11 +1,6 @@
 @import 'mixins/breakpoints';
 
 :host {
-  .first-column {
-    @include media-breakpoint-up('md') {
-      margin-right: 16px;
-    }
-  }
   mat-list-item.wrap {
     height: auto !important;
     p {

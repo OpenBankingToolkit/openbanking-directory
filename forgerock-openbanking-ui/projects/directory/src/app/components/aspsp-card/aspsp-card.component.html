@@ -1,37 +1,43 @@
-<h1>Banks (ASPSPs)</h1>
 <mat-card>
   <mat-card-content>
+    <mat-card-title>ASPSPs</mat-card-title>
     <table mat-table [dataSource]="aspsps">
       <ng-container matColumnDef="logoUri">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let element">
+        <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm></th>
+        <td mat-cell *matCellDef="let element" fxHide.xs fxHide.sm>
           <img [src]="element.logoUri" onerror="this.style.display='none'" alt="ASPSP logo" height="42" />
         </td>
       </ng-container>
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        <th mat-header-cell *matHeaderCellDef fxHide.xs>Name</th>
+        <td mat-cell *matCellDef="let element" fxHide.xs>{{ element.name }}</td>
       </ng-container>
       <ng-container matColumnDef="financialId">
         <th mat-header-cell *matHeaderCellDef>Financial ID</th>
         <td mat-cell *matCellDef="let element">{{ element.financialId }}</td>
       </ng-container>
       <ng-container matColumnDef="asDiscoveryEndpoint">
-        <th mat-header-cell *matHeaderCellDef>OIDC discovery endpoint</th>
+        <th mat-header-cell *matHeaderCellDef>OIDC discovery</th>
         <td mat-cell *matCellDef="let element">
-          <a href="{{ element.asDiscoveryEndpoint }}" target="_blank">OIDC Discovery</a>
+          <a mat-icon-button aria-label="OIDC Discovery link" href="{{ element.asDiscoveryEndpoint }}" target="_blank">
+            <mat-icon>link</mat-icon>
+          </a>
         </td>
       </ng-container>
       <ng-container matColumnDef="rsDiscoveryEndpoint">
-        <th mat-header-cell *matHeaderCellDef>ASPSP-RS discovery endpoint</th>
+        <th mat-header-cell *matHeaderCellDef>RS discovery</th>
         <td mat-cell *matCellDef="let element">
-          <a href="{{ element.rsDiscoveryEndpoint }}" target="_blank">RS Discovery</a>
+          <a mat-icon-button aria-label="RS Discovery link" href="{{ element.rsDiscoveryEndpoint }}" target="_blank">
+            <mat-icon>link</mat-icon>
+          </a>
         </td>
       </ng-container>
       <ng-container matColumnDef="transportKeys">
         <th mat-header-cell *matHeaderCellDef>Transport certs</th>
         <td mat-cell *matCellDef="let element">
-          <a href="{{ element.transportKeys }}" target="_blank">Certificates chain</a>
+          <a mat-icon-button aria-label="Certificates chain link" href="{{ element.transportKeys }}" target="_blank">
+            <mat-icon>link</mat-icon>
+          </a>
         </td>
       </ng-container>
       <!-- <ng-container matColumnDef="applicationId">
@@ -52,5 +58,6 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
+    <mat-progress-bar [style.visibility]="isLoading ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>
   </mat-card-content>
 </mat-card>

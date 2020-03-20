@@ -1,25 +1,32 @@
-<div fxLayout="column" fxLayout.gt-sm="row">
-  <div fxFlex.gt-sm="30" class="first-column">
-    <mat-card>
-      <mat-card-title>Directory</mat-card-title>
-      <mat-card-content>
-        <mat-list>
-          <mat-list-item>
-            <mat-icon mat-list-icon>vpn_key</mat-icon>
-            <div mat-line>JSON Web Key</div>
-            <a mat-line [href]="jwkUri" target="_blank">{{ jwkUri }}</a>
-          </mat-list-item>
-          <mat-list-item>
-            <mat-icon mat-list-icon>vpn_lock</mat-icon>
-            <div mat-line>Public CA certificate</div>
-            <a mat-line href="javascript:void(0)" (click)="downloadPublicIssuerCert()">Download</a>
-          </mat-list-item>
-        </mat-list>
-      </mat-card-content>
-    </mat-card>
+<div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="1em grid">
+  <div fxFlex.gt-sm="30" fxLayoutGap="1em grid" fxLayout="column">
+    <div>
+      <mat-card>
+        <mat-card-title>Directory</mat-card-title>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon mat-list-icon>vpn_key</mat-icon>
+              <div mat-line>JSON Web Key</div>
+              <a mat-line [href]="jwkUri" target="_blank">{{ jwkUri }}</a>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>vpn_lock</mat-icon>
+              <div mat-line>Public CA certificate</div>
+              <a mat-line href="javascript:void(0)" (click)="downloadPublicIssuerCert()">Download</a>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>help</mat-icon>
+              <a mat-line href="javascript:void(0)" (click)="openSupportDialog()">Support</a>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
     <app-organisation-card></app-organisation-card>
   </div>
-  <div fxFlex fxFlex.gt-sm="70">
+  <div fxFlex fxFlex.gt-sm="70" fxLayoutGap="1em grid" fxLayout="column">
+    <app-aspsp-card></app-aspsp-card>
     <app-software-statement-list
       fxFlex
       [displayedColumns]="['id', 'applicationId', 'name', 'delete']"

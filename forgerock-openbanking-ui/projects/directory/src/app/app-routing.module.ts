@@ -66,12 +66,6 @@ const routes: Routes = [
         canActivate: [IsOIDCConnectedGuard]
       },
       {
-        path: 'user',
-        loadChildren: 'directory/src/app/pages/user/user.module#UserModule',
-        canLoad: [ForgerockCustomerCanAccessGuard],
-        canActivate: [IsOIDCConnectedGuard]
-      },
-      {
         path: 'admin',
         loadChildren: 'directory/src/app/pages/admin/admin.module#AdminModule',
         canLoad: [ForgerockCustomerCanAccessGuard],

@@ -30,14 +30,6 @@
       </button>
 
       <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
-        <button mat-menu-item routerLink="/user/messages">
-          <mat-icon>message</mat-icon>
-          <span>{{ 'MESSAGES' | translate }}</span>
-        </button>
-        <button mat-menu-item routerLink="/user/support">
-          <mat-icon>contact_support</mat-icon>
-          <span>{{ 'SUPPORT' | translate }}</span>
-        </button>
         <button mat-menu-item (click)="logout($event)">
           <mat-icon>exit_to_app</mat-icon>
           <span>{{ 'SIGNOUT' | translate }}</span>
