@@ -16,13 +16,18 @@ export const OrganisationsSuccessAction = createAction(
 export const OrganisationsErrorAction = createAction('ORGANISATIONS_ERROR', props<{ error: string }>());
 export const OrganisationRequestAction = createAction('ORGANISATION_REQUEST', props<{ organisationId: string }>());
 export const OrganisationSuccessAction = createAction('ORGANISATION_SUCCESS', props<{ organisation: IOrganisation }>());
+export const OrganisationUpdateRequestAction = createAction(
+  'ORGANISATION_UPDATE_REQUEST',
+  props<{ organisation: IOrganisation }>()
+);
 
 export type ActionsUnion =
   | typeof OrganisationsRequestAction
   | typeof OrganisationsSuccessAction
   | typeof OrganisationsErrorAction
   | typeof OrganisationRequestAction
-  | typeof OrganisationSuccessAction;
+  | typeof OrganisationSuccessAction
+  | typeof OrganisationUpdateRequestAction;
 
 export const adapter: EntityAdapter<IOrganisation> = createEntityAdapter<IOrganisation>();
 
@@ -54,9 +59,14 @@ export const OrganisationsReducer = createReducer(
     isLoading: true,
     error: ''
   })),
+  on(OrganisationUpdateRequestAction, state => ({
+    ...state,
+    isLoading: true,
+    error: ''
+  })),
   on(OrganisationSuccessAction, (state, { organisation }) => ({
     ...state,
-    ...adapter.addOne(organisation, state),
+    ...adapter.upsertOne(organisation, state),
     isLoading: false,
     error: ''
   })),

@@ -15,7 +15,8 @@ import {
   ActionsUnion,
   OrganisationRequestAction,
   OrganisationSuccessAction,
-  OrganisationsErrorAction
+  OrganisationsErrorAction,
+  OrganisationUpdateRequestAction
 } from '../reducers/organisations';
 
 @Injectable()
@@ -33,12 +34,29 @@ export class OrganisationsEffects {
       return this.organisationService.getOrganisation(action.organisationId).pipe(
         retry(3),
         map((organisation: IOrganisation) => OrganisationSuccessAction({ organisation })),
-        catchError((er: HttpErrorResponse) => {
-          const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
-          this.messages.error(error);
-          return of(OrganisationsErrorAction({ error }));
-        })
+        this.errorPipe()
       );
     })
   );
+
+  @Effect()
+  updateOne$: Observable<any> = this.actions$.pipe(
+    ofType(OrganisationUpdateRequestAction),
+    mergeMap((action: { organisation: IOrganisation }) => {
+      return this.organisationService.updateOrganisation(action.organisation).pipe(
+        retry(3),
+        map((organisation: IOrganisation) => OrganisationSuccessAction({ organisation })),
+        this.errorPipe()
+      );
+    })
+  );
+
+  errorPipe = () =>
+    pipe(
+      catchError((er: HttpErrorResponse) => {
+        const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
+        this.messages.error(error);
+        return of(OrganisationsErrorAction({ error }));
+      })
+    );
 }

@@ -22,8 +22,8 @@ export class OrganisationService {
     );
   }
 
-  public putOrganisation(organisation) {
-    return this.http.put(
+  public updateOrganisation(organisation) {
+    return this.http.put<IOrganisation>(
       `${this.conf.get('directoryBackend')}/api/organisation/${organisation.id}`,
       organisation,
       getHTTPOptions()

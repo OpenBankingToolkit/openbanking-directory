@@ -12,20 +12,20 @@ import {
 import { first, withLatestFrom } from 'rxjs/operators';
 import { selectOIDCUserOrganisationId } from '@forgerock/openbanking-ngx-common/oidc';
 
-const selector = 'app-organisation-card-container';
+const selector = 'app-organisation-form-card-container';
 
 @Component({
   selector,
   template: `
-    <app-organisation-card
+    <app-organisation-form-card
       [organisation]="organisation$ | async"
       [isLoading]="isLoading$ | async"
       (update)="update($event)"
     >
-    </app-organisation-card>
+    </app-organisation-form-card>
   `
 })
-export class DirectoryOrganisationCardContainer implements OnInit {
+export class DirectoryOrganisationFormCardContainer implements OnInit {
   @Input() displayedColumns: string[];
 
   public organisationId$: Observable<string> = this.store.pipe(select(selectOIDCUserOrganisationId));
