@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 
 import { IState, ISoftwareStatement } from 'directory/src/models';
 import { selectOIDCUserOrganisationId } from '@forgerock/openbanking-ngx-common/oidc';
@@ -41,20 +41,27 @@ export class DirectorySoftwareStatementListContainer implements OnInit {
     select(([state, organisationId]: [IState, string]) => getSelectors(state, organisationId).selectAll)
   );
 
+  private shouldLoad$: Observable<any> = combineLatest(
+    this.softwareStatements$,
+    this.organisationId$,
+    (softwareStatements: ISoftwareStatement[], organisationId: string) => ({
+      shouldLoad: !softwareStatements.length,
+      organisationId
+    })
+  );
+
   constructor(protected store: Store<IState>) {}
 
   ngOnInit() {
-    this.softwareStatements$.pipe(first()).subscribe(data => {
-      console.log('data', data);
-      return (
-        !data.length &&
+    this.shouldLoad$.pipe(first()).subscribe(
+      ({ shouldLoad, organisationId }) =>
+        shouldLoad &&
         this.store.dispatch(
           SoftwareStatementsRequestAction({
-            organisationId: '5e45732cb4c37200146018f9'
+            organisationId: organisationId
           })
         )
-      );
-    });
+    );
   }
 
   delete(softwareStatementId: string) {

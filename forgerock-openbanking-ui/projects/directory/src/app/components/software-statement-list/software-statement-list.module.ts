@@ -23,6 +23,6 @@ import { DirectorySoftwareStatementListContainer } from './software-statement-li
     ForgerockConfirmDialogModule
   ],
   declarations: [DirectorySoftwareStatementListComponent, DirectorySoftwareStatementListContainer],
-  exports: [DirectorySoftwareStatementListComponent, DirectorySoftwareStatementListContainer]
+  exports: [DirectorySoftwareStatementListContainer]
 })
 export class DirectorySoftwareStatementListModule {}

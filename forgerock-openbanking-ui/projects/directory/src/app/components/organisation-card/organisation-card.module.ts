@@ -9,6 +9,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 
 import { DirectoryOrganisationCardComponent } from './organisation-card.component';
+import { DirectoryOrganisationCardContainer } from './organisation-card.container';
 
 @NgModule({
   imports: [
@@ -21,7 +22,7 @@ import { DirectoryOrganisationCardComponent } from './organisation-card.componen
     MatProgressBarModule,
     FlexLayoutModule
   ],
-  declarations: [DirectoryOrganisationCardComponent],
-  exports: [DirectoryOrganisationCardComponent]
+  declarations: [DirectoryOrganisationCardComponent, DirectoryOrganisationCardContainer],
+  exports: [DirectoryOrganisationCardContainer]
 })
 export class DirectoryOrganisationCardModule {}

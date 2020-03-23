@@ -1,16 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { Store, select } from '@ngrx/store';
-import { take, switchMap, catchError, finalize, takeUntil, retry } from 'rxjs/operators';
-import { of, Subject } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import _get from 'lodash-es/get';
 
 import debug from 'debug';
 
-import { OrganisationService } from 'directory/src/app/services/organisation.service';
-import { IState, IOrganisation } from 'directory/src/models';
-import { ForgerockMessagesService } from '@forgerock/openbanking-ngx-common/services/forgerock-messages';
-import { selectOIDCUserOrganisationId } from '@forgerock/openbanking-ngx-common/oidc';
-import { HttpErrorResponse } from '@angular/common/http';
+import { IOrganisation } from 'directory/src/models';
 
 const log = debug('Organisation:OrganisationIndexComponent');
 
@@ -21,11 +14,7 @@ const log = debug('Organisation:OrganisationIndexComponent');
       <mat-card-title
         >Your organisation
         <span fxFlex></span>
-        <button
-          mat-icon-button
-          routerLink="/organisation"
-          aria-label="Edit organisation"
-        >
+        <button mat-icon-button routerLink="/organisation" aria-label="Edit organisation">
           <mat-icon>edit</mat-icon>
         </button></mat-card-title
       >
@@ -66,46 +55,10 @@ const log = debug('Organisation:OrganisationIndexComponent');
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DirectoryOrganisationCardComponent implements OnInit, OnDestroy {
-  organisation: IOrganisation;
-  isLoading = false;
-  private _unsubscribeAll: Subject<any> = new Subject();
+export class DirectoryOrganisationCardComponent implements OnInit {
+  @Input() organisation: IOrganisation;
+  @Input() isLoading = false;
 
-  constructor(
-    private _organisationService: OrganisationService,
-    private messages: ForgerockMessagesService,
-    private store: Store<IState>,
-    private cdr: ChangeDetectorRef
-  ) {}
-  ngOnInit() {
-    let organisationId;
-    this.store.pipe(select(selectOIDCUserOrganisationId), take(1)).subscribe(value => (organisationId = value));
-
-    this.isLoading = true;
-    this._organisationService
-      .getOrganisation(organisationId)
-      .pipe(
-        takeUntil(this._unsubscribeAll),
-        retry(3),
-        switchMap((response: IOrganisation) => {
-          this.organisation = response;
-          return of(response);
-        }),
-        catchError((er: HttpErrorResponse | Error) => {
-          const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
-          this.messages.error(error);
-          return of(er);
-        }),
-        finalize(() => {
-          this.isLoading = false;
-          this.cdr.markForCheck();
-        })
-      )
-      .subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this._unsubscribeAll.next();
-    this._unsubscribeAll.complete();
-  }
+  constructor() {}
+  ngOnInit() {}
 }
