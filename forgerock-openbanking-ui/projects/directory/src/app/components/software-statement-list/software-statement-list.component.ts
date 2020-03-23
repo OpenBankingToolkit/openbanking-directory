@@ -1,4 +1,13 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnDestroy,
+  Input,
+  EventEmitter,
+  Output
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { take, switchMap, catchError, finalize, takeUntil, retry } from 'rxjs/operators';
@@ -24,11 +33,13 @@ const log = debug('SoftwareStatements:SoftwareStatementsListComponent');
   templateUrl: './software-statement-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DirectorySoftwareStatementListComponent implements OnInit, OnDestroy {
-  softwareStatements: ISoftwareStatement[];
-  isLoading = false;
+export class DirectorySoftwareStatementListComponent implements OnInit {
   private _unsubscribeAll: Subject<any> = new Subject();
   @Input() displayedColumns: string[] = ['id', 'applicationId', 'name', 'delete'];
+  @Input() isLoading = false;
+  @Input() softwareStatements: ISoftwareStatement[];
+  @Output() delete = new EventEmitter<string>();
+  @Output() create = new EventEmitter<void>();
 
   constructor(
     private _organisationService: OrganisationService,
@@ -42,70 +53,71 @@ export class DirectorySoftwareStatementListComponent implements OnInit, OnDestro
   ) {}
 
   ngOnInit() {
-    this.initSoftwareStatement();
+    // this.initSoftwareStatement();
   }
 
-  ngOnDestroy(): void {
-    this._unsubscribeAll.next();
-    this._unsubscribeAll.complete();
-  }
+  // ngOnDestroy(): void {
+  //   this._unsubscribeAll.next();
+  //   this._unsubscribeAll.complete();
+  // }
 
-  startLoading() {
-    this.isLoading = true;
-    this.cdr.markForCheck();
-  }
+  // startLoading() {
+  //   this.isLoading = true;
+  //   this.cdr.markForCheck();
+  // }
 
-  initSoftwareStatement() {
-    let organisationId;
-    this.store.pipe(select(selectOIDCUserOrganisationId), take(1)).subscribe(value => (organisationId = value));
+  // initSoftwareStatement() {
+  //   let organisationId;
+  //   this.store.pipe(select(selectOIDCUserOrganisationId), take(1)).subscribe(value => (organisationId = value));
 
-    this.startLoading();
-    this._organisationService
-      .getOrganisationSoftwareStatements(organisationId)
-      .pipe(
-        takeUntil(this._unsubscribeAll),
-        retry(3),
-        switchMap((response: ISoftwareStatement[]) => {
-          this.softwareStatements = response;
-          return of(response);
-        }),
-        catchError((er: HttpErrorResponse | Error) => {
-          const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
-          this.messages.error(error);
-          return of(er);
-        }),
-        finalize(() => {
-          this.isLoading = false;
-          this.cdr.markForCheck();
-        })
-      )
-      .subscribe();
-  }
+  //   this.startLoading();
+  //   this._organisationService
+  //     .getOrganisationSoftwareStatements(organisationId)
+  //     .pipe(
+  //       takeUntil(this._unsubscribeAll),
+  //       retry(3),
+  //       switchMap((response: ISoftwareStatement[]) => {
+  //         this.softwareStatements = response;
+  //         return of(response);
+  //       }),
+  //       catchError((er: HttpErrorResponse | Error) => {
+  //         const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
+  //         this.messages.error(error);
+  //         return of(er);
+  //       }),
+  //       finalize(() => {
+  //         this.isLoading = false;
+  //         this.cdr.markForCheck();
+  //       })
+  //     )
+  //     .subscribe();
+  // }
 
   createSoftwareStatement() {
     log('New software statement!');
-    this.startLoading();
-    this._softwareStatementService
-      .createSoftwareStatement()
-      .pipe(
-        takeUntil(this._unsubscribeAll),
-        retry(3),
-        switchMap((response: ISoftwareStatement) => {
-          log('softwareStatements: ', response);
-          this._router.navigate(['/software-statements/' + response.id + '/general']);
-          return of(response);
-        }),
-        catchError((er: HttpErrorResponse | Error) => {
-          const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
-          this.messages.error(error);
-          return of(er);
-        }),
-        finalize(() => {
-          this.isLoading = false;
-          this.cdr.markForCheck();
-        })
-      )
-      .subscribe();
+    this.create.emit();
+    // this.startLoading();
+    // this._softwareStatementService
+    //   .createSoftwareStatement()
+    //   .pipe(
+    //     takeUntil(this._unsubscribeAll),
+    //     retry(3),
+    //     switchMap((response: ISoftwareStatement) => {
+    //       log('softwareStatements: ', response);
+    //       this._router.navigate(['/software-statements/' + response.id + '/general']);
+    //       return of(response);
+    //     }),
+    //     catchError((er: HttpErrorResponse | Error) => {
+    //       const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
+    //       this.messages.error(error);
+    //       return of(er);
+    //     }),
+    //     finalize(() => {
+    //       this.isLoading = false;
+    //       this.cdr.markForCheck();
+    //     })
+    //   )
+    //   .subscribe();
   }
 
   deleteSoftwareStatement(e: Event, softwareStatementId: string) {
@@ -119,27 +131,28 @@ export class DirectorySoftwareStatementListComponent implements OnInit, OnDestro
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.startLoading();
-        this._softwareStatementService
-          .deleteSoftwareStatement(softwareStatementId)
-          .pipe(
-            takeUntil(this._unsubscribeAll),
-            retry(3),
-            switchMap(() => {
-              this.initSoftwareStatement();
-              return of(true);
-            }),
-            catchError((er: HttpErrorResponse | Error) => {
-              const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
-              this.messages.error(error);
-              return of(er);
-            }),
-            finalize(() => {
-              this.isLoading = false;
-              this.cdr.markForCheck();
-            })
-          )
-          .subscribe();
+        this.delete.emit(softwareStatementId);
+        // this.this.startLoading();
+        // this._softwareStatementService
+        //   .deleteSoftwareStatement(softwareStatementId)
+        //   .pipe(
+        //     takeUntil(this._unsubscribeAll),
+        //     retry(3),
+        //     switchMap(() => {
+        //       this.initSoftwareStatement();
+        //       return of(true);
+        //     }),
+        //     catchError((er: HttpErrorResponse | Error) => {
+        //       const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
+        //       this.messages.error(error);
+        //       return of(er);
+        //     }),
+        //     finalize(() => {
+        //       this.isLoading = false;
+        //       this.cdr.markForCheck();
+        //     })
+        //   )
+        //   .subscribe();
       }
     });
   }

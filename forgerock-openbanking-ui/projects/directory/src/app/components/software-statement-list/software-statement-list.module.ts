@@ -9,6 +9,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ForgerockSharedModule } from '@forgerock/openbanking-ngx-common/shared';
 import { ForgerockConfirmDialogModule } from '@forgerock/openbanking-ngx-common/components/forgerock-confirm-dialog';
 import { DirectorySoftwareStatementListComponent } from './software-statement-list.component';
+import { DirectorySoftwareStatementListContainer } from './software-statement-list.container';
 
 @NgModule({
   imports: [
@@ -21,7 +22,7 @@ import { DirectorySoftwareStatementListComponent } from './software-statement-li
     ForgerockSharedModule,
     ForgerockConfirmDialogModule
   ],
-  declarations: [DirectorySoftwareStatementListComponent],
-  exports: [DirectorySoftwareStatementListComponent]
+  declarations: [DirectorySoftwareStatementListComponent, DirectorySoftwareStatementListContainer],
+  exports: [DirectorySoftwareStatementListComponent, DirectorySoftwareStatementListContainer]
 })
 export class DirectorySoftwareStatementListModule {}
