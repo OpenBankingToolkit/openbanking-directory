@@ -16,10 +16,10 @@ export const environment = {
   client: {
     name: 'Forgerock',
     adminContact: 'openbanking-support@forgerock.com',
-    iconWidth: 70,
-    iconHeight: 70,
+    iconWidth: 35,
+    iconHeight: 39,
     logoWidth: 230,
-    logoHeight: '100%'
+    logoHeight: 'auto'
   },
   devModules: []
 };
