@@ -46,7 +46,6 @@
 
   table {
     width: 100%;
-    margin-bottom: 20px;
     .mat-column-actions {
       max-width: 40px;
     }
@@ -58,6 +57,9 @@
         flex: 1;
         display: flex;
         align-items: center;
+      }
+      &:last-child > td {
+        border-bottom-width: 0px;
       }
     }
     td {

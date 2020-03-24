@@ -11,7 +11,6 @@
   app-software-statement-list {
     table {
       width: 100%;
-      margin-bottom: 20px;
 
       tbody tr {
         cursor: pointer;
@@ -32,6 +31,9 @@
           flex: 1;
           display: flex;
           align-items: center;
+        }
+        &:last-child > td {
+          border-bottom-width: 0px;
         }
       }
       td {
