@@ -30,12 +30,10 @@
   }
 
   .eidas-tag {
-    transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
-    display: -ms-inline-flexbox;
+    white-space: nowrap;
     display: inline-flex;
     padding: 7px;
     border-radius: 25px;
-    -ms-flex-align: center;
     align-items: center;
     cursor: default;
     min-height: 20px;
@@ -44,5 +42,32 @@
     color: #000;
     font-size: 90%;
     margin: 0 5px;
+  }
+
+  table {
+    width: 100%;
+    margin-bottom: 20px;
+    .mat-column-actions {
+      max-width: 40px;
+    }
+    tr {
+      display: flex;
+      flex-direction: row;
+      & > td,
+      & > th {
+        flex: 1;
+        display: flex;
+        align-items: center;
+      }
+    }
+    td {
+      width: 100px;
+      & > span {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
   }
 }

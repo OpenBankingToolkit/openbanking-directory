@@ -8,6 +8,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { ForgerockSharedModule } from '@forgerock/openbanking-ngx-common/shared';
 import { DirectoryASPSPCardComponent } from './aspsp-card.component';
+import { DirectoryASPSPCardContainer } from './aspsp-card.container';
 
 @NgModule({
   imports: [
@@ -19,7 +20,7 @@ import { DirectoryASPSPCardComponent } from './aspsp-card.component';
     MatProgressBarModule,
     ForgerockSharedModule
   ],
-  declarations: [DirectoryASPSPCardComponent],
-  exports: [DirectoryASPSPCardComponent]
+  declarations: [DirectoryASPSPCardComponent, DirectoryASPSPCardContainer],
+  exports: [DirectoryASPSPCardContainer]
 })
 export class DirectoryASPSPCardModule {}

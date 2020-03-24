@@ -1,8 +1,28 @@
 :host {
   table {
     width: 100%;
-    td img {
-      max-height: 45px;
+    margin-bottom: 20px;
+    tr {
+      display: flex;
+      flex-direction: row;
+      & > td,
+      & > th {
+        flex: 1;
+        display: flex;
+        align-items: center;
+      }
+    }
+    td {
+      > img {
+        max-height: 45px;
+      }
+      width: 100px;
+      & > span {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
 }
