@@ -23,7 +23,7 @@
               <mat-icon matListIcon>link</mat-icon>
               <h3 matLine>JWK_URI</h3>
               <p matLine>
-                <a (click)="onNavigateToTransportJwtUri()">{{ transportJwkUri }}</a>
+                <a [href]="transportJwkUri" target="_blank">{{transportJwkUri}}</a>
               </p>
             </mat-list-item>
             <mat-list-item>
@@ -43,7 +43,7 @@
               <mat-icon matListIcon>link</mat-icon>
               <h3 matLine>JWK URI</h3>
               <p matLine>
-                <a (click)="onNavigateToSigningAndEncryptionJwtUri()">{{ keysJwkUri }}</a>
+                <a [href]="SigningAndEncryptionJwtUri" target="_blank">{{SigningAndEncryptionJwtUri}}</a>
               </p>
             </mat-list-item>
             <mat-list-item>

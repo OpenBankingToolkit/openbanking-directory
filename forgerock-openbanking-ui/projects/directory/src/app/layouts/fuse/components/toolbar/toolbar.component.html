@@ -30,7 +30,7 @@
       </button>
 
       <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
-        <button mat-menu-item (click)="logout($event)">
+        <button mat-menu-item (click)="logout()">
           <mat-icon>exit_to_app</mat-icon>
           <span>{{ 'SIGNOUT' | translate }}</span>
         </button>

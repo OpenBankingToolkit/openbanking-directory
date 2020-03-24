@@ -32,7 +32,7 @@ export class DirectorySoftwareStatementListContainer implements OnInit {
 
   public organisationId$: Observable<string> = this.store.pipe(select(selectOIDCUserOrganisationId));
 
-  public isLoading$: Observable<ISoftwareStatement[]> = this.store.pipe(
+  public isLoading$: Observable<boolean> = this.store.pipe(
     withLatestFrom(this.organisationId$),
     select(([state, organisationId]: [IState, string]) => getSelectors(state, organisationId).isLoading)
   );

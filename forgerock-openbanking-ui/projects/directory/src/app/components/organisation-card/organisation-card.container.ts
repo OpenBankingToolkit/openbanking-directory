@@ -6,10 +6,9 @@ import { IState, IOrganisation } from 'directory/src/models';
 import {
   selectCurrrentUserOrganisation,
   selectIsLoading,
-  OrganisationRequestAction,
-  OrganisationUpdateRequestAction
+  OrganisationRequestAction
 } from 'directory/src/store/reducers/organisations';
-import { first, withLatestFrom } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { selectOIDCUserOrganisationId } from '@forgerock/openbanking-ngx-common/oidc';
 
 const selector = 'app-organisation-card-container';
@@ -17,11 +16,7 @@ const selector = 'app-organisation-card-container';
 @Component({
   selector,
   template: `
-    <app-organisation-card
-      [organisation]="organisation$ | async"
-      [isLoading]="isLoading$ | async"
-      (update)="update($event)"
-    >
+    <app-organisation-card [organisation]="organisation$ | async" [isLoading]="isLoading$ | async">
     </app-organisation-card>
   `
 })
@@ -52,14 +47,6 @@ export class DirectoryOrganisationCardContainer implements OnInit {
             organisationId: organisationId
           })
         )
-    );
-  }
-
-  update(organisation: IOrganisation) {
-    this.store.dispatch(
-      OrganisationUpdateRequestAction({
-        organisation
-      })
     );
   }
 }

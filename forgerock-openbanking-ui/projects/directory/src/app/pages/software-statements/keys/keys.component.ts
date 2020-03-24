@@ -46,6 +46,12 @@ export class SoftwareStatementsKeysComponent implements OnInit, OnDestroy {
   ];
   isLoading = false;
   private _unsubscribeAll: Subject<any> = new Subject();
+  public transportJwkUri = `${this.conf.get('directoryBackend')}/api/software-statement/${
+    this.softwareStatementId
+  }/application/jwk_uri`;
+  public SigningAndEncryptionJwtUri = `${this.conf.get('directoryBackend')}/api/software-statement/${
+    this.softwareStatementId
+  }/application/jwk_uri`;
 
   constructor(
     private _softwareStatementService: SoftwareStatementService,
@@ -70,22 +76,6 @@ export class SoftwareStatementsKeysComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
-  }
-
-  onNavigateToTransportJwtUri() {
-    window.open(
-      `${this.conf.get('directoryBackend')}/api/software-statement/${
-        this.softwareStatementId
-      }/application/transport/jwk_uri`,
-      '_blank'
-    );
-  }
-
-  onNavigateToSigningAndEncryptionJwtUri() {
-    window.open(
-      `${this.conf.get('directoryBackend')}/api/software-statement/${this.softwareStatementId}/application/jwk_uri`,
-      '_blank'
-    );
   }
 
   getStatus(key) {
