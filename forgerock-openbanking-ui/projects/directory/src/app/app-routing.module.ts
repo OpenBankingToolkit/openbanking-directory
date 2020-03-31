@@ -117,13 +117,6 @@ export const navigations: IForgerockMainLayoutNavigations = {
       url: '/dashboard'
     },
     {
-      id: 'organisation',
-      translate: 'NAV.ORGANISATION',
-      type: 'item',
-      icon: 'assignment_ind',
-      url: '/organisation'
-    },
-    {
       id: 'software-statements',
       translate: 'NAV.SOFTWARE_STATEMENTS',
       type: 'item',

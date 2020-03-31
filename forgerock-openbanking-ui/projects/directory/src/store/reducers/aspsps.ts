@@ -42,7 +42,7 @@ export const AspspsReducer = createReducer(
 
 const { selectAll } = adapter.getSelectors((state: IState) => state.aspsps);
 
-export const selectIsLoading = (state: IState) => state.organisations.isLoading;
+export const selectIsLoading = (state: IState) => state.aspsps.isLoading;
 export const selectAspsps = selectAll;
 
 export default AspspsReducer;

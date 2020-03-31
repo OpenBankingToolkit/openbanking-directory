@@ -7,9 +7,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { DirectoryOrganisationCardComponent } from './organisation-card.component';
 import { DirectoryOrganisationCardContainer } from './organisation-card.container';
+import { DirectoryOrganisationFormModule } from '../organisation-form/organisation-form.module';
+// import { DirectoryOrganisationCardDialogComponent } from './organisation-card-dialog.component';
 
 @NgModule({
   imports: [
@@ -19,8 +22,10 @@ import { DirectoryOrganisationCardContainer } from './organisation-card.containe
     MatListModule,
     MatIconModule,
     RouterModule,
+    MatDialogModule,
     MatProgressBarModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    DirectoryOrganisationFormModule
   ],
   declarations: [DirectoryOrganisationCardComponent, DirectoryOrganisationCardContainer],
   exports: [DirectoryOrganisationCardContainer]

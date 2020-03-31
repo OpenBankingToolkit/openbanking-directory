@@ -11,41 +11,31 @@ import {
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import _get from 'lodash-es/get';
 
-import debug from 'debug';
-
 import { IOrganisation } from 'directory/src/models';
 
-const log = debug('Organisation:OrganisationIndexComponent');
-
 @Component({
-  selector: 'app-organisation-form-card',
+  selector: 'app-organisation-form',
   template: `
-    <mat-card>
-      <mat-card-title>Edit {{ organisation?.name || organisation?.id }}</mat-card-title>
-      <mat-card-content
-        ><mat-progress-bar
-          [style.visibility]="isLoading ? 'visible' : 'hidden'"
-          mode="indeterminate"
-        ></mat-progress-bar>
-        <form [formGroup]="form" (ngSubmit)="submit()">
-          <mat-form-field>
-            <input matInput placeholder="Id" formControlName="id" type="text" />
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput placeholder="Name" formControlName="name" type="text" />
-          </mat-form-field>
-          <mat-form-field>
-            <textarea matInput placeholder="Description" formControlName="description" rows="5"></textarea>
-          </mat-form-field>
-          <div fxLayout="row">
-            <div fxFlex></div>
-            <button mat-raised-button color="accent" type="submit" [disabled]="!form.valid || isLoading">
-              <span>Save</span>
-            </button>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field>
+        <input matInput placeholder="Id" formControlName="id" type="text" />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Name" formControlName="name" type="text" />
+      </mat-form-field>
+      <mat-form-field>
+        <textarea matInput placeholder="Description" formControlName="description" rows="5"></textarea>
+      </mat-form-field>
+      <div fxLayout="row">
+        <div fxFlex></div>
+        <button mat-button (click)="cancel.emit()">
+          {{ 'CANCEL' | translate }}
+        </button>
+        <button mat-raised-button color="accent" type="submit" [disabled]="!form.valid || isLoading">
+          {{ 'SAVE' | translate }}
+        </button>
+      </div>
+    </form>
   `,
   styles: [
     `
@@ -59,10 +49,11 @@ const log = debug('Organisation:OrganisationIndexComponent');
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DirectoryOrganisationFormCardComponent implements OnInit, OnChanges {
+export class DirectoryOrganisationFormComponent implements OnInit, OnChanges {
   @Input() organisation: IOrganisation;
   @Input() isLoading = false;
   @Output() update = new EventEmitter<IOrganisation>();
+  @Output() cancel = new EventEmitter<void>();
   public form: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {

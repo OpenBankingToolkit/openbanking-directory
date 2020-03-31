@@ -1,11 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import _get from 'lodash-es/get';
 
-import debug from 'debug';
-
 import { IOrganisation } from 'directory/src/models';
-
-const log = debug('Organisation:OrganisationIndexComponent');
+import { DirectoryOrganisationFormDialogContainer } from '../organisation-form/organisation-form-dialog.container';
 
 @Component({
   selector: 'app-organisation-card',
@@ -14,7 +12,7 @@ const log = debug('Organisation:OrganisationIndexComponent');
       <mat-card-title
         >Your organisation
         <span fxFlex></span>
-        <button mat-icon-button routerLink="/organisation" aria-label="Edit organisation">
+        <button mat-icon-button (click)="openEditDialog()" aria-label="Edit organisation">
           <mat-icon>edit</mat-icon>
         </button></mat-card-title
       >
@@ -59,6 +57,18 @@ export class DirectoryOrganisationCardComponent implements OnInit {
   @Input() organisation: IOrganisation;
   @Input() isLoading = false;
 
-  constructor() {}
+  constructor(public dialog: MatDialog) {}
   ngOnInit() {}
+
+  openEditDialog(): void {
+    const dialogRef = this.dialog.open(DirectoryOrganisationFormDialogContainer, {
+      width: '400px',
+      data: { organisation: this.organisation }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      // this.animal = result;
+    });
+  }
 }

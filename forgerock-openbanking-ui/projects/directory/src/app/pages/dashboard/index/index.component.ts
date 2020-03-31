@@ -20,6 +20,16 @@ const log = debug('Dashboard:DashboardIndexComponent');
 })
 export class DashboardIndexComponent implements OnInit, OnDestroy {
   public jwkUri = `${this.conf.get('directoryBackend')}/api/directory/keys/jwk_uri`;
+  public termsOfServiceLink = this.conf.get(
+    'termsOfServiceLink',
+    'https://backstage.forgerock.com/knowledge/openbanking/article/a45894685'
+  );
+  public policyLink = this.conf.get(
+    'policyLink',
+    'https://backstage.forgerock.com/knowledge/openbanking/article/a11457341'
+  );
+  public aboutLink = this.conf.get('aboutLink', 'https://backstage.forgerock.com/knowledge/openbanking/');
+
   isLoading = false;
   private _unsubscribeAll: Subject<any> = new Subject();
 

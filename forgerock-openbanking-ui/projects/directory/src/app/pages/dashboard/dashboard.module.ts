@@ -6,6 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardIndexComponent } from './index/index.component';
@@ -25,6 +26,7 @@ import { DirectorySupportDialogComponent } from './index/support-dialog.componen
     MatIconModule,
     MatDialogModule,
     FlexLayoutModule,
+    TranslateModule,
     DirectoryOrganisationCardModule,
     DirectorySoftwareStatementListModule,
     DirectoryASPSPCardModule

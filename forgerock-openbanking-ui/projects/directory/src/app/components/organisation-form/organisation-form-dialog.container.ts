@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, combineLatest } from 'rxjs';
 
@@ -11,21 +11,23 @@ import {
 } from 'directory/src/store/reducers/organisations';
 import { first, withLatestFrom } from 'rxjs/operators';
 import { selectOIDCUserOrganisationId } from '@forgerock/openbanking-ngx-common/oidc';
-
-const selector = 'app-organisation-form-card-container';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector,
+  selector: 'app-organisation-form-dialog-container',
   template: `
-    <app-organisation-form-card
-      [organisation]="organisation$ | async"
-      [isLoading]="isLoading$ | async"
-      (update)="update($event)"
-    >
-    </app-organisation-form-card>
+    <div mat-dialog-content>
+      <app-organisation-form
+        [organisation]="organisation$ | async"
+        [isLoading]="isLoading$ | async"
+        (update)="update($event)"
+        (cancel)="cancel()"
+      >
+      </app-organisation-form>
+    </div>
   `
 })
-export class DirectoryOrganisationFormCardContainer implements OnInit {
+export class DirectoryOrganisationFormDialogContainer implements OnInit {
   @Input() displayedColumns: string[];
 
   public organisationId$: Observable<string> = this.store.pipe(select(selectOIDCUserOrganisationId));
@@ -41,7 +43,11 @@ export class DirectoryOrganisationFormCardContainer implements OnInit {
     })
   );
 
-  constructor(protected store: Store<IState>) {}
+  constructor(
+    public dialogRef: MatDialogRef<DirectoryOrganisationFormDialogContainer>,
+    @Inject(MAT_DIALOG_DATA) public data: void,
+    protected store: Store<IState>
+  ) {}
 
   ngOnInit() {
     this.shouldLoad$.pipe(first()).subscribe(
@@ -55,11 +61,16 @@ export class DirectoryOrganisationFormCardContainer implements OnInit {
     );
   }
 
+  cancel() {
+    this.dialogRef.close();
+  }
+
   update(organisation: IOrganisation) {
     this.store.dispatch(
       OrganisationUpdateRequestAction({
         organisation
       })
     );
+    this.dialogRef.close();
   }
 }
