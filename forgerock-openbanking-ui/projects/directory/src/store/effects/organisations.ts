@@ -14,7 +14,9 @@ import {
   OrganisationRequestAction,
   OrganisationSuccessAction,
   OrganisationsErrorAction,
-  OrganisationUpdateRequestAction
+  OrganisationUpdateRequestAction,
+  OrganisationsRequestAction,
+  OrganisationsSuccessAction
 } from '../reducers/organisations';
 
 @Injectable()
@@ -24,6 +26,18 @@ export class OrganisationsEffects {
     private messages: ForgerockMessagesService,
     private organisationService: OrganisationService
   ) {}
+
+  @Effect()
+  requestAll$: Observable<any> = this.actions$.pipe(
+    ofType(OrganisationsRequestAction),
+    mergeMap(() => {
+      return this.organisationService.getOrganisations().pipe(
+        retry(3),
+        map((organisations: IOrganisation[]) => OrganisationsSuccessAction({ organisations })),
+        this.errorPipe()
+      );
+    })
+  );
 
   @Effect()
   requestOne$: Observable<any> = this.actions$.pipe(

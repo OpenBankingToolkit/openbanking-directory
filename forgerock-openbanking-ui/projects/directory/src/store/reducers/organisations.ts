@@ -45,7 +45,7 @@ export const OrganisationsReducer = createReducer(
   })),
   on(OrganisationsSuccessAction, (state, { organisations }) => ({
     ...state,
-    ...adapter.addAll(organisations, state),
+    ...adapter.setAll(organisations, state),
     isLoading: false,
     error: ''
   })),
@@ -73,8 +73,9 @@ export const OrganisationsReducer = createReducer(
   on(logoutAction, () => initialState)
 );
 
-const { selectEntities } = adapter.getSelectors((state: IState) => state.organisations);
+const { selectEntities, selectAll } = adapter.getSelectors((state: IState) => state.organisations);
 
+export const selectOrganisations = selectAll;
 export const selectIsLoading = (state: IState) => state.organisations.isLoading;
 export const selectCurrrentUserOrganisation = createSelector(
   selectEntities,

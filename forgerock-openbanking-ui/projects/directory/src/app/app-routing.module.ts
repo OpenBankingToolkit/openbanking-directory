@@ -5,7 +5,8 @@ import {
   ForgerockMainLayoutComponent,
   ForgerockMainLayoutModule,
   IForgerockMainLayoutConfig,
-  IForgerockMainLayoutNavigations
+  IForgerockMainLayoutNavigations,
+  IForgerockMainLayoutNavigation
 } from '@forgerock/openbanking-ngx-common/layouts/main-layout';
 import { SimpleLayoutComponent } from '@forgerock/openbanking-ngx-common/layouts/simple';
 import { ForgerockSimpleLayoutModule } from '@forgerock/openbanking-ngx-common/layouts/simple';
@@ -16,6 +17,7 @@ import { ForgerockAuthRedirectOIDCComponent, IsOIDCConnectedGuard } from '@forge
 import { DirectoryToolbarMenuComponentModule } from './components/toolbar-menu/toolbar-menu.module';
 import { DirectoryToolbarMenuContainer } from './components/toolbar-menu/toolbar-menu.container';
 
+export const mainNavKey = 'main';
 const routes: Routes = [
   {
     path: '',
@@ -107,30 +109,32 @@ const mainLayoutConfig: IForgerockMainLayoutConfig = {
   }
 };
 
+export const mainNav: IForgerockMainLayoutNavigation[] = [
+  {
+    id: 'dashboard',
+    translate: 'NAV.DASHBOARD',
+    type: 'item',
+    icon: 'dashboard',
+    url: '/dashboard'
+  },
+  {
+    id: 'software-statements',
+    translate: 'NAV.SOFTWARE_STATEMENTS',
+    type: 'item',
+    icon: 'gavel',
+    url: '/software-statements'
+  },
+  {
+    id: 'bank',
+    translate: 'NAV.BANK',
+    type: 'item',
+    icon: 'card_travel',
+    url: '/aspsps'
+  }
+];
+
 export const navigations: IForgerockMainLayoutNavigations = {
-  main: [
-    {
-      id: 'dashboard',
-      translate: 'NAV.DASHBOARD',
-      type: 'item',
-      icon: 'dashboard',
-      url: '/dashboard'
-    },
-    {
-      id: 'software-statements',
-      translate: 'NAV.SOFTWARE_STATEMENTS',
-      type: 'item',
-      icon: 'gavel',
-      url: '/software-statements'
-    },
-    {
-      id: 'bank',
-      translate: 'NAV.BANK',
-      type: 'item',
-      icon: 'card_travel',
-      url: '/aspsps'
-    }
-  ],
+  [mainNavKey]: mainNav,
   admin: [
     {
       id: 'dashboard',

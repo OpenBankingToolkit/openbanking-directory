@@ -28,7 +28,7 @@ import { IOrganisation } from 'directory/src/models';
       </mat-form-field>
       <div fxLayout="row">
         <div fxFlex></div>
-        <button mat-button (click)="cancel.emit()">
+        <button mat-button type="button" (click)="cancel.emit()">
           {{ 'CANCEL' | translate }}
         </button>
         <button mat-raised-button color="accent" type="submit" [disabled]="!form.valid || isLoading">

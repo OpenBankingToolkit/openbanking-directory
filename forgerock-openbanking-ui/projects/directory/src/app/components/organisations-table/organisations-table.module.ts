@@ -7,10 +7,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatChipsModule } from '@angular/material/chips';
 
-import { DirectoryOrganisationCardComponent } from './organisation-card.component';
-import { DirectoryOrganisationCardContainer } from './organisation-card.container';
+import { DirectoryOrganisationsTableComponent } from './organisations-table.component';
+import { DirectoryOrganisationsTableContainer } from './organisations-table.container';
 import { DirectoryOrganisationFormModule } from '../organisation-form/organisation-form.module';
 
 @NgModule({
@@ -20,13 +21,14 @@ import { DirectoryOrganisationFormModule } from '../organisation-form/organisati
     MatButtonModule,
     MatListModule,
     MatIconModule,
+    MatTableModule,
+    MatChipsModule,
     RouterModule,
-    MatDialogModule,
     MatProgressBarModule,
     FlexLayoutModule,
     DirectoryOrganisationFormModule
   ],
-  declarations: [DirectoryOrganisationCardComponent, DirectoryOrganisationCardContainer],
-  exports: [DirectoryOrganisationCardContainer]
+  declarations: [DirectoryOrganisationsTableComponent, DirectoryOrganisationsTableContainer],
+  exports: [DirectoryOrganisationsTableContainer]
 })
-export class DirectoryOrganisationCardModule {}
+export class DirectoryOrganisationsTableModule {}
