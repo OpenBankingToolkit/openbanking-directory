@@ -1,4 +1,4 @@
-import { props, on, createSelector, createReducer, createAction, createFeatureSelector } from '@ngrx/store';
+import { props, on, createSelector, createReducer, createAction } from '@ngrx/store';
 import _get from 'lodash-es/get';
 
 import { IOrganisationsState, IState, IOrganisation } from '../../models';

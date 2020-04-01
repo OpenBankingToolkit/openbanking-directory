@@ -9,7 +9,7 @@ import {
   OrganisationRequestAction,
   OrganisationUpdateRequestAction
 } from 'directory/src/store/reducers/organisations';
-import { first, withLatestFrom } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { selectOIDCUserOrganisationId } from '@forgerock/openbanking-ngx-common/oidc';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 

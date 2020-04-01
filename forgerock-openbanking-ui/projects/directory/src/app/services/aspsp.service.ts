@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 
 import { getHTTPOptions } from './utils';
 import { ForgerockConfigService } from '@forgerock/openbanking-ngx-common/services/forgerock-config';

@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Renderer2, OnDestroy } from '@angular/core';
-import debug from 'debug';
-import { take, switchMap, catchError, finalize, takeUntil, retry } from 'rxjs/operators';
+import { switchMap, catchError, finalize, takeUntil, retry } from 'rxjs/operators';
 import { of, Subject, pipe } from 'rxjs';
 import _get from 'lodash-es/get';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,8 +9,6 @@ import { ForgerockConfigService } from '@forgerock/openbanking-ngx-common/servic
 import { DirectoryService } from 'directory/src/app/services/directory.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DirectorySupportDialogComponent } from './support-dialog.component';
-
-const log = debug('Dashboard:DashboardIndexComponent');
 
 @Component({
   selector: 'app-index',

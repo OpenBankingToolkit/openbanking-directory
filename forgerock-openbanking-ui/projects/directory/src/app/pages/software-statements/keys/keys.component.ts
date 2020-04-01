@@ -23,7 +23,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 const log = debug('SoftwareStatements:SoftwareStatementsKeysComponent');
 
 @Component({
-  selector: 'software-statements-keys',
+  selector: 'app-software-statements-keys',
   templateUrl: './keys.component.html',
   styleUrls: ['./keys.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of, pipe } from 'rxjs';
-import { catchError, map, mergeMap, withLatestFrom, retry } from 'rxjs/operators';
+import { catchError, map, mergeMap, retry } from 'rxjs/operators';
 import _get from 'lodash-es/get';
 
 import {
@@ -14,7 +13,7 @@ import {
   SoftwareStatementCreateRequestAction
 } from 'directory/src/store/reducers/software-statements';
 import { ForgerockMessagesService } from '@forgerock/openbanking-ngx-common/services/forgerock-messages';
-import { IState, ISoftwareStatement } from 'directory/src/models';
+import {  ISoftwareStatement } from 'directory/src/models';
 import { OrganisationService } from 'directory/src/app/services/organisation.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SoftwareStatementService } from 'directory/src/app/services/software-statement.service';

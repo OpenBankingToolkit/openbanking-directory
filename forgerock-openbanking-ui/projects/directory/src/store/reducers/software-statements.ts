@@ -1,8 +1,8 @@
-import { props, on, createSelector, createReducer, createAction, createFeatureSelector } from '@ngrx/store';
+import { props, on, createReducer, createAction } from '@ngrx/store';
 import _get from 'lodash-es/get';
 
 import { ISoftwareStatementsState, IState, ISoftwareStatement, ISoftwareStatementsEntityState } from '../../models';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { logoutAction } from './oidc';
 
 export const SoftwareStatementsRequestAction = createAction(

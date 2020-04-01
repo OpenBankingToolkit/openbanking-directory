@@ -10,7 +10,7 @@ import {
   SoftwareStatementDeletionRequestAction,
   SoftwareStatementCreateRequestAction
 } from 'directory/src/store/reducers/software-statements';
-import { first, withLatestFrom, mergeMap } from 'rxjs/operators';
+import { first, withLatestFrom } from 'rxjs/operators';
 
 const selector = 'app-software-statement-list-container';
 
