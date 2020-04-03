@@ -6,7 +6,15 @@ import _get from 'lodash-es/get';
 
 import { ForgerockMessagesService } from '@forgerock/openbanking-ngx-common/services/forgerock-messages';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ActionsUnion, AspspsRequestAction, AspspsSuccessAction, AspspsErrorAction } from '../reducers/aspsps';
+import {
+  ActionsUnion,
+  AspspsRequestAction,
+  AspspsSuccessAction,
+  AspspsErrorAction,
+  AspspSuccessAction,
+  AspspUpdateRequestAction,
+  AspspCreateRequestAction
+} from '../reducers/aspsps';
 import { AspspService } from 'directory/src/app/services/aspsp.service';
 import { IAspsp } from 'directory/src/models';
 
@@ -19,15 +27,39 @@ export class AspspsEffects {
   ) {}
 
   @Effect()
-  requestOne$: Observable<any> = this.actions$.pipe(
+  requestAll$: Observable<any> = this.actions$.pipe(
     ofType(AspspsRequestAction),
-    mergeMap(() => {
-      return this.aspspsService.getAspsps().pipe(
+    mergeMap(() =>
+      this.aspspsService.getAspsps().pipe(
         retry(3),
-        map((aspsps: IAspsp[]) => AspspsSuccessAction({ aspsps })),
+        map((response: IAspsp[]) => AspspsSuccessAction({ aspsps: response })),
         this.errorPipe()
-      );
-    })
+      )
+    )
+  );
+
+  @Effect()
+  create$: Observable<any> = this.actions$.pipe(
+    ofType(AspspCreateRequestAction),
+    mergeMap((action: { aspsp: IAspsp }) =>
+      this.aspspsService.createAspsp(action.aspsp).pipe(
+        retry(3),
+        map((response: IAspsp) => AspspSuccessAction({ aspsp: response })),
+        this.errorPipe()
+      )
+    )
+  );
+
+  @Effect()
+  update$: Observable<any> = this.actions$.pipe(
+    ofType(AspspUpdateRequestAction),
+    mergeMap((action: { aspsp: IAspsp }) =>
+      this.aspspsService.updateAspsp(action.aspsp).pipe(
+        retry(3),
+        map((response: IAspsp) => AspspSuccessAction({ aspsp: response })),
+        this.errorPipe()
+      )
+    )
   );
 
   errorPipe = () =>

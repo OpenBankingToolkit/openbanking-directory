@@ -1,6 +1,12 @@
 :host {
+  mat-card-title {
+    align-items: center;
+  }
   table {
     width: 100%;
+    .mat-column-admin {
+      max-width: 40px;
+    }
     tr {
       display: flex;
       flex-direction: row;
@@ -17,6 +23,7 @@
     td {
       > img {
         max-height: 45px;
+        margin: auto;
       }
       width: 100px;
       & > span {

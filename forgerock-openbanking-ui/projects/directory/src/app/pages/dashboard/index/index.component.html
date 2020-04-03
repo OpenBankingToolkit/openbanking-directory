@@ -38,7 +38,16 @@
     <app-organisation-card-container></app-organisation-card-container>
   </div>
   <div fxFlex fxFlex.gt-sm="70" fxLayoutGap="1em grid" fxLayout="column">
-    <app-aspsp-card-container></app-aspsp-card-container>
+    <app-aspsp-card-container
+      [displayedColumns]="[
+        'logoUri',
+        'name',
+        'financialId',
+        'asDiscoveryEndpoint',
+        'rsDiscoveryEndpoint',
+        'transportKeys'
+      ]"
+    ></app-aspsp-card-container>
     <app-software-statement-list-container
       fxFlex
       [displayedColumns]="['id', 'applicationId', 'name', 'delete']"

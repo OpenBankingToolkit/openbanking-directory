@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, combineLatest } from 'rxjs';
 
@@ -28,8 +28,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   `
 })
 export class DirectoryOrganisationFormDialogContainer implements OnInit {
-  @Input() displayedColumns: string[];
-
   public organisationId$: Observable<string> = this.store.pipe(select(selectOIDCUserOrganisationId));
   public organisation$: Observable<IOrganisation> = this.store.pipe(select(selectCurrrentUserOrganisation));
   public isLoading$: Observable<boolean> = this.store.pipe(select(selectIsLoading));

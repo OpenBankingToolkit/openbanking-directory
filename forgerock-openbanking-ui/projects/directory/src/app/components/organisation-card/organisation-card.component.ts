@@ -63,6 +63,7 @@ export class DirectoryOrganisationCardComponent implements OnInit {
   openEditDialog(): void {
     const dialogRef = this.dialog.open(DirectoryOrganisationFormDialogContainer, {
       width: '400px',
+      disableClose: true,
       data: { organisation: this.organisation }
     });
 

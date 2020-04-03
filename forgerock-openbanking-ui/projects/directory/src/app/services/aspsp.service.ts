@@ -19,11 +19,11 @@ export class AspspService {
     return this.http.get<IAspsp>(`${this.conf.get('directoryBackend')}/api/aspsp/${aspspId}`, getHTTPOptions());
   }
 
-  createAspsp() {
-    return this.http.post<IAspsp>(`${this.conf.get('directoryBackend')}/api/aspsp/`, {}, getHTTPOptions());
+  createAspsp({ id, ...rest }: Partial<IAspsp> = {}) { // remove the ID otherwise it won't create a new entity and return an object with an empty ID
+    return this.http.post<IAspsp>(`${this.conf.get('directoryBackend')}/api/aspsp/`, { ...rest }, getHTTPOptions());
   }
 
-  updateAspsp(aspsp) {
-    return this.http.put<IAspsp>(`${this.conf.get('directoryBackend')}/api/aspsp/${aspsp.id}`, aspsp, getHTTPOptions());
+  updateAspsp(body: Partial<IAspsp>) {
+    return this.http.put<IAspsp>(`${this.conf.get('directoryBackend')}/api/aspsp/${body.id}`, body, getHTTPOptions());
   }
 }

@@ -49,9 +49,31 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authoritiesSubscription = this.authorities$.subscribe((authorities: string[]) => {
       const adminFR = authorities.includes(IAuhtorities.GROUP_FORGEROCK);
       const adminOB = authorities.includes(IAuhtorities.GROUP_OB);
-      const hadAdminAccess = adminFR || adminOB;
+      const hasAdminAccess = adminFR || adminOB;
 
-      if (!hadAdminAccess) return;
+      if (!hasAdminAccess) return;
+
+      const adminMenu = [];
+
+      if (adminFR || adminOB) {
+        adminMenu.push({
+          id: 'organisation',
+          translate: 'NAV.ORGANISATIONS',
+          type: 'item',
+          icon: 'assignment_ind',
+          url: '/admin/organisations'
+        });
+      }
+
+      if (adminFR) {
+        adminMenu.push({
+          id: 'aspsps',
+          translate: 'NAV.ASPSPS',
+          type: 'item',
+          icon: 'card_travel',
+          url: '/admin/aspsps'
+        });
+      }
 
       this.mainLayoutNavigationService.unregister(mainNavKey);
       this.mainLayoutNavigationService.register(
@@ -63,29 +85,7 @@ export class AppComponent implements OnInit, OnDestroy {
               id: 'admin',
               translate: 'NAV.ADMIN',
               type: 'group',
-              children: [
-                {
-                  id: 'organisation',
-                  translate: 'NAV.ORGANISATIONS',
-                  type: 'item',
-                  icon: 'assignment_ind',
-                  url: '/admin/organisations'
-                },
-                {
-                  id: 'aspsps',
-                  translate: 'NAV.ASPSPS',
-                  type: 'item',
-                  icon: 'card_travel',
-                  url: '/admin/aspsps'
-                },
-                {
-                  id: 'messages',
-                  translate: 'NAV.MESSAGES',
-                  type: 'item',
-                  icon: 'message',
-                  url: '/admin/messages'
-                }
-              ]
+              children: adminMenu
             }
           ];
         })()

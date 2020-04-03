@@ -1,6 +1,18 @@
 <mat-card>
+  <mat-card-title
+    >ASPSPs
+    <span fxFlex></span>
+    <button
+      *ngIf="isAdmin && displayedColumns.includes('admin')"
+      mat-icon-button
+      [disabled]="isLoading"
+      (click)="createASPSP()"
+      aria-label="Create a new ASPSP"
+    >
+      <mat-icon>add</mat-icon>
+    </button></mat-card-title
+  >
   <mat-card-content>
-    <mat-card-title>ASPSPs</mat-card-title>
     <table mat-table [dataSource]="aspsps">
       <ng-container matColumnDef="logoUri">
         <th mat-header-cell *matHeaderCellDef fxHide.xs fxHide.sm></th>
@@ -10,7 +22,7 @@
       </ng-container>
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef fxHide.xs>Name</th>
-        <td mat-cell *matCellDef="let element" fxHide.xs  [title]="element.name">
+        <td mat-cell *matCellDef="let element" fxHide.xs [title]="element.name">
           <span>{{ element.name }}</span>
         </td>
       </ng-container>
@@ -44,21 +56,14 @@
           </a>
         </td>
       </ng-container>
-      <!-- <ng-container matColumnDef="applicationId">
-            <th
-              mat-header-cell
-              *matHeaderCellDef
-              fxHide.xs
-              fxHide.sm
-            > applicationId </th>
-            <td
-              mat-cell
-              fxHide.xs
-              fxHide.sm
-              *matCellDef="let element"
-            > {{element.applicationId}} </td>
-          </ng-container> -->
-
+      <ng-container matColumnDef="admin">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button [disabled]="isLoading" mat-icon-button (click)="updateASPSP(element)">
+            <mat-icon aria-label="Update ASPSP">edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>

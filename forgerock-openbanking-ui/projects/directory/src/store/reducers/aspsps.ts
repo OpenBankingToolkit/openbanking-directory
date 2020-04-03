@@ -1,4 +1,4 @@
-import { props, on,  createReducer, createAction } from '@ngrx/store';
+import { props, on, createReducer, createAction } from '@ngrx/store';
 import _get from 'lodash-es/get';
 
 import { IAspspsState, IState, IAspsp } from '../../models';
@@ -6,7 +6,10 @@ import { createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { logoutAction } from './oidc';
 
 export const AspspsRequestAction = createAction('ASPSPS_REQUEST');
+export const AspspCreateRequestAction = createAction('ASPSP_CREATE_REQUEST', props<{ aspsp: IAspsp }>());
+export const AspspUpdateRequestAction = createAction('ASPSP_UPDATE_REQUEST', props<{ aspsp: IAspsp }>());
 
+export const AspspSuccessAction = createAction('ASPSP_SUCCESS', props<{ aspsp: IAspsp }>());
 export const AspspsSuccessAction = createAction('ASPSPS_SUCCESS', props<{ aspsps: IAspsp[] }>());
 export const AspspsErrorAction = createAction('ASPSPS_ERROR', props<{ error: string }>());
 
@@ -19,16 +22,26 @@ export const initialState: IAspspsState = adapter.getInitialState({
   error: ''
 });
 
+const requestCallback = state => ({
+  ...state,
+  isLoading: true,
+  error: ''
+});
+
 export const AspspsReducer = createReducer(
   initialState,
-  on(AspspsRequestAction, state => ({
-    ...state,
-    isLoading: true,
-    error: ''
-  })),
+  on(AspspsRequestAction, requestCallback),
+  on(AspspCreateRequestAction, requestCallback),
+  on(AspspUpdateRequestAction, requestCallback),
   on(AspspsSuccessAction, (state, { aspsps }) => ({
     ...state,
     ...adapter.addAll(aspsps, state),
+    isLoading: false,
+    error: ''
+  })),
+  on(AspspSuccessAction, (state, { aspsp }) => ({
+    ...state,
+    ...adapter.upsertOne(aspsp, state),
     isLoading: false,
     error: ''
   })),

@@ -13,6 +13,13 @@ import { DirectorySupportDialogComponent } from './support-dialog.component';
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
+  styles: [
+    `
+      ::ng-deep mat-card-title {
+        align-items: center;
+      }
+    `
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardIndexComponent implements OnInit, OnDestroy {

@@ -69,12 +69,6 @@ const routes: Routes = [
         canActivate: [IsOIDCConnectedGuard]
       },
       {
-        path: 'aspsps',
-        loadChildren: 'directory/src/app/pages/aspsps/aspsps.module#AspspsModule',
-        canLoad: [ForgerockCustomerCanAccessGuard],
-        canActivate: [IsOIDCConnectedGuard]
-      },
-      {
         path: 'admin',
         loadChildren: 'directory/src/app/pages/admin/admin.module#AdminModule',
         canLoad: [ForgerockCustomerCanAccessGuard],
@@ -116,62 +110,18 @@ export const mainNav: IForgerockMainLayoutNavigation[] = [
     type: 'item',
     icon: 'dashboard',
     url: '/dashboard'
-  },
-  {
-    id: 'software-statements',
-    translate: 'NAV.SOFTWARE_STATEMENTS',
-    type: 'item',
-    icon: 'gavel',
-    url: '/software-statements'
-  },
-  {
-    id: 'bank',
-    translate: 'NAV.BANK',
-    type: 'item',
-    icon: 'card_travel',
-    url: '/aspsps'
   }
+  // {
+  //   id: 'software-statements',
+  //   translate: 'NAV.SOFTWARE_STATEMENTS',
+  //   type: 'item',
+  //   icon: 'gavel',
+  //   url: '/software-statements'
+  // }
 ];
 
 export const navigations: IForgerockMainLayoutNavigations = {
-  [mainNavKey]: mainNav,
-  admin: [
-    {
-      id: 'dashboard',
-      translate: 'NAV.HOME',
-      type: 'item',
-      icon: 'arrow_back',
-      url: '/dashboard'
-    },
-    {
-      id: 'admin',
-      translate: 'NAV.ADMIN',
-      type: 'group',
-      children: [
-        {
-          id: 'organisation',
-          translate: 'NAV.ORGANISATIONS',
-          type: 'item',
-          icon: 'assignment_ind',
-          url: '/admin/organisations'
-        },
-        {
-          id: 'aspsps',
-          translate: 'NAV.ASPSPS',
-          type: 'item',
-          icon: 'card_travel',
-          url: '/admin/aspsps'
-        },
-        {
-          id: 'messages',
-          translate: 'NAV.MESSAGES',
-          type: 'item',
-          icon: 'message',
-          url: '/admin/messages'
-        }
-      ]
-    }
-  ]
+  [mainNavKey]: mainNav
 };
 
 @NgModule({
