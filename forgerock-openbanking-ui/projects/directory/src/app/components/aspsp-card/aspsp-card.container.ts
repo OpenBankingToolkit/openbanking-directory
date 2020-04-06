@@ -31,7 +31,7 @@ export class DirectoryASPSPCardContainer implements OnInit {
   @Input() displayedColumns: string[];
 
   public aspsps$: Observable<IAspsp[]> = this.store.pipe(select(selectAspsps));
-  public isAdmin$: Observable<string[]> = this.store.pipe(
+  public isAdmin$: Observable<boolean> = this.store.pipe(
     select(selectOIDCUserAuthorities),
     map(authorities => authorities.includes(IAuhtorities.GROUP_FORGEROCK))
   );
