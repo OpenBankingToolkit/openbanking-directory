@@ -82,20 +82,16 @@ export class AppComponent implements OnInit, OnDestroy {
       log({ adminMenu });
 
       this.mainLayoutNavigationService.unregister(mainNavKey);
-      this.mainLayoutNavigationService.register(
-        mainNavKey,
-        (() => {
-          return [
-            ...mainNav,
-            {
-              id: 'admin',
-              translate: 'NAV.ADMIN',
-              type: 'group',
-              children: adminMenu
-            }
-          ];
-        })()
-      );
+      this.mainLayoutNavigationService.register(mainNavKey, [
+        ...mainNav,
+        {
+          id: 'admin',
+          translate: 'NAV.ADMIN',
+          type: 'group',
+          children: adminMenu
+        }
+      ]);
+      this.mainLayoutNavigationService.setCurrentNavigation(mainNavKey);
     });
   }
 
