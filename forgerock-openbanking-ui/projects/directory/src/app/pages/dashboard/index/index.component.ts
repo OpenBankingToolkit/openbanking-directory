@@ -18,6 +18,10 @@ import { DirectorySupportDialogComponent } from './support-dialog.component';
       ::ng-deep mat-card-title {
         align-items: center;
       }
+      a {
+        width: 100%;
+        text-align: left;
+      }
     `
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
