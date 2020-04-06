@@ -4,6 +4,7 @@ import { Platform } from '@angular/cdk/platform';
 import { TranslateService } from '@ngx-translate/core';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
+import debug from 'debug';
 
 import { ForgerockSplashscreenService } from '@forgerock/openbanking-ngx-common/services/forgerock-splashscreen';
 import { ForgerockGDPRService } from '@forgerock/openbanking-ngx-common/gdpr';
@@ -12,6 +13,8 @@ import { selectOIDCUserAuthorities } from '@forgerock/openbanking-ngx-common/oid
 
 import { mainNav, mainNavKey } from './app-routing.module';
 import { IState, IAuhtorities } from '../models';
+
+const log = debug('AppComponent');
 
 @Component({
   selector: 'app-root',
@@ -47,9 +50,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.authoritiesSubscription = this.authorities$.subscribe((authorities: string[]) => {
+      log('users authorities', authorities);
       const adminFR = authorities.includes(IAuhtorities.GROUP_FORGEROCK);
       const adminOB = authorities.includes(IAuhtorities.GROUP_OB);
       const hasAdminAccess = adminFR || adminOB;
+      log({ adminFR, adminOB, hasAdminAccess });
 
       if (!hasAdminAccess) return;
 
@@ -74,6 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
           url: '/admin/aspsps'
         });
       }
+      log({ adminMenu });
 
       this.mainLayoutNavigationService.unregister(mainNavKey);
       this.mainLayoutNavigationService.register(
