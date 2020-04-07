@@ -14,7 +14,7 @@
     "bundleSize.directory": "openbanking-ui-cli appSize --theme forgerock --project directory",
     "serve.directory": "ng serve directory",
     "report.directory": "npm run build.directory.forgerock && webpack-bundle-analyzer dist/forgerock/stats.json",
-    "build.directory.forgerock": "ng build --project=directory --prod --configuration=forgerock --output-path dist/forgerock --statsJson --extra-webpack-config webpack.extra.js",
+    "build.directory.forgerock": "ng build --project=directory --configuration=forgerock --output-path dist/forgerock --statsJson --extra-webpack-config webpack.extra.js",
     "build.directory.themes": "openbanking-ui-cli buildThemes --project directory",
     "=================CLUSTER UI-INTEG=================": "",
     "serve.ui-integ.directory": "ng serve directory --host dev.directory.ui-integ.forgerock.financial --browserTarget directory:build:ui-integ --sslCert ssl/all.ui-integ.forgerock.financial.crt --sslKey ssl/k-all.ui-integ.forgerock.financial.key --aot=true"
