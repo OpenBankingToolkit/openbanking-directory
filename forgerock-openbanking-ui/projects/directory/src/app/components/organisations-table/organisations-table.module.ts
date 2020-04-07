@@ -8,11 +8,14 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatChipsModule } from '@angular/material/chips';
 
 import { DirectoryOrganisationsTableComponent } from './organisations-table.component';
 import { DirectoryOrganisationsTableContainer } from './organisations-table.container';
 import { DirectoryOrganisationFormModule } from '../organisation-form/organisation-form.module';
+import { ForgerockSharedModule } from '@forgerock/openbanking-ngx-common/shared';
+import { ForgerockAlertModule } from '@forgerock/openbanking-ngx-common/components/forgerock-alert';
 
 @NgModule({
   imports: [
@@ -22,11 +25,14 @@ import { DirectoryOrganisationFormModule } from '../organisation-form/organisati
     MatListModule,
     MatIconModule,
     MatTableModule,
+    MatPaginatorModule,
     MatChipsModule,
     RouterModule,
     MatProgressBarModule,
     FlexLayoutModule,
-    DirectoryOrganisationFormModule
+    DirectoryOrganisationFormModule,
+    ForgerockSharedModule,
+    ForgerockAlertModule
   ],
   declarations: [DirectoryOrganisationsTableComponent, DirectoryOrganisationsTableContainer],
   exports: [DirectoryOrganisationsTableContainer]

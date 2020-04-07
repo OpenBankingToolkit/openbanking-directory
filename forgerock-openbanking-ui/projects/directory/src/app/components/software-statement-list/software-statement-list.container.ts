@@ -10,7 +10,7 @@ import {
   SoftwareStatementDeletionRequestAction,
   SoftwareStatementCreateRequestAction
 } from 'directory/src/store/reducers/software-statements';
-import { first, withLatestFrom } from 'rxjs/operators';
+import { first, withLatestFrom, map } from 'rxjs/operators';
 
 const selector = 'app-software-statement-list-container';
 
@@ -38,7 +38,8 @@ export class DirectorySoftwareStatementListContainer implements OnInit {
   );
   public softwareStatements$: Observable<ISoftwareStatement[]> = this.store.pipe(
     withLatestFrom(this.organisationId$),
-    select(([state, organisationId]: [IState, string]) => getSelectors(state, organisationId).selectAll)
+    select(([state, organisationId]: [IState, string]) => getSelectors(state, organisationId).selectAll),
+    map(rows => rows.reverse())
   );
 
   private shouldLoad$: Observable<any> = combineLatest(

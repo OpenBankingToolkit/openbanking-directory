@@ -1,5 +1,7 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { IOrganisation } from 'directory/src/models';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-organisations-table',
@@ -10,8 +12,7 @@ import { IOrganisation } from 'directory/src/models';
         >Organisations <small>({{ organisations.length }})</small></mat-card-title
       >
       <mat-card-content>
-        <mat-progress-bar [style.visibility]="isLoading ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>
-        <table mat-table [dataSource]="organisations">
+        <table mat-table [dataSource]="dataSource">
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef>ID</th>
             <td mat-cell *matCellDef="let element" [title]="element.id">
@@ -49,17 +50,45 @@ import { IOrganisation } from 'directory/src/models';
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
+
+        <mat-progress-bar [style.visibility]="isLoading ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>
       </mat-card-content>
+
+      <ng-container *ngIf="!dataSource.data.length && !isLoading">
+        <forgerock-alert color="accent">{{ 'EMPTY' | translate }}</forgerock-alert>
+      </ng-container>
+
+      <mat-card-actions>
+        <mat-paginator
+          [pageSizeOptions]="pageSizeOptions"
+          [pageSize]="selectedPageSize"
+          showFirstLastButtons
+        ></mat-paginator>
+      </mat-card-actions>
     </mat-card>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DirectoryOrganisationsTableComponent implements OnInit {
+export class DirectoryOrganisationsTableComponent implements OnInit, OnChanges {
   @Input() organisations: IOrganisation[];
   @Input() isLoading = false;
   @Input() displayedColumns: string[] = ['id', 'name', 'status', 'description', 'softwareStatementIds'];
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  dataSource: MatTableDataSource<IOrganisation>;
+  pageSizeOptions = [5, 10, 20];
+  selectedPageSize = this.pageSizeOptions[1];
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.dataSource = new MatTableDataSource(this.organisations);
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes.organisations.firstChange && changes.organisations.currentValue) {
+      this.dataSource.data = changes.organisations.currentValue;
+      this.dataSource.paginator.firstPage();
+    }
+  }
 }
