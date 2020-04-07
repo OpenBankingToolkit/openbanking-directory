@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  directory-ui:
+    image: r.cfcr.io/openbanking/obri/directory-ui:3.1.2-queen-rc5-66c2f84
+    ports:
+      - "4202:443"
+    environment:
+      DOMAIN: ui-integ.forgerock.financial
+      TEMPLATE: jpmorgan
+    volumes:
+      - ./ssl/k-all.ui-integ.forgerock.financial.key:/etc/nginx/certs/ui-integ.forgerock.financial.key
+      - ./ssl/all.ui-integ.forgerock.financial.crt:/etc/nginx/certs/ui-integ.forgerock.financial.crt
+      - ./ssl/ui-integ.forgerock.financial.conf:/etc/nginx/conf.d/default.conf
