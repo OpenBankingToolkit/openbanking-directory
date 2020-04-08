@@ -9,6 +9,7 @@ import {
   OnChanges
 } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { validateUrl } from '@utils/forms';
 import _get from 'lodash-es/get';
 
 import { IAspsp } from 'directory/src/models';
@@ -40,7 +41,11 @@ import { IAspsp } from 'directory/src/models';
         <mat-error
           *ngIf="form.controls.asDiscoveryEndpoint.hasError('required') && form.controls.asDiscoveryEndpoint.touched"
         >
-          <strong>{{ 'REQUIRED' | translate }}</strong>
+          <strong>{{ 'REQUIRED' | translate }}</strong> </mat-error
+        ><mat-error
+          *ngIf="form.controls.asDiscoveryEndpoint.hasError('validateUrl') && form.controls.asDiscoveryEndpoint.touched"
+        >
+          Malformed <strong>URL</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field>
@@ -48,7 +53,11 @@ import { IAspsp } from 'directory/src/models';
         <mat-error
           *ngIf="form.controls.rsDiscoveryEndpoint.hasError('required') && form.controls.rsDiscoveryEndpoint.touched"
         >
-          <strong>{{ 'REQUIRED' | translate }}</strong>
+          <strong>{{ 'REQUIRED' | translate }}</strong> </mat-error
+        ><mat-error
+          *ngIf="form.controls.rsDiscoveryEndpoint.hasError('validateUrl') && form.controls.rsDiscoveryEndpoint.touched"
+        >
+          Malformed <strong>URL</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field>
@@ -56,7 +65,11 @@ import { IAspsp } from 'directory/src/models';
         <mat-error
           *ngIf="form.controls.testMtlsEndpoint.hasError('required') && form.controls.testMtlsEndpoint.touched"
         >
-          <strong>{{ 'REQUIRED' | translate }}</strong>
+          <strong>{{ 'REQUIRED' | translate }}</strong> </mat-error
+        ><mat-error
+          *ngIf="form.controls.testMtlsEndpoint.hasError('validateUrl') && form.controls.testMtlsEndpoint.touched"
+        >
+          Malformed <strong>URL</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field>
@@ -103,12 +116,12 @@ export class DirectoryASPSPFormComponent implements OnInit, OnChanges {
         },
         Validators.required
       ),
-      logoUri: new FormControl(''),
+      logoUri: new FormControl('', [Validators.required, validateUrl]),
       name: new FormControl('', Validators.required),
       financialId: new FormControl('', Validators.required),
-      asDiscoveryEndpoint: new FormControl('', Validators.required),
-      rsDiscoveryEndpoint: new FormControl('', Validators.required),
-      testMtlsEndpoint: new FormControl('', Validators.required),
+      asDiscoveryEndpoint: new FormControl('', [Validators.required, validateUrl]),
+      rsDiscoveryEndpoint: new FormControl('', [Validators.required, validateUrl]),
+      testMtlsEndpoint: new FormControl('', [Validators.required, validateUrl]),
       transportKeys: new FormControl('', Validators.required)
     });
   }

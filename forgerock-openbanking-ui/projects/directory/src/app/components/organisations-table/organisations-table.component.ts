@@ -55,7 +55,7 @@ import { MatTableDataSource } from '@angular/material/table';
       </mat-card-content>
 
       <ng-container *ngIf="!dataSource.data.length && !isLoading">
-        <forgerock-alert color="accent">{{ 'EMPTY' | translate }}</forgerock-alert>
+        <forgerock-alert>{{ 'EMPTY' | translate }}</forgerock-alert>
       </ng-container>
 
       <mat-card-actions>
@@ -86,9 +86,8 @@ export class DirectoryOrganisationsTableComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes.organisations.firstChange && changes.organisations.currentValue) {
+    if (changes.organisations && !changes.organisations.firstChange && changes.organisations.currentValue) {
       this.dataSource.data = changes.organisations.currentValue;
-      this.dataSource.paginator.firstPage();
     }
   }
 }

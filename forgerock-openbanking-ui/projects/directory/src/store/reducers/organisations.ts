@@ -84,5 +84,7 @@ export const selectCurrrentUserOrganisation = createSelector(
     return entities[organisationId];
   }
 );
+export const selectOrganisationSoftwareStatementsIds = (state: IState, organisationId: string): string[] =>
+  _get(state.organisations, `entities[${organisationId}].softwareStatementIds`);
 
 export default OrganisationsReducer;

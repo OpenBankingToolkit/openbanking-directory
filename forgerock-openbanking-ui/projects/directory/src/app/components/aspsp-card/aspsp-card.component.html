@@ -4,7 +4,9 @@
     <span fxFlex></span>
     <button
       *ngIf="isAdmin && displayedColumns.includes('admin')"
+      mat-raised-button
       mat-icon-button
+      color="accent"
       [disabled]="isLoading"
       (click)="createASPSP()"
       aria-label="Create a new ASPSP"
@@ -69,7 +71,7 @@
     </table>
 
     <ng-container *ngIf="!dataSource.data.length && !isLoading">
-      <forgerock-alert color="accent">{{ 'EMPTY' | translate }}</forgerock-alert>
+      <forgerock-alert>{{ 'EMPTY' | translate }}</forgerock-alert>
     </ng-container>
 
     <mat-progress-bar [style.visibility]="isLoading ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>

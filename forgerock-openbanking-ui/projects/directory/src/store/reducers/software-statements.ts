@@ -1,7 +1,7 @@
-import { props, on, createReducer, createAction } from '@ngrx/store';
+import { props, on, createReducer, createAction, createSelector } from '@ngrx/store';
 import _get from 'lodash-es/get';
 
-import { ISoftwareStatementsState, IState, ISoftwareStatement, ISoftwareStatementsEntityState } from '../../models';
+import { ISoftwareStatementsState, IState, ISoftwareStatement } from '../../models';
 import { createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import { logoutAction } from './oidc';
 
@@ -10,81 +10,108 @@ export const SoftwareStatementsRequestAction = createAction(
   props<{ organisationId: string }>()
 );
 
-export const SoftwareStatementsSuccessAction = createAction(
-  'SOFTWARE_STATEMENTS_SUCCESS',
-  props<{ organisationId: string; softwareStatements: ISoftwareStatement[] }>()
+export const SoftwareStatementRequestAction = createAction(
+  'SOFTWARE_STATEMENT_REQUEST',
+  props<{ softwareStatementId: string }>()
 );
 
-export const SoftwareStatementsErrorAction = createAction(
-  'SOFTWARE_STATEMENTS_ERROR',
-  props<{ organisationId: string; error: string }>()
+export const SoftwareStatementsSuccessAction = createAction(
+  'SOFTWARE_STATEMENTS_SUCCESS',
+  props<{ softwareStatements: ISoftwareStatement[] }>()
+);
+
+export const SoftwareStatementsErrorAction = createAction('SOFTWARE_STATEMENTS_ERROR', props<{ error: string }>());
+
+export const SoftwareStatementUpdateRequestAction = createAction(
+  'SOFTWARE_STATEMENT_UPDATE_REQUEST',
+  props<{ softwareStatement: ISoftwareStatement }>()
+);
+
+export const SoftwareStatementSuccessAction = createAction(
+  'SOFTWARE_STATEMENT_SUCCESS',
+  props<{ softwareStatement: ISoftwareStatement }>()
 );
 
 export const SoftwareStatementDeletionRequestAction = createAction(
   'SOFTWARE_STATEMENT_DELETION_REQUEST',
-  props<{ organisationId: string; softwareStatementId: string }>()
+  props<{ softwareStatementId: string }>()
 );
 
-export const SoftwareStatementCreateRequestAction = createAction(
+export const SoftwareStatementCreationRequestAction = createAction(
   'SOFTWARE_STATEMENT_CREATE_REQUEST',
   props<{ organisationId: string }>()
 );
 
 export type ActionsUnion =
   | typeof SoftwareStatementsRequestAction
+  | typeof SoftwareStatementRequestAction
   | typeof SoftwareStatementsSuccessAction
   | typeof SoftwareStatementsErrorAction
+  | typeof SoftwareStatementSuccessAction
+  | typeof SoftwareStatementUpdateRequestAction
   | typeof SoftwareStatementDeletionRequestAction
-  | typeof SoftwareStatementCreateRequestAction;
+  | typeof SoftwareStatementCreationRequestAction;
 
 export const adapter: EntityAdapter<ISoftwareStatement> = createEntityAdapter<ISoftwareStatement>();
 
-export const initialState: ISoftwareStatementsState = {};
+export const initialState: ISoftwareStatementsState = adapter.getInitialState({
+  isLoading: true,
+  error: '',
+  currentUserSoftwareStatementIds: undefined
+});
 
-const defaultSoftwareStatementsEntityState = adapter.getInitialState({
+const loadingState = state => ({
+  ...state,
   isLoading: true,
   error: ''
 });
 
 export const softwareStatementsReducer = createReducer(
   initialState,
-  on(SoftwareStatementsRequestAction, (state, { organisationId }) => ({
+  on(SoftwareStatementsRequestAction, loadingState),
+  on(SoftwareStatementUpdateRequestAction, loadingState),
+  on(SoftwareStatementDeletionRequestAction, loadingState),
+  on(SoftwareStatementCreationRequestAction, loadingState),
+  on(SoftwareStatementsSuccessAction, (state, { softwareStatements }) => ({
     ...state,
-    [organisationId]: state[organisationId] || defaultSoftwareStatementsEntityState
+    ...adapter.addAll(softwareStatements, state),
+    currentUserSoftwareStatementIds: softwareStatements.map(value => value.id),
+    isLoading: false,
+    error: ''
   })),
-  on(SoftwareStatementsSuccessAction, (state, { organisationId, softwareStatements }) => ({
+  on(SoftwareStatementSuccessAction, (state, { softwareStatement }) => ({
     ...state,
-    [organisationId]: {
-      ...adapter.addAll(softwareStatements, state[organisationId]),
-      isLoading: false,
-      error: ''
-    }
+    ...adapter.upsertOne(softwareStatement, state),
+    isLoading: false,
+    error: ''
   })),
-  on(SoftwareStatementsErrorAction, (state, { organisationId, error }) => ({
+  on(SoftwareStatementsErrorAction, (state, { error }) => ({
     ...state,
-    [organisationId]: { ...state[organisationId], isLoading: false, error }
-  })),
-  on(SoftwareStatementDeletionRequestAction, (state, { organisationId }) => ({
-    ...state,
-    [organisationId]: { ...state[organisationId], isLoading: true, error: '' }
-  })),
-  on(SoftwareStatementCreateRequestAction, (state, { organisationId }) => ({
-    ...state,
-    [organisationId]: { ...state[organisationId], isLoading: true, error: '' }
+    isLoading: false,
+    error
   })),
   on(logoutAction, () => initialState)
 );
 
-export const getSelectors = (state: IState, organisationId: string) => {
-  const { selectAll } = adapter.getSelectors<ISoftwareStatementsEntityState>(
-    () => state.softwareStatements[organisationId] || defaultSoftwareStatementsEntityState
-  );
+const { selectEntities, selectAll } = adapter.getSelectors((state: IState) => state.softwareStatements);
 
-  return {
-    selectAll: selectAll(state.softwareStatements[organisationId] || defaultSoftwareStatementsEntityState),
-    isLoading: _get(state.softwareStatements, `[${organisationId}].isLoading`, false),
-    error: _get(state.softwareStatements, `[${organisationId}].error`, '')
-  };
-};
+export const selectSoftwareStatements = selectAll;
+export const selectIsLoading = (state: IState) => state.softwareStatements.isLoading;
+export const selectCurrentUserSoftwareStatementIds = (state: IState) =>
+  state.softwareStatements.currentUserSoftwareStatementIds;
+export const selectError = (state: IState) => state.softwareStatements.error;
+
+export const selectSoftwareStatement = createSelector(
+  (state: IState, softwareStatementId: string) => softwareStatementId,
+  selectEntities,
+  (softwareStatementId: string | undefined, entities) => entities[softwareStatementId]
+);
+
+export const selectCurrentUserSoftwareStatements = createSelector(
+  selectCurrentUserSoftwareStatementIds,
+  selectEntities,
+  (softwareStatementsIds: string[] | undefined, entities) =>
+    softwareStatementsIds && softwareStatementsIds.map(id => entities[id])
+);
 
 export default softwareStatementsReducer;

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { getHTTPOptions } from './utils';
 import { ForgerockConfigService } from '@forgerock/openbanking-ngx-common/services/forgerock-config';
+import { ISoftwareStatement } from 'directory/src/models';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { ForgerockConfigService } from '@forgerock/openbanking-ngx-common/servic
 export class SoftwareStatementService {
   constructor(private http: HttpClient, private conf: ForgerockConfigService) {}
   public getSoftwareStatement(softwareStatementId: string) {
-    return this.http.get(
+    return this.http.get<ISoftwareStatement>(
       `${this.conf.get('directoryBackend')}/api/software-statement/${softwareStatementId}`,
       getHTTPOptions()
     );

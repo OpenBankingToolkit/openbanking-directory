@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of, pipe } from 'rxjs';
-import { catchError, map, mergeMap, retry } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError, map, mergeMap, retry, withLatestFrom } from 'rxjs/operators';
 import _get from 'lodash-es/get';
 
 import {
@@ -10,14 +13,16 @@ import {
   SoftwareStatementsErrorAction,
   ActionsUnion,
   SoftwareStatementDeletionRequestAction,
-  SoftwareStatementCreateRequestAction
+  SoftwareStatementCreationRequestAction,
+  SoftwareStatementUpdateRequestAction,
+  SoftwareStatementSuccessAction,
+  SoftwareStatementRequestAction
 } from 'directory/src/store/reducers/software-statements';
 import { ForgerockMessagesService } from '@forgerock/openbanking-ngx-common/services/forgerock-messages';
-import {  ISoftwareStatement } from 'directory/src/models';
+import { ISoftwareStatement, IState } from 'directory/src/models';
 import { OrganisationService } from 'directory/src/app/services/organisation.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { SoftwareStatementService } from 'directory/src/app/services/software-statement.service';
-import { Router } from '@angular/router';
+import { selectOIDCUserOrganisationId } from '@forgerock/openbanking-ngx-common/oidc';
 
 @Injectable()
 export class SoftwareStatementsEffects {
@@ -26,18 +31,31 @@ export class SoftwareStatementsEffects {
     private router: Router,
     private messages: ForgerockMessagesService,
     private organisationService: OrganisationService,
-    private softwareStatementService: SoftwareStatementService
+    private softwareStatementService: SoftwareStatementService,
+    private store: Store<IState>
   ) {}
 
   @Effect()
-  request$: Observable<any> = this.actions$.pipe(
+  requestAll$: Observable<any> = this.actions$.pipe(
     ofType(SoftwareStatementsRequestAction),
     mergeMap((action: { organisationId: string }) => {
       return this.organisationService.getOrganisationSoftwareStatements(action.organisationId).pipe(
         retry(3),
-        map((softwareStatements: ISoftwareStatement[]) =>
-          SoftwareStatementsSuccessAction({ organisationId: action.organisationId, softwareStatements })
-        ),
+        map((softwareStatements: ISoftwareStatement[]) => SoftwareStatementsSuccessAction({ softwareStatements })),
+        this.errorPipe(action)
+      );
+    })
+  );
+
+  @Effect()
+  requestOne$: Observable<any> = this.actions$.pipe(
+    ofType(SoftwareStatementRequestAction),
+    mergeMap((action: { softwareStatementId: string }) => {
+      return this.softwareStatementService.getSoftwareStatement(action.softwareStatementId).pipe(
+        retry(3),
+        map((softwareStatement: ISoftwareStatement) => {
+          return SoftwareStatementSuccessAction({ softwareStatement });
+        }),
         this.errorPipe(action)
       );
     })
@@ -45,7 +63,7 @@ export class SoftwareStatementsEffects {
 
   @Effect()
   create$: Observable<any> = this.actions$.pipe(
-    ofType(SoftwareStatementCreateRequestAction),
+    ofType(SoftwareStatementCreationRequestAction),
     mergeMap((action: { organisationId: string }) =>
       this.softwareStatementService.createSoftwareStatement().pipe(
         retry(3),
@@ -62,13 +80,28 @@ export class SoftwareStatementsEffects {
   );
 
   @Effect()
+  update$: Observable<any> = this.actions$.pipe(
+    ofType(SoftwareStatementUpdateRequestAction),
+    mergeMap((action: { softwareStatement: ISoftwareStatement }) =>
+      this.softwareStatementService.putSoftwareStatement(action.softwareStatement).pipe(
+        retry(3),
+        map((softwareStatement: ISoftwareStatement) => {
+          return SoftwareStatementSuccessAction({ softwareStatement });
+        }),
+        this.errorPipe(action)
+      )
+    )
+  );
+
+  @Effect()
   delete$: Observable<any> = this.actions$.pipe(
     ofType(SoftwareStatementDeletionRequestAction),
-    mergeMap((action: { organisationId: string; softwareStatementId: string }) =>
+    withLatestFrom(this.store.select(selectOIDCUserOrganisationId)),
+    mergeMap(([action, organisationId]: [{ softwareStatementId: string }, string]) =>
       this.softwareStatementService.deleteSoftwareStatement(action.softwareStatementId).pipe(
         retry(3),
         map(() => {
-          return SoftwareStatementsRequestAction({ organisationId: action.organisationId });
+          return SoftwareStatementsRequestAction({ organisationId });
         }),
         this.errorPipe(action)
       )
@@ -80,7 +113,7 @@ export class SoftwareStatementsEffects {
       catchError((er: HttpErrorResponse) => {
         const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
         this.messages.error(error);
-        return of(SoftwareStatementsErrorAction({ organisationId: action.organisationId, error }));
+        return of(SoftwareStatementsErrorAction({ error }));
       })
     );
 }

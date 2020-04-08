@@ -46,13 +46,11 @@ export class DirectoryASPSPCardComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.dataSource = new MatTableDataSource(this.aspsps);
     this.dataSource.paginator = this.paginator;
-    console.log('333', this.dataSource.paginator, this.paginator)
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes.aspsps.firstChange && changes.aspsps.currentValue) {
+    if (changes.aspsps && !changes.aspsps.firstChange && changes.aspsps.currentValue) {
       this.dataSource.data = changes.aspsps.currentValue;
-      this.dataSource.paginator.firstPage();
     }
   }
 

@@ -23,13 +23,10 @@ export interface IOrganisationsState extends EntityState<IOrganisation> {
   error: string;
 }
 
-export interface ISoftwareStatementsEntityState extends EntityState<ISoftwareStatement> {
+export interface ISoftwareStatementsState extends EntityState<ISoftwareStatement> {
   isLoading: boolean;
   error: string;
-}
-
-export interface ISoftwareStatementsState {
-  [organisationId: string]: ISoftwareStatementsEntityState;
+  currentUserSoftwareStatementIds: string[];
 }
 
 export interface IState {

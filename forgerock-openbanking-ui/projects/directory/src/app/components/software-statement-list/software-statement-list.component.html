@@ -3,7 +3,9 @@
     >Software statements
     <span fxFlex></span>
     <button
+      mat-raised-button
       mat-icon-button
+      color="accent"
       [disabled]="isLoading"
       (click)="createSoftwareStatement()"
       aria-label="Create a new Software statement"
@@ -67,7 +69,7 @@
     </table>
 
     <ng-container *ngIf="!dataSource.data.length && !isLoading">
-      <forgerock-alert color="accent">{{ 'EMPTY' | translate }}</forgerock-alert>
+      <forgerock-alert>{{ 'EMPTY' | translate }}</forgerock-alert>
     </ng-container>
 
     <mat-progress-bar [style.visibility]="isLoading ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>

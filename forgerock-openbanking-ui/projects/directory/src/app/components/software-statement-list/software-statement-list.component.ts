@@ -44,9 +44,12 @@ export class DirectorySoftwareStatementListComponent implements OnInit, OnChange
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes.softwareStatements.firstChange && changes.softwareStatements.currentValue) {
+    if (
+      changes.softwareStatements &&
+      !changes.softwareStatements.firstChange &&
+      changes.softwareStatements.currentValue
+    ) {
       this.dataSource.data = changes.softwareStatements.currentValue;
-      this.dataSource.paginator.firstPage();
     }
   }
 

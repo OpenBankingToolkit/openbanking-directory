@@ -14,6 +14,7 @@ import { SoftwareStatementsTabsComponent } from './tabs/tabs.component';
 import { MatSharedModule } from '../../mat-shared.module';
 import { ForgerockSharedModule } from '@forgerock/openbanking-ngx-common/shared';
 import { SoftwareStatementsListModule } from './index/index.module';
+import { DirectorySoftwareStatementFormModule } from '../../components/software-statement-form/software-statement-form.module';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { SoftwareStatementsListModule } from './index/index.module';
     SoftwareStatementsRoutingModule,
     MatSharedModule,
     ForgerockSharedModule,
-    SoftwareStatementsListModule
+    SoftwareStatementsListModule,
+    DirectorySoftwareStatementFormModule
   ],
   declarations: [
     SoftwareStatementsGeneralComponent,

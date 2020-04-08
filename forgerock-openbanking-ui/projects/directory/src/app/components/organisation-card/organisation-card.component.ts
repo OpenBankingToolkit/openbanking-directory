@@ -12,7 +12,13 @@ import { DirectoryOrganisationFormDialogContainer } from '../organisation-form/o
       <mat-card-title
         >Your organisation
         <span fxFlex></span>
-        <button mat-icon-button (click)="openEditDialog()" aria-label="Edit organisation">
+        <button
+          mat-raised-button
+          mat-icon-button
+          color="accent"
+          (click)="openEditDialog()"
+          aria-label="Edit organisation"
+        >
           <mat-icon>edit</mat-icon>
         </button></mat-card-title
       >
