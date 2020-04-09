@@ -107,8 +107,8 @@
     </repositories>
 
     <scm>
-        <connection>scm:git:https://github.com/OpenBankingToolkit/openbanking-directory.git</connection>
-        <developerConnection>scm:git:https://github.com/OpenBankingToolkit/openbanking-directory.git</developerConnection>
+        <connection>scm:git:git@github.com:OpenBankingToolkit/openbanking-directory.git</connection>
+        <developerConnection>scm:git:git@github.com:OpenBankingToolkit/openbanking-directory.git</developerConnection>
         <url>https://github.com/OpenBankingToolkit/OpenBankingToolkit-directory.git</url>
         <tag>HEAD</tag>
     </scm>
