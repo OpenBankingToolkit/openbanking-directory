@@ -36,7 +36,7 @@ export class DirectorySoftwareStatementListContainer implements OnInit {
 
   public softwareStatements$: Observable<ISoftwareStatement[]> = this.store.pipe(
     select(selectCurrentUserSoftwareStatements),
-    map(rows => rows && rows.reverse())
+    map(rows => rows && [...rows].reverse())
   );
 
   constructor(protected store: Store<IState>) {}

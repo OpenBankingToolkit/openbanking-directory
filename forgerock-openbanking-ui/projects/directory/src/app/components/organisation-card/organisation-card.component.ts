@@ -55,6 +55,9 @@ import { DirectoryOrganisationFormDialogContainer } from '../organisation-form/o
       mat-card-title {
         align-items: center;
       }
+      ::ng-deep .mat-column-softwareStatementIds {
+        justify-content: center;
+      }
     `
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
