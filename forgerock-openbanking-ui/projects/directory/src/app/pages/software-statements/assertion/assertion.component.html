@@ -1,13 +1,16 @@
-<button
-  mat-raised-button
-  color="accent"
-  id="generate-button"
-  type="button"
-  (click)="generateSSA()"
-  class="m-widget__detalis  btn m-btn--pill  btn-brand"
->
-  Generate a new software statement assertions
-</button>
+<mat-progress-bar [style.visibility]="isLoading ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>
+<div class="generate">
+  <button
+    mat-raised-button
+    color="accent"
+    id="generate-button"
+    type="button"
+    (click)="generateSSA()"
+    class="m-widget__detalis  btn m-btn--pill  btn-brand"
+  >
+    Generate a new software statement assertions
+  </button>
+</div>
 <div *ngIf="ssa" fxLayout="column" fxLayout.gt-sm="row">
   <div fxFlex.gt-sm="50" class="first-column">
     <mat-card>

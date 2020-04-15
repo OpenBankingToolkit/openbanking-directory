@@ -1,31 +1,14 @@
 // Import library functions for theme creation.
 @import '~@angular/material/theming';
 // OVERWRITES SOME OF THE MAT COMPONENT MIXINS TO SUPPORT CSS VARS
-// @import "projects/directory/src/app/layouts/fuse/components/navbar/horizontal/style-1/style-1.component";
-@import 'projects/directory/src/app/layouts/fuse/components/footer/footer.component';
-@import 'projects/directory/src/app/layouts/fuse/components/toolbar/toolbar.component';
-@import 'projects/directory/src/app/layouts/fuse/components/navbar/vertical/style-1/style-1.component';
-@import 'projects/directory/src/app/pages/user/index/index.component';
-@import '~@forgerock/openbanking-ngx-common/components/main.scss';
+@import 'mixins/theme';
 @import 'mixins/cssvars';
+
+@import 'projects/directory/src/app/pages/user/index/index.component';
+@import 'projects/directory/src/app/components/software-statement-list/software-statement-list.component';
+@import '~@forgerock/openbanking-ngx-common/layouts/main.scss';
+@import '~@forgerock/openbanking-ngx-common/components/main.scss';
 @import '~@forgerock/openbanking-ngx-common/gdpr/main.scss';
-
-@mixin forgerock-client-icon-theme($theme) {
-  img.client-logo {
-    display: flex;
-    margin: auto;
-    margin-bottom: 30px;
-    width: $logo-width;
-    height: $logo-height;
-  }
-}
-
-@mixin forgerock-utils-theme($theme) {
-  $foreground: map-get($theme, foreground);
-  .secondary-text {
-    color: mat-color($foreground, secondary-text);
-  }
-}
 
 @mixin foregrock-material-theme($theme) {
   // Including only the components that we use:
@@ -36,15 +19,15 @@
   // @include mat-badge-theme($theme);
   @include mat-bottom-sheet-theme($theme);
   @include mat-button-theme($theme);
-  @include mat-button-toggle-theme($theme);
+  // @include mat-button-toggle-theme($theme);
   @include mat-card-theme($theme);
   @include mat-checkbox-theme($theme);
   @include mat-chips-theme($theme);
   @include mat-table-theme($theme);
-  @include mat-datepicker-theme($theme);
+  // @include mat-datepicker-theme($theme);
   @include mat-dialog-theme($theme);
   @include mat-divider-theme($theme);
-  @include mat-expansion-panel-theme($theme);
+  // @include mat-expansion-panel-theme($theme);
   @include mat-form-field-theme($theme);
   @include mat-grid-list-theme($theme);
   @include mat-icon-theme($theme);
@@ -68,12 +51,10 @@
   @include mat-snack-bar-theme($theme);
 
   // FORGEROCK
-  @include forgerock-client-icon-theme($theme);
-  @include forgerock-utils-theme($theme);
-  @include forgerock-navbar-vertical-style-theme($theme);
-  @include forgerock-footer-theme($theme);
-  @include forgerock-directory-app-toolbar-theme($theme);
-  @include forgerock-user-index-theme($theme);
-  @include forgerock-gdpr-theme($theme);
+  @include forgerock-main-layout-theme($theme);
   @include forgerock-alert-component-theme($theme);
+  @include forgerock-gdpr-theme($theme);
+  // Directory
+  @include directory-user-index-theme($theme);
+  @include directory-software-statement-table-theme($theme);
 }

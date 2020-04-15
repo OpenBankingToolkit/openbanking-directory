@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
 import { MessageService } from 'directory/src/app/services/message.service';
+import { IMessage } from 'directory/src/models';
 
 @Component({
   selector: 'app-index',
@@ -17,6 +18,7 @@ import { MessageService } from 'directory/src/app/services/message.service';
 })
 export class AdminMessagesIndexComponent implements OnInit {
   messages;
+  expandedElement: IMessage | null;
   displayedColumns: string[] = [
     'created',
     'author',

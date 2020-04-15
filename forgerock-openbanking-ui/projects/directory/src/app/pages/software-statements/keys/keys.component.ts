@@ -1,34 +1,40 @@
-/* tslint:disable */
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Renderer2, Inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Renderer2,
+  Inject,
+  OnDestroy
+} from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { switchMap, catchError, finalize, retry, takeUntil } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
 import debug from 'debug';
+import _get from 'lodash-es/get';
 
 import { SoftwareStatementService } from 'directory/src/app/services/software-statement.service';
-import { IState } from 'directory/src/models';
+import { ISoftwareStatementApplication } from 'directory/src/models';
 import { ForgerockMessagesService } from '@forgerock/openbanking-ngx-common/services/forgerock-messages';
 import { ForgerockConfigService } from '@forgerock/openbanking-ngx-common/services/forgerock-config';
+import { of, pipe, Subject } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 const log = debug('SoftwareStatements:SoftwareStatementsKeysComponent');
 
 @Component({
-  selector: 'software-statements-keys',
+  selector: 'app-software-statements-keys',
   templateUrl: './keys.component.html',
   styleUrls: ['./keys.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SoftwareStatementsKeysComponent implements OnInit {
+export class SoftwareStatementsKeysComponent implements OnInit, OnDestroy {
   keyUri: string;
   softwareStatementId: string = this.activatedRoute.snapshot.parent.params.softwareStatementId;
   softwareStatement;
-  application;
+  application: ISoftwareStatementApplication;
   transportKeys;
   keys;
-  transportJwkUri;
-  keysJwkUri;
-  keyManagementDoc;
-  OBRIDoc;
   displayedColumns: string[] = [
     'kid',
     'keyUse',
@@ -38,11 +44,18 @@ export class SoftwareStatementsKeysComponent implements OnInit {
     'validity-end',
     /* 'description', */ 'actions'
   ];
+  isLoading = false;
+  private _unsubscribeAll: Subject<any> = new Subject();
+  public transportJwkUri = `${this.conf.get('directoryBackend')}/api/software-statement/${
+    this.softwareStatementId
+  }/application/jwk_uri`;
+  public SigningAndEncryptionJwtUri = `${this.conf.get('directoryBackend')}/api/software-statement/${
+    this.softwareStatementId
+  }/application/jwk_uri`;
 
   constructor(
     private _softwareStatementService: SoftwareStatementService,
     private activatedRoute: ActivatedRoute,
-    private store: Store<IState>,
     private messages: ForgerockMessagesService,
     private cdr: ChangeDetectorRef,
     private conf: ForgerockConfigService,
@@ -51,38 +64,18 @@ export class SoftwareStatementsKeysComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.keyUri = `${this.conf.get('directoryBackend')}/api/software-statement/${this.softwareStatementId}/application`;
-    this.transportJwkUri = `${this.conf.get('directoryBackend')}/api/software-statement/${
-      this.softwareStatementId
-    }/application/transport/jwk_uri`;
-    this.keysJwkUri = `${this.conf.get('directoryBackend')}/api/software-statement/${
-      this.softwareStatementId
-    }/application/jwk_uri`;
-
     log('this.softwareStatementId: ', this.softwareStatementId);
-    this._softwareStatementService.getSoftwareStatement(this.softwareStatementId).subscribe((data: any) => {
-      log('softwareStatement: ', data);
-      this.softwareStatement = data;
-      this.cdr.detectChanges();
-    });
-
-    this.refreshApplication();
+    this.isLoading = true;
+    this.cdr.markForCheck();
+    this._softwareStatementService
+      .getApplication(this.softwareStatementId)
+      .pipe(this.updateAppPipe())
+      .subscribe();
   }
 
-  onNavigateToTransportJwtUri() {
-    window.open(this.transportJwkUri, '_blank');
-  }
-
-  onNavigateToSigningAndEncryptionJwtUri() {
-    window.open(this.keysJwkUri, '_blank');
-  }
-
-  onNavigateToOBRIDoc() {
-    window.open(this.OBRIDoc, '_blank');
-  }
-
-  onNavigateToKeyManagementDoc() {
-    window.open(this.keyManagementDoc, '_blank');
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
   }
 
   getStatus(key) {
@@ -93,36 +86,47 @@ export class SoftwareStatementsKeysComponent implements OnInit {
     }
   }
 
+  downloadPipe = (filePath: string) =>
+    pipe(
+      takeUntil(this._unsubscribeAll),
+      retry(3),
+      switchMap((response: string) => {
+        this.downloadFile(response, 'text/json', filePath);
+        return of(response);
+      }),
+      catchError((er: HttpErrorResponse | Error) => {
+        const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
+        this.messages.error(error);
+        return of(er);
+      })
+    );
+
   getPublicJwk(kid: string) {
     this._softwareStatementService
       .getPublicJwk(this.softwareStatementId, kid)
-      .subscribe(data => this.downloadFile(data, 'text/json', kid + '.public.jwk')),
-      error => log('Error downloading the file.', error),
-      () => log('OK');
+      .pipe(this.downloadPipe(kid + '.public.jwk'))
+      .subscribe();
   }
 
   getPrivateJwk(kid: string) {
     this._softwareStatementService
       .getPrivateJwk(this.softwareStatementId, kid)
-      .subscribe(data => this.downloadFile(data, 'text/json', kid + '.private.jwk')),
-      error => log('Error downloading the file.', error),
-      () => log('OK');
+      .pipe(this.downloadPipe(kid + '.private.jwk'))
+      .subscribe();
   }
 
   getPublicCert(kid: string) {
     this._softwareStatementService
       .getPublicCert(this.softwareStatementId, kid)
-      .subscribe(data => this.downloadFile(data, 'text/pem', kid + '.pem')),
-      error => log('Error downloading the file.', error),
-      () => log('OK');
+      .pipe(this.downloadPipe(kid + '.pem'))
+      .subscribe();
   }
 
   getPrivateCert(kid: string) {
     this._softwareStatementService
       .getPrivateCert(this.softwareStatementId, kid)
-      .subscribe(data => this.downloadFile(data, 'text/key', kid + '.key')),
-      error => log('Error downloading the file.', error),
-      () => log('OK');
+      .pipe(this.downloadPipe(kid + '.key'))
+      .subscribe();
   }
 
   downloadFile(data, type, fileName) {
@@ -139,47 +143,66 @@ export class SoftwareStatementsKeysComponent implements OnInit {
 
   rotateTransportKeys() {
     log('rotateTransportKeys: ');
-    this._softwareStatementService.rotateTransportKeys(this.softwareStatementId).subscribe(data => {
-      this.updateApp(data);
-    });
+    this.isLoading = true;
+    this.cdr.markForCheck();
+    this._softwareStatementService
+      .rotateTransportKeys(this.softwareStatementId)
+      .pipe(this.updateAppPipe())
+      .subscribe();
   }
 
   resetTransportKeys() {
     log('resetTransportKeys: ');
-    this._softwareStatementService.resetTransportKeys(this.softwareStatementId).subscribe(data => {
-      this.updateApp(data);
-    });
+    this.isLoading = true;
+    this.cdr.markForCheck();
+    this._softwareStatementService
+      .resetTransportKeys(this.softwareStatementId)
+      .pipe(this.updateAppPipe())
+      .subscribe();
   }
 
   rotateSigningEncryptionKeys() {
     log('rotateSigningEncryptionKeys: ');
-    this._softwareStatementService.rotateSigningEncryptionKeys(this.softwareStatementId).subscribe(data => {
-      this.updateApp(data);
-    });
+    this.isLoading = true;
+    this.cdr.markForCheck();
+    this._softwareStatementService
+      .rotateSigningEncryptionKeys(this.softwareStatementId)
+      .pipe(this.updateAppPipe())
+      .subscribe();
   }
 
   resetSigningEncryptionKeys() {
     log('resetSigningEncryptionKeys: ');
-    this._softwareStatementService.resetSigningEncryptionKeys(this.softwareStatementId).subscribe(data => {
-      this.updateApp(data);
-    });
+    this.isLoading = true;
+    this.cdr.markForCheck();
+    this._softwareStatementService
+      .resetSigningEncryptionKeys(this.softwareStatementId)
+      .pipe(this.updateAppPipe())
+      .subscribe();
   }
 
-  refreshApplication() {
-    this._softwareStatementService.getApplication(this.softwareStatementId).subscribe(data => {
-      this.updateApp(data);
-    });
-  }
-
-  updateApp(data) {
-    log('application: ', data);
-    this.application = data;
-    this.transportKeys = Object.values(this.application.transportKeys);
-    for (const transport of this.transportKeys) {
-      transport.keyUse = 'TRANSPORT';
-    }
-    this.keys = Object.values(this.application.keys).concat(this.transportKeys);
-    // Do something with 'event'
-    this.cdr.detectChanges();
-  }
+  updateAppPipe = () =>
+    pipe(
+      takeUntil(this._unsubscribeAll),
+      retry(3),
+      switchMap((response: ISoftwareStatementApplication) => {
+        log('application: ', response);
+        this.application = response;
+        this.transportKeys = Object.values(this.application.transportKeys);
+        for (const transport of this.transportKeys) {
+          transport.keyUse = 'TRANSPORT';
+        }
+        this.keys = Object.values(this.application.keys).concat(this.transportKeys);
+        return of(response);
+      }),
+      catchError((er: HttpErrorResponse | Error) => {
+        const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
+        this.messages.error(error);
+        return of(er);
+      }),
+      finalize(() => {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      })
+    );
 }
