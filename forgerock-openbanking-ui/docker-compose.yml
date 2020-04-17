@@ -7,6 +7,10 @@ services:
     environment:
       DOMAIN: ui-integ.forgerock.financial
       TEMPLATE: hsbc
+      # The following env vars are all based on DOMAIN but can be set with any value (interesting locally with different ports)
+      # DIRECTORY_BACKEND_URL: "https://service.directory.DOMAIN"
+      # AUTHENTICATION_URL: "https://am.DOMAIN"
+      # ACCOUNT_REQUEST_BACKEND_URL: "https://rs.aspsp.DOMAIN/api/account-requests"
     volumes:
       - ./ssl/k-all.ui-integ.forgerock.financial.key:/etc/nginx/certs/ui-integ.forgerock.financial.key
       - ./ssl/all.ui-integ.forgerock.financial.crt:/etc/nginx/certs/ui-integ.forgerock.financial.crt
