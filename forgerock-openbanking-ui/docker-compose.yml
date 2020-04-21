@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   directory-ui:
-    image: r.cfcr.io/openbanking/obri/directory-ui:3.1.2-queen-rc5-66c2f84
+    image: eu.gcr.io/openbanking-214714/obri/directory-ui:3.1.2-queen-rc5-66c2f84
     ports:
       - "4202:443"
     environment:
