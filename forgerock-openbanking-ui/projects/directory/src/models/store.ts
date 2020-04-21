@@ -1,7 +1,10 @@
 import { EntityState } from '@ngrx/entity';
 
 import { IMessage } from './messages';
+import { ISoftwareStatement } from './software-statements';
 import { IOIDCState } from '@forgerock/openbanking-ngx-common/oidc';
+import { IOrganisation } from './organisations';
+import { IAspsp } from './aspsps';
 
 export interface IMessagesState extends EntityState<IMessage> {
   isFetching: boolean;
@@ -10,7 +13,26 @@ export interface IMessagesState extends EntityState<IMessage> {
   //   entities: { [key: string]: IMessage };
 }
 
+export interface IAspspsState extends EntityState<IAspsp> {
+  isLoading: boolean;
+  error: string;
+}
+
+export interface IOrganisationsState extends EntityState<IOrganisation> {
+  isLoading: boolean;
+  error: string;
+}
+
+export interface ISoftwareStatementsState extends EntityState<ISoftwareStatement> {
+  isLoading: boolean;
+  error: string;
+  currentUserSoftwareStatementIds: string[];
+}
+
 export interface IState {
   oidc: IOIDCState;
   messages: IMessagesState;
+  softwareStatements: ISoftwareStatementsState;
+  organisations: IOrganisationsState;
+  aspsps: IAspspsState;
 }

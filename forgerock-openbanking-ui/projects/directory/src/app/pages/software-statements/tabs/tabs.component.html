@@ -31,16 +31,6 @@
     >
       {{ 'SOFTWARE_STATEMENTS.TAB_ASSERTION' | translate }}
     </a>
-    <a
-      mat-tab-link
-      [routerLink]="'/software-statements/' + softwareStatementId + '/onboarding'"
-      queryParamsHandling="preserve"
-      routerLinkActive
-      #rla4="routerLinkActive"
-      [active]="rla4.isActive"
-    >
-      {{ 'SOFTWARE_STATEMENTS.TAB_ONBOARDING' | translate }}
-    </a>
   </nav>
   <div class="content">
     <router-outlet></router-outlet>

@@ -3,30 +3,17 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AdminAspspComponent } from './aspsp.component';
-import { AdminAspspEditComponent } from './edit/edit.component';
-import { AdminAspspIndexComponent } from './index/index.component';
-import { ForgerockSharedModule } from '@forgerock/openbanking-ngx-common/shared';
-import { MatSharedModule } from 'directory/src/app/mat-shared.module';
+import { DirectoryASPSPCardModule } from 'directory/src/app/components/aspsp-card/aspsp-card.module';
 
 const routes: Routes = [
   {
-    path: '',
-    component: AdminAspspComponent,
-    children: [
-      {
-        path: '',
-        component: AdminAspspIndexComponent
-      },
-      {
-        path: ':aspspId',
-        component: AdminAspspEditComponent
-      }
-    ]
+    path: '**',
+    component: AdminAspspComponent
   }
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), ForgerockSharedModule, MatSharedModule],
-  declarations: [AdminAspspComponent, AdminAspspEditComponent, AdminAspspIndexComponent]
+  imports: [CommonModule, RouterModule.forChild(routes), DirectoryASPSPCardModule],
+  declarations: [AdminAspspComponent]
 })
 export class AdminAspspModule {}

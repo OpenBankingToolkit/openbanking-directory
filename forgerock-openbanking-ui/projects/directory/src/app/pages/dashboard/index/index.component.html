@@ -1,39 +1,56 @@
-<h1>
-  Dashboard
-</h1>
-
-<div fxLayout="column" fxLayout.gt-sm="row">
-  <div fxFlex.gt-sm="30" class="first-column">
-    <mat-card>
-      <mat-card-title>Your organisation</mat-card-title>
-      <mat-card-content>
-        <mat-list>
-          <mat-list-item>
-            <h3 matLine>ID</h3>
-            <p matLine>{{ organisation?.id }}</p>
-          </mat-list-item>
-          <mat-list-item>
-            <h3 matLine>Name</h3>
-            <p matLine>{{ organisation?.name }}</p>
-          </mat-list-item>
-          <mat-list-item>
-            <h3 matLine>Status</h3>
-            <p matLine>{{ organisation?.status }}</p>
-          </mat-list-item>
-          <mat-list-item class="wrap">
-            <h3 matLine>Description</h3>
-            <p matLine>{{ organisation?.description }}</p>
-          </mat-list-item>
-        </mat-list>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-raised-button routerLink="/organisation" type="button" color="accent">
-          See more
-        </button>
-      </mat-card-actions>
-    </mat-card>
+<div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="1em grid">
+  <div fxFlex.gt-sm="30" fxLayoutGap="1em grid" fxLayout="column">
+    <div>
+      <mat-card>
+        <mat-card-title>Directory</mat-card-title>
+        <mat-card-content>
+          <mat-list>
+            <mat-list-item>
+              <mat-icon mat-list-icon>vpn_key</mat-icon>
+              <a mat-button [href]="jwkUri" target="_blank">{{ 'JWK_URI' | translate }}</a>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>vpn_lock</mat-icon>
+              <a mat-button href="javascript:void(0)" (click)="downloadPublicIssuerCert()">{{
+                'PUBLIC_ISSUER' | translate
+              }}</a>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>help</mat-icon>
+              <a mat-button href="javascript:void(0)" (click)="openSupportDialog()">{{ 'SUPPORT' | translate }}</a>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>policy</mat-icon>
+              <a mat-button [href]="policyLink" target="_blank">{{ 'POLICY' | translate }}</a>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>insert_drive_file</mat-icon>
+              <a mat-button [href]="termsOfServiceLink" target="_blank">{{ 'TERMS' | translate }}</a>
+            </mat-list-item>
+            <mat-list-item>
+              <mat-icon mat-list-icon>info</mat-icon>
+              <a mat-button [href]="aboutLink" target="_blank">{{ 'ABOUT' | translate }}</a>
+            </mat-list-item>
+          </mat-list>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <app-organisation-card-container></app-organisation-card-container>
   </div>
-  <div fxFlex fxFlex.gt-sm="70">
-    <software-statements-list fxFlex></software-statements-list>
+  <div fxFlex fxFlex.gt-sm="70" fxLayoutGap="1em grid" fxLayout="column">
+    <app-aspsp-card-container
+      [displayedColumns]="[
+        'logoUri',
+        'name',
+        'financialId',
+        'asDiscoveryEndpoint',
+        'rsDiscoveryEndpoint',
+        'transportKeys'
+      ]"
+    ></app-aspsp-card-container>
+    <app-software-statement-list-container
+      fxFlex
+      [displayedColumns]="['id', 'applicationId', 'name', 'delete']"
+    ></app-software-statement-list-container>
   </div>
 </div>

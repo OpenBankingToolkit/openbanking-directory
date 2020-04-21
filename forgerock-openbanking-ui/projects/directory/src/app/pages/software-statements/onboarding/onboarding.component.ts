@@ -2,10 +2,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit }
 import { ActivatedRoute } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import debug from 'debug';
+import _get from 'lodash-es/get';
 
 import { SoftwareStatementService } from 'directory/src/app/services/software-statement.service';
 import { ForgerockMessagesService } from '@forgerock/openbanking-ngx-common/services/forgerock-messages';
 import { AspspService } from 'directory/src/app/services/aspsp.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { IAspsp } from 'directory/src/models';
 
 const log = debug('SoftwareStatements:SoftwareStatementsOnboardingComponent');
 
@@ -41,17 +44,16 @@ export class SoftwareStatementsOnboardingDialogComponent {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SoftwareStatementsOnboardingComponent implements OnInit {
-  aspsps;
+  aspsps: IAspsp[];
   displayedColumns: string[] = [
-    'logo_uri',
+    'logoUri',
     'name',
-    'financial_id',
-    'as_discovery_endpoint',
-    'rs_discovery_endpoint',
+    'financialId',
+    'asDiscoveryEndpoint',
+    'rsDiscoveryEndpoint',
     'test_mtls_endpoint',
     'onboard'
   ];
-
   constructor(
     private _aspspService: AspspService,
     private _softwareStatementService: SoftwareStatementService,
@@ -72,12 +74,11 @@ export class SoftwareStatementsOnboardingComponent implements OnInit {
   testMtls(aspsp) {
     const { softwareStatementId } = this.activatedRoute.snapshot.parent.params;
     this._softwareStatementService.testMatls(softwareStatementId, aspsp.id).subscribe(
-      data => {
+      data =>
         this.dialog.open(SoftwareStatementsOnboardingDialogComponent, {
           data
-        });
-      },
-      () => this.messages.error()
+        }),
+      (error: HttpErrorResponse) => this.messages.error(error.message)
     );
   }
 
@@ -87,10 +88,11 @@ export class SoftwareStatementsOnboardingComponent implements OnInit {
 
     this._softwareStatementService.testMatls(softwareStatementId, aspsp.id).subscribe(
       data => {
-        aspsp.isAlreadyOnboard = JSON.parse(JSON.stringify(data)).authorities[0].authority !== 'UNREGISTERED_TPP';
+        console.log({ data });
+        aspsp.isAlreadyOnboard = _get(data, 'authorities[0].authority', '') !== 'UNREGISTERED_TPP';
         this.cdr.detectChanges();
       },
-      () => this.messages.error()
+      (error: HttpErrorResponse) => this.messages.error(error.message)
     );
   }
 
@@ -104,29 +106,27 @@ export class SoftwareStatementsOnboardingComponent implements OnInit {
         aspsp.isAlreadyOnboard = true;
         this.cdr.detectChanges();
       },
-      () => this.messages.error()
+      (error: HttpErrorResponse) => this.messages.error(error.message)
     );
   }
   readOnboarding(aspsp) {
     const { softwareStatementId } = this.activatedRoute.snapshot.parent.params;
     this._softwareStatementService.readBoarding(softwareStatementId, aspsp.id).subscribe(
-      data => {
+      data =>
         this.dialog.open(SoftwareStatementsOnboardingDialogComponent, {
           data
-        });
-      },
-      () => this.messages.error()
+        }),
+      (error: HttpErrorResponse) => this.messages.error(error.message)
     );
   }
   updateOnboarding(aspsp) {
     const { softwareStatementId } = this.activatedRoute.snapshot.parent.params;
     this._softwareStatementService.updateboard(softwareStatementId, aspsp.id).subscribe(
-      data => {
+      data =>
         this.dialog.open(SoftwareStatementsOnboardingDialogComponent, {
           data
-        });
-      },
-      () => this.messages.error()
+        }),
+      (error: HttpErrorResponse) => this.messages.error(error.message)
     );
   }
   offboarding(aspsp) {
@@ -136,7 +136,7 @@ export class SoftwareStatementsOnboardingComponent implements OnInit {
         aspsp.isAlreadyOnboard = false;
         this.cdr.detectChanges();
       },
-      () => this.messages.error()
+      (error: HttpErrorResponse) => this.messages.error(error.message)
     );
   }
 }

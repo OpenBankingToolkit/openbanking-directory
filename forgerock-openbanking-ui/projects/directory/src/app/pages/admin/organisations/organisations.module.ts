@@ -2,19 +2,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AdminOrganisationsComponent } from './organisations.component';
-import { ForgerockSharedModule } from '@forgerock/openbanking-ngx-common/shared';
-import { MatSharedModule } from 'directory/src/app/mat-shared.module';
+import { AdminOrganisationsPageComponent } from './organisations.component';
+import { DirectoryOrganisationsTableModule } from 'directory/src/app/components/organisations-table/organisations-table.module';
 
 const routes: Routes = [
   {
     path: '',
-    component: AdminOrganisationsComponent
+    component: AdminOrganisationsPageComponent
   }
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), ForgerockSharedModule, MatSharedModule],
-  declarations: [AdminOrganisationsComponent]
+  imports: [CommonModule, RouterModule.forChild(routes), DirectoryOrganisationsTableModule],
+  declarations: [AdminOrganisationsPageComponent]
 })
 export class AdminOrganisationsModule {}

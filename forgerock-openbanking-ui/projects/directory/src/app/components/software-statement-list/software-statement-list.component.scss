@@ -1,0 +1,53 @@
+@import 'mixins/breakpoints';
+@import '_variables';
+
+@mixin directory-software-statement-table-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  app-software-statement-list {
+    table {
+      width: 100%;
+
+      tbody tr {
+        cursor: pointer;
+        &:hover,
+        &:focus {
+          background-color: mat-color($background, hover);
+          outline: 0;
+        }
+      }
+      .mat-column-delete {
+        max-width: 40px;
+      }
+      tr {
+        display: flex;
+        flex-direction: row;
+        & > td,
+        & > th {
+          flex: 1;
+          display: flex;
+          align-items: center;
+        }
+        &:last-child > td {
+          border-bottom-width: 0px;
+        }
+      }
+      td {
+        width: 100px;
+        & > span {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+    mat-card-title {
+      align-items: center;
+    }
+  }
+}

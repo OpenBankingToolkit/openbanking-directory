@@ -1,0 +1,30 @@
+:host {
+  table {
+    width: 100%;
+    tr {
+      display: flex;
+      flex-direction: row;
+      & > td,
+      & > th {
+        flex: 1;
+        display: flex;
+        align-items: center;
+      }
+      &:last-child > td {
+        border-bottom-width: 0px;
+      }
+    }
+    td {
+      > img {
+        max-height: 45px;
+      }
+      width: 100px;
+      & > span {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+}

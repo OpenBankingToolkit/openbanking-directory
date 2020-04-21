@@ -4,14 +4,18 @@
   "SIGNOUT": "Sign out",
   "MESSAGES": "Messages",
   "SUPPORT": "Support",
+  "REQUIRED": "Required",
+  "EMPTY": "Empty",
+  "SAVE": "Save",
+  "CANCEL": "Cancel",
+  "ABOUT": "About",
+  "POLICY": "Privacy Policy",
+  "TERMS": "Terms of service",
+  "JWK_URI": "JSON Web Key",
+  "PUBLIC_ISSUER": "Public CA certificate",
   "GDPR": {
     "TITLE": "Access denied",
     "TEXT": "In order to use this application, you must comply with our cookie policy."
-  },
-  "FOOTER": {
-    "ABOUT": "About",
-    "POLICY": "Privacy Policy",
-    "TERMS": "Terms of service"
   },
   "NAV": {
     "HOME": "Home",

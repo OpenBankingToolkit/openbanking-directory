@@ -1,43 +1,116 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
-import { Store, select } from '@ngrx/store';
-import { take } from 'rxjs/operators';
-import debug from 'debug';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Renderer2, OnDestroy } from '@angular/core';
+import { switchMap, catchError, finalize, takeUntil, retry } from 'rxjs/operators';
+import { of, Subject, pipe } from 'rxjs';
+import _get from 'lodash-es/get';
+import { MatDialog } from '@angular/material/dialog';
 
-import { OrganisationService } from 'directory/src/app/services/organisation.service';
-import { IState } from 'directory/src/models';
-import { selectOIDCUserOrganisationId } from '@forgerock/openbanking-ngx-common/oidc';
-
-const log = debug('Dashboard:DashboardIndexComponent');
+import { ForgerockMessagesService } from '@forgerock/openbanking-ngx-common/services/forgerock-messages';
+import { ForgerockConfigService } from '@forgerock/openbanking-ngx-common/services/forgerock-config';
+import { DirectoryService } from 'directory/src/app/services/directory.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { DirectorySupportDialogComponent } from './support-dialog.component';
 
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
-  styleUrls: ['./index.component.scss'],
+  styles: [
+    `
+      ::ng-deep mat-card-title {
+        align-items: center;
+      }
+      a {
+        width: 100%;
+        text-align: left;
+      }
+    `
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardIndexComponent implements OnInit {
-  organisation;
-  softwareStatements;
+export class DashboardIndexComponent implements OnInit, OnDestroy {
+  public jwkUri = `${this.conf.get('directoryBackend')}/api/directory/keys/jwk_uri`;
+  public termsOfServiceLink = this.conf.get(
+    'termsOfServiceLink',
+    'https://backstage.forgerock.com/knowledge/openbanking/article/a45894685'
+  );
+  public policyLink = this.conf.get(
+    'policyLink',
+    'https://backstage.forgerock.com/knowledge/openbanking/article/a11457341'
+  );
+  public aboutLink = this.conf.get('aboutLink', 'https://backstage.forgerock.com/knowledge/openbanking/');
+
+  isLoading = false;
+  private _unsubscribeAll: Subject<any> = new Subject();
 
   constructor(
-    private _organisationService: OrganisationService,
-    private _router: Router,
-    private store: Store<IState>,
-    private cdr: ChangeDetectorRef
+    private conf: ForgerockConfigService,
+    private renderer: Renderer2,
+    private directoryService: DirectoryService,
+    private messages: ForgerockMessagesService,
+    private cdr: ChangeDetectorRef,
+    public dialog: MatDialog
   ) {}
 
-  ngOnInit() {
-    let organisationId;
-    this.store
-      .pipe(select(selectOIDCUserOrganisationId))
-      .pipe(take(1))
-      .subscribe(value => (organisationId = value));
-    log('user: ', organisationId);
-    this._organisationService.getOrgansation(organisationId).subscribe(data => {
-      log('organisation: ', data);
-      this.organisation = data;
-      this.cdr.detectChanges();
+  ngOnInit() {}
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next();
+    this._unsubscribeAll.complete();
+  }
+
+  startLoading() {
+    this.isLoading = true;
+    this.cdr.markForCheck();
+  }
+
+  downloadPublicIssuerCert() {
+    this.startLoading();
+    this.directoryService
+      .getPublicIssuerCert()
+      .pipe(this.downloadPipe('ForgeRock-directory-issuer.pem'))
+      .subscribe();
+  }
+
+  downloadPublicCACert() {
+    this.startLoading();
+    this.directoryService
+      .getPublicCACert()
+      .pipe(this.downloadPipe('ForgeRock-directory-ca.pem'))
+      .subscribe();
+  }
+
+  downloadPipe = (filename: string) =>
+    pipe(
+      takeUntil(this._unsubscribeAll),
+      retry(3),
+      switchMap((response: string) => {
+        this.downloadFile(response, 'text/pem', filename);
+        return of(response);
+      }),
+      catchError((er: HttpErrorResponse | Error) => {
+        const error = _get(er, 'error.Message') || _get(er, 'error.message') || _get(er, 'message') || er;
+        this.messages.error(error);
+        return of(er);
+      }),
+      finalize(() => {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      })
+    );
+
+  downloadFile(data, type, fileName) {
+    const anchor = this.renderer.createElement('a');
+    this.renderer.setStyle(anchor, 'visibility', 'hidden');
+    this.renderer.setAttribute(anchor, 'href', 'data:' + type + ';charset=utf-8,' + encodeURIComponent(data));
+    this.renderer.setAttribute(anchor, 'target', '_blank');
+    this.renderer.setAttribute(anchor, 'download', fileName);
+
+    anchor.click();
+    anchor.remove();
+  }
+
+  openSupportDialog(): void {
+    this.dialog.open(DirectorySupportDialogComponent, {
+      width: '400px'
     });
   }
 }
