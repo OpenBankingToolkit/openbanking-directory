@@ -27,7 +27,7 @@
     <name>ForgeRock OpenBanking Directory</name>
     <groupId>com.forgerock.openbanking.directory</groupId>
     <artifactId>forgerock-openbanking-reference-implementation-directory</artifactId>
-    <version>1.4.66-SNAPSHOT</version>
+    <version>1.4.71-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -45,7 +45,7 @@
     </modules>
 
     <properties>
-        <ob-build.version>1.0.71</ob-build.version>
+        <ob-build.version>1.0.73</ob-build.version>
         <ob-clients.version>1.0.31</ob-clients.version>
         <ob-auth.version>1.0.55</ob-auth.version>
     </properties>
@@ -83,6 +83,16 @@
 
     <repositories>
         <repository>
+            <id>maven.forgerock.org-community</id>
+            <name>maven.forgerock.org-releases</name>
+            <url>https://maven.forgerock.org:443/repo/community</url>
+        </repository>
+        <repository>
+            <id>maven.forgerock.org-community-snapshots</id>
+            <name>maven.forgerock.org-snapshots</name>
+            <url>https://maven.forgerock.org:443/repo/community</url>
+        </repository>
+        <repository>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -97,18 +107,23 @@
     </repositories>
 
     <scm>
-        <connection>scm:git:https://github.com/OpenBankingToolkit/openbanking-directory.git</connection>
-        <developerConnection>scm:git:https://github.com/OpenBankingToolkit/openbanking-directory.git</developerConnection>
+        <connection>scm:git:git@github.com:OpenBankingToolkit/openbanking-directory.git</connection>
+        <developerConnection>scm:git:git@github.com:OpenBankingToolkit/openbanking-directory.git</developerConnection>
         <url>https://github.com/OpenBankingToolkit/OpenBankingToolkit-directory.git</url>
         <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
         <repository>
-            <id>bintray-openbankingtoolkit-OpenBankingToolkit</id>
-            <name>OpenBankingToolkit Common</name>
-            <url>https://api.bintray.com/maven/openbanking-toolkit/OpenBankingToolKit/openbanking-directory/;publish=1</url>
+            <id>maven.forgerock.org-community</id>
+            <name>maven.forgerock.org-releases</name>
+            <url>https://maven.forgerock.org:443/repo/community</url>
         </repository>
+        <snapshotRepository>
+            <id>maven.forgerock.org-community-snapshots</id>
+            <name>maven.forgerock.org-snapshots</name>
+            <url>https://maven.forgerock.org:443/repo/community</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <build>

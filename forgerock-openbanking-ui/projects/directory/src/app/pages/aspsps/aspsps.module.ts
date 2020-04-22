@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { AspspsRoutingModule } from './aspsps-routing.module';
 import { AspspsIndexComponent } from './index/index.component';
-import { MatSharedModule } from '../../mat-shared.module';
+import { DirectoryASPSPCardModule } from '../../components/aspsp-card/aspsp-card.module';
 
 @NgModule({
-  imports: [CommonModule, AspspsRoutingModule, MatSharedModule],
+  imports: [CommonModule, AspspsRoutingModule, DirectoryASPSPCardModule],
   declarations: [AspspsIndexComponent]
 })
 export class AspspsModule {}

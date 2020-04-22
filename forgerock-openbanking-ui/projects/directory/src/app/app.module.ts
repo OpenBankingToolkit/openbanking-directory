@@ -7,7 +7,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { StoreModule, ActionReducerMap } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import { FuseSharedModule } from 'directory/src/app/theme-shared.module';
 import { MatSharedModule } from 'directory/src/app/mat-shared.module';
 import { AppComponent } from 'directory/src/app/app.component';
 import rootReducer from 'directory/src/store';
@@ -15,7 +14,6 @@ import { RootEffects } from 'directory/src/store/effects';
 import { environment } from 'directory/src/environments/environment';
 // Layouts
 import { ForgerockSimpleLayoutModule } from '@forgerock/openbanking-ngx-common/layouts/simple';
-import { FuseVerticalLayoutModule } from './layouts/fuse/vertical/vertical.module';
 import { ForgerockConfigService } from '@forgerock/openbanking-ngx-common/services/forgerock-config';
 import { IState } from '../models';
 import { ForgerockSharedModule } from '@forgerock/openbanking-ngx-common/shared';
@@ -60,7 +58,6 @@ export function createForgerockOIDCConfigFactory(config: ForgerockConfigService)
       }
     }),
     ForgerockSimpleLayoutModule,
-    FuseVerticalLayoutModule,
     ForgerockOIDCModule.forRoot(createForgerockOIDCConfigFactory),
     ForgerockSharedModule,
     // Material Design
@@ -69,8 +66,6 @@ export function createForgerockOIDCConfigFactory(config: ForgerockConfigService)
     StoreModule.forRoot(REDUCER_TOKEN),
     EffectsModule.forRoot(RootEffects),
     environment.devModules || [],
-    // Theme
-    FuseSharedModule
   ],
   providers: [
     {

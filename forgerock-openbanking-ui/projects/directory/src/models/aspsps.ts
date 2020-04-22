@@ -1,10 +1,10 @@
-export interface IAspsps {
-  as_discovery_endpoint: string;
-  financial_id: string;
+export interface IAspsp {
   id: string;
-  logo_uri: string;
   name: string;
-  rs_discovery_endpoint: string;
-  test_mtls_endpoint: string;
-  transport_keys: string;
+  logoUri: string;
+  financialId: string;
+  asDiscoveryEndpoint: string;
+  rsDiscoveryEndpoint: string;
+  testMtlsEndpoint: string;
+  transportKeys: string;
 }
