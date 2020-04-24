@@ -25,3 +25,11 @@ hs_err_pid*
 target/
 .idea/
 *.iml
+# Maven
+target/
+release.properties
+# Intellij
+.idea/
+*.iml
+release.properties
+pom.xml.releaseBackup
