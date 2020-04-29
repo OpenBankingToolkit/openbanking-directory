@@ -9,7 +9,7 @@ import {
   OnChanges
 } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { validateUrl } from '@utils/forms';
+import { validateUrl } from '@forgerock/openbanking-ngx-common/utils';
 import _get from 'lodash-es/get';
 
 import { IAspsp } from 'directory/src/models';

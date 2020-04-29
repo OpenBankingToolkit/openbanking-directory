@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import _get from 'lodash-es/get';
-import { validateMultipleUrls, validateUrl } from '@utils/forms';
+import { validateMultipleUrls, validateUrl } from '@forgerock/openbanking-ngx-common/utils';
 import { ISoftwareStatement } from 'directory/src/models';
 
 @Component({
