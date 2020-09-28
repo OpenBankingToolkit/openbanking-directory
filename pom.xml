@@ -33,7 +33,7 @@
     <parent>
         <groupId>com.forgerock.openbanking</groupId>
         <artifactId>forgerock-openbanking-starter-parent</artifactId>
-        <version>1.0.78</version>
+        <version>1.0.83</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
@@ -45,9 +45,9 @@
     </modules>
 
     <properties>
-        <ob-clients.version>1.0.36</ob-clients.version>
-        <ob-build.version>1.0.77</ob-build.version>
-        <ob-auth.version>1.0.59</ob-auth.version>
+        <ob-clients.version>1.0.40</ob-clients.version>
+        <ob-common.version>1.0.81</ob-common.version>
+        <ob-auth.version>1.0.62</ob-auth.version>
     </properties>
 
     <dependencyManagement>
@@ -56,12 +56,12 @@
             <dependency>
                 <groupId>com.forgerock.openbanking</groupId>
                 <artifactId>forgerock-openbanking-model</artifactId>
-                <version>${ob-build.version}</version>
+                <version>${ob-common.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.forgerock.openbanking</groupId>
                 <artifactId>forgerock-openbanking-ssl</artifactId>
-                <version>${ob-build.version}</version>
+                <version>${ob-common.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.forgerock.openbanking.clients</groupId>
