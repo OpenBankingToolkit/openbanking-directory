@@ -100,41 +100,57 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
     // https://www.etsi.org/deliver/etsi_ts/119400_119499/11941201/01.02.01_60/ts_11941201v010201p.pdf
 
     // TODO - get this from config
-    private static String LEGAL_PERSON_SEMANTICS_TYPE_COUNTRY_PREPEND = "PSDGB-";
+    private static final String LEGAL_PERSON_SEMANTICS_TYPE_COUNTRY_PREPEND = "PSDGB-";
     private static final String NATIONAL_COMPETENT_AUTHORITY_NAME = "ForgeRock Financial Authority";
     private static final String NATIONAL_COMPETENT_AUTHORITY_ACRONYM = "FFA";
     private static final String NATIONAL_COMPETENT_AUTHORITY_ID =
             LEGAL_PERSON_SEMANTICS_TYPE_COUNTRY_PREPEND.substring(3) + NATIONAL_COMPETENT_AUTHORITY_ACRONYM;
 
-    @Autowired
-    private SoftwareStatementRepository softwareStatementRepository;
-    @Autowired
-    private DirectoryUserRepository directoryUserRepository;
-    @Autowired
-    private OrganisationRepository organisationRepository;
-    @Autowired
-    private AspspRepository aspspRepository;
-    @Autowired
-    private ApplicationApiClient applicationApiClient;
-    @Autowired
-    private CryptoApiClient cryptoApiClient;
-    @Autowired
-    private SSAService ssaService;
-    @Autowired
-    private AspspApiClient aspspApiClient;
-    @Autowired
-    private KeyStoreService keyStoreService;
-    @Autowired
-    private SslConfiguration sslConfiguration;
-    @Autowired
-    private ASDiscoveryService asDiscoveryService;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Value("${forgerockdirectory.jwks_uri}")
-    public String jwksUri;
-    @Autowired
-    private DirectoryCountersKPIService directoryCountersKPIService;
+    private final SoftwareStatementRepository softwareStatementRepository;
+    private final DirectoryUserRepository directoryUserRepository;
+    private final OrganisationRepository organisationRepository;
+    private final AspspRepository aspspRepository;
+    private final ApplicationApiClient applicationApiClient;
+    private final CryptoApiClient cryptoApiClient;
+    private final SSAService ssaService;
+    private final AspspApiClient aspspApiClient;
+    private final KeyStoreService keyStoreService;
+    private final SslConfiguration sslConfiguration;
+    private final ASDiscoveryService asDiscoveryService;
+    private final ObjectMapper objectMapper;
+    public final String jwksUri;
+    private final DirectoryCountersKPIService directoryCountersKPIService;
     private OnBehalfApplicationRestTemplate restTemplate;
+
+    public SoftwareStatementApiController(SoftwareStatementRepository softwareStatementRepository,
+                                          DirectoryUserRepository directoryUserRepository,
+                                          OrganisationRepository organisationRepository,
+                                          AspspRepository aspspRepository,
+                                          ApplicationApiClient applicationApiClient,
+                                          CryptoApiClient cryptoApiClient,
+                                          SSAService ssaService,
+                                          AspspApiClient aspspApiClient,
+                                          KeyStoreService keyStoreService,
+                                          SslConfiguration sslConfiguration,
+                                          ASDiscoveryService asDiscoveryService,
+                                          ObjectMapper objectMapper,
+                                          @Value("${forgerockdirectory.jwks_uri}") String jwksUri,
+                                          DirectoryCountersKPIService directoryCountersKPIService) {
+        this.softwareStatementRepository = softwareStatementRepository;
+        this.directoryUserRepository = directoryUserRepository;
+        this.organisationRepository = organisationRepository;
+        this.aspspRepository = aspspRepository;
+        this.applicationApiClient = applicationApiClient;
+        this.cryptoApiClient = cryptoApiClient;
+        this.ssaService = ssaService;
+        this.aspspApiClient = aspspApiClient;
+        this.keyStoreService = keyStoreService;
+        this.sslConfiguration = sslConfiguration;
+        this.asDiscoveryService = asDiscoveryService;
+        this.objectMapper = objectMapper;
+        this.jwksUri = jwksUri;
+        this.directoryCountersKPIService = directoryCountersKPIService;
+    }
 
     @Override
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -154,8 +170,6 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
         if (isUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authorised");
         }
-        //Create software statement
-        softwareStatement = softwareStatementRepository.save(softwareStatement);
 
         //Add it to the organisation
         User directoryUser = isUser.get();
@@ -164,7 +178,14 @@ public class SoftwareStatementApiController implements SoftwareStatementApi {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Organisation not found");
         }
         Organisation organisation = isOrganisation.get();
-        organisation.getSoftwareStatementIds().add(softwareStatement.getId());
+
+        softwareStatement.setOrganisationId(organisation.getId());
+        //Create software statement
+        softwareStatement = softwareStatementRepository.save(softwareStatement);
+
+        String ssId = softwareStatement.getId();
+        softwareStatement.setSoftwareId(ssId);
+        organisation.getSoftwareStatementIds().add(ssId);
         organisationRepository.save(organisation);
 
         //Create the JWK MS application
