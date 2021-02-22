@@ -27,13 +27,13 @@
     <name>ForgeRock OpenBanking Directory</name>
     <groupId>com.forgerock.openbanking.directory</groupId>
     <artifactId>forgerock-openbanking-reference-implementation-directory</artifactId>
-    <version>1.4.79-SNAPSHOT</version>
+    <version>1.4.80-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
         <groupId>com.forgerock.openbanking</groupId>
         <artifactId>forgerock-openbanking-starter-parent</artifactId>
-        <version>1.0.86</version>
+        <version>1.1.86</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
@@ -45,9 +45,9 @@
     </modules>
 
     <properties>
-        <ob-clients.version>1.0.44</ob-clients.version>
-        <ob-common.version>1.0.88</ob-common.version>
-        <ob-auth.version>1.0.65</ob-auth.version>
+        <ob-clients.version>1.0.45</ob-clients.version>
+        <ob-common.version>1.0.90</ob-common.version>
+        <ob-auth.version>1.0.66</ob-auth.version>
     </properties>
 
     <dependencyManagement>
@@ -299,7 +299,7 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <version>3.0</version>
                 <configuration>
-                    <header>file://${maven.multiModuleProjectDirectory}/legal/LICENSE.txt</header>
+                    <header>legal/LICENSE.txt</header>
                     <includes>
                         <include>**/*.java</include>
                         <include>pom.xml</include>
