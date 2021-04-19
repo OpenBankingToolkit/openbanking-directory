@@ -27,13 +27,13 @@
     <name>ForgeRock OpenBanking Directory</name>
     <groupId>com.forgerock.openbanking.directory</groupId>
     <artifactId>forgerock-openbanking-reference-implementation-directory</artifactId>
-    <version>1.4.82-SNAPSHOT</version>
+    <version>1.4.83-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
         <groupId>com.forgerock.openbanking</groupId>
         <artifactId>forgerock-openbanking-starter-parent</artifactId>
-        <version>1.1.88</version>
+        <version>1.1.89</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
@@ -45,9 +45,9 @@
     </modules>
 
     <properties>
-        <ob-clients.version>1.1.1</ob-clients.version>
-        <ob-common.version>1.1.1</ob-common.version>
-        <ob-auth.version>1.0.68</ob-auth.version>
+        <ob-clients.version>1.1.2</ob-clients.version>
+        <ob-common.version>1.1.2</ob-common.version>
+        <ob-auth.version>1.0.69</ob-auth.version>
     </properties>
 
     <dependencyManagement>
