@@ -1,0 +1,60 @@
+{
+  "_id" : ObjectId("5c865c2980b05f01cf66bc4d"),
+  "directoryId" : "ForgeRock",
+  "name" : "ForTest_b75ad2fb-d8f1-457b-bb18-4539539ef704",
+  "officialName" : "monitoring.sandbox.lloydsbanking.com - ForTest_b75ad2fb-d8f1-457b-bb18-4539539ef704",
+  "certificateCn" : "b75ad2fb-d8f1-457b-bb18-4539539ef704",
+  "clientId" : "72e7afda-a240-4bc1-b0db-7a0b5ced7d85",
+  "ssa" : "{\"org_jwks_endpoint\":\"TODO\",\"software_mode\":\"TEST\",\"software_redirect_uris\":[],\"org_status\":\"Active\",\"software_client_name\":\"ForTest_b75ad2fb-d8f1-457b-bb18-4539539ef704\",\"software_client_id\":\"b75ad2fb-d8f1-457b-bb18-4539539ef704\",\"iss\":\"ForgeRock\",\"software_jwks_endpoint\":\"https:\\/\\/service.directory.sandbox.lloydsbanking.com:443\\/api\\/software-statement\\/b75ad2fb-d8f1-457b-bb18-4539539ef704\\/application\\/jwk_uri\",\"software_id\":\"b75ad2fb-d8f1-457b-bb18-4539539ef704\",\"org_contacts\":[],\"ob_registry_tos\":\"https:\\/\\/directory.sandbox.lloydsbanking.com:443\\/tos\\/\",\"org_id\":\"5c86517ff810da002eb71e79\",\"software_jwks_revoked_endpoint\":\"TODO\",\"software_roles\":[\"DATA\",\"PISP\",\"CBPII\",\"AISP\"],\"exp\":1552914085,\"org_name\":\"monitoring.sandbox.lloydsbanking.com\",\"org_jwks_revoked_endpoint\":\"TODO\",\"iat\":1552309285,\"jti\":\"e3b9a8a8-c1dd-4824-99e5-038e70bbfe44\"}",
+  "tppRequest" : "{\"token_endpoint_auth_signing_alg\":\"PS256\",\"request_object_encryption_alg\":\"RSA-OAEP-256\",\"grant_types\":[\"authorization_code\",\"client_credentials\"],\"subject_type\":\"pairwise\",\"iss\":\"b75ad2fb-d8f1-457b-bb18-4539539ef704\",\"redirect_uris\":[\"https:\\/\\/www.google.com\"],\"token_endpoint_auth_method\":\"client_secret_basic\",\"software_statement\":\"eyJraWQiOiI2ODdmNzJkZWE4MDM0OTI4OTgxMmY4NTYxYjRlMDExN2FhZTA3ZGYxIiwiYWxnIjoiUFMyNTYifQ.eyJvcmdfandrc19lbmRwb2ludCI6IlRPRE8iLCJzb2Z0d2FyZV9tb2RlIjoiVEVTVCIsInNvZnR3YXJlX3JlZGlyZWN0X3VyaXMiOltdLCJvcmdfc3RhdHVzIjoiQWN0aXZlIiwic29mdHdhcmVfY2xpZW50X25hbWUiOiJGb3JUZXN0X2I3NWFkMmZiLWQ4ZjEtNDU3Yi1iYjE4LTQ1Mzk1MzllZjcwNCIsInNvZnR3YXJlX2NsaWVudF9pZCI6ImI3NWFkMmZiLWQ4ZjEtNDU3Yi1iYjE4LTQ1Mzk1MzllZjcwNCIsImlzcyI6IkZvcmdlUm9jayIsInNvZnR3YXJlX2p3a3NfZW5kcG9pbnQiOiJodHRwczpcL1wvc2VydmljZS5kaXJlY3Rvcnkuc2FuZGJveC5sbG95ZHNiYW5raW5nLmNvbTo0NDNcL2FwaVwvc29mdHdhcmUtc3RhdGVtZW50XC9iNzVhZDJmYi1kOGYxLTQ1N2ItYmIxOC00NTM5NTM5ZWY3MDRcL2FwcGxpY2F0aW9uXC9qd2tfdXJpIiwic29mdHdhcmVfaWQiOiJiNzVhZDJmYi1kOGYxLTQ1N2ItYmIxOC00NTM5NTM5ZWY3MDQiLCJvcmdfY29udGFjdHMiOltdLCJvYl9yZWdpc3RyeV90b3MiOiJodHRwczpcL1wvZGlyZWN0b3J5LnNhbmRib3gubGxveWRzYmFua2luZy5jb206NDQzXC90b3NcLyIsIm9yZ19pZCI6IjVjODY1MTdmZjgxMGRhMDAyZWI3MWU3OSIsInNvZnR3YXJlX2p3a3NfcmV2b2tlZF9lbmRwb2ludCI6IlRPRE8iLCJzb2Z0d2FyZV9yb2xlcyI6WyJEQVRBIiwiUElTUCIsIkNCUElJIiwiQUlTUCJdLCJleHAiOjE1NTI5MTQwODUsIm9yZ19uYW1lIjoibW9uaXRvcmluZy5zYW5kYm94Lmxsb3lkc2JhbmtpbmcuY29tIiwib3JnX2p3a3NfcmV2b2tlZF9lbmRwb2ludCI6IlRPRE8iLCJpYXQiOjE1NTIzMDkyODUsImp0aSI6ImUzYjlhOGE4LWMxZGQtNDgyNC05OWU1LTAzOGU3MGJiZmU0NCJ9.XiU8cnARSnLn_LVy5RwjdCyPG5q3Db_oBQZXP8LPkHw-mtyzUqFc6K8OCoqfUFDGhDCSUZg8QXXIIHWpQHSK5FUaG873iSEzEDDrFBySTaJ0bDc_wk1VPJc_XeZ14fufynflzMtyTXasqvZBfXQT9mAYrP7SSQDlY84Cu-CNNNZ-jXrEX7fQ2kv_iG9rUsBeLmQqdtPEDF4RTi8sfkw2xoGbq1kAM07C4vrVeYRK0ISN6xXcaNUONWxJN1iGsSRO7PFOZCS4QjTQA-azT3_llbUtk1rQVWD6Rb5QIFxFpF0aKSA9xaeuMtn-JMJ2UlszAlw7YLmDPDAtTf8owXbk0w\",\"scope\":\"openid accounts payments fundsconfirmations\",\"request_object_signing_alg\":\"PS256\",\"exp\":1552309586,\"request_object_encryption_enc\":\"A128CBC-HS256\",\"iat\":1552309286,\"jti\":\"0d830db7-028e-471f-bfc7-efe8dd20330a\",\"response_types\":[\"code id_token\"],\"id_token_signed_response_alg\":\"PS256\"}",
+  "registrationResponse" : {
+    "clientId" : "72e7afda-a240-4bc1-b0db-7a0b5ced7d85",
+    "clientSecret" : "UmdVoAxXKnS9dqGpGkNXTx2It6OE4KQcUnJJHSM79wUAtasD9UZlD5QhKS5Pk-Qz7N_FQZJVkZfOfLT2qZNNBQ",
+    "registrationAccessToken" : "eyJ0eXAiOiJKV1QiLCJ6aXAiOiJOT05FIiwia2lkIjoiUi82bXV6ZlZQTTVuUklzUWpMTndVR1FDY2FrPSIsImFsZyI6IlBTMjU2In0.eyJzdWIiOiI3MmU3YWZkYS1hMjQwLTRiYzEtYjBkYi03YTBiNWNlZDdkODUiLCJjdHMiOiJPQVVUSDJfU1RBVEVMRVNTX0dSQU5UIiwiYXVkaXRUcmFja2luZ0lkIjoiNTc5Yjk3MTQtZDc1ZS00MzQxLWIwNTktYTJmYTdmYjNhN2U2LTk2IiwiaXNzIjoiaHR0cHM6Ly9tYXRscy5hcy5hc3BzcC5zYW5kYm94Lmxsb3lkc2JhbmtpbmcuY29tL29hdXRoMiIsInRva2VuTmFtZSI6ImFjY2Vzc190b2tlbiIsInRva2VuX3R5cGUiOiJCZWFyZXIiLCJhdXRoR3JhbnRJZCI6IjROcEtXYXBkSFFEdTBxUERBbmlhRmY3Z3BlayIsImF1ZCI6IjcyZTdhZmRhLWEyNDAtNGJjMS1iMGRiLTdhMGI1Y2VkN2Q4NSIsIm5iZiI6MTU1MjMwOTI4OSwic2NvcGUiOltdLCJhdXRoX3RpbWUiOjE1NTIzMDkyODksInJlYWxtIjoiL29wZW5iYW5raW5nIiwiZXhwIjoxNTUyMzEyODg5LCJpYXQiOjE1NTIzMDkyODksImV4cGlyZXNfaW4iOjM2MDAsImp0aSI6ImkwWGZhb1BVTi1uZnVNSTluVVFLRUJ2UjdPYyJ9.LLLMtXes_IJn3RIxDBSsMW-xNGG2rf0iLwAICDPH1usicsRhWRa9lNc8JtX0Jqu8kyAHvEyHlrmp1XIy3aTICbcckjSph5ots_vKtppMmu_VF_jeABfKGrgq9tq2xFbjl1nCyibV-PcMtXzXqloUKTiXZvCk7CueHMzH_73hXHorw60O8kgcA5PIL-I3CiJmAE1qp-Lli0b8JvPgi6afSk9N-q0f-xnhJIzhxXvQAzM1A9XpeyRN7pIq6yUw9QL8Vw57zXZGJ_AJS4zVwk3F8Hapb7xpHlZ6jWkXC8E3kem_WVWiG_1Xk8SwDyYQwzr1iMNgxuhP5dv4Ut8jONvSWA",
+    "registrationClientUri" : "http://matls.as.aspsp.sandbox.lloydsbanking.com/oauth2/register?client_id=72e7afda-a240-4bc1-b0db-7a0b5ced7d85",
+    "clientSecretExpiresAt" : "0",
+    "scopes" : [
+      "openid",
+      "payments",
+      "fundsconfirmations",
+      "accounts"
+    ],
+    "scope" : "openid payments fundsconfirmations accounts",
+    "redirectUris" : [
+      "https://www.google.com"
+    ],
+    "responseTypes" : [
+      "code id_token"
+    ],
+    "grantTypes" : [
+      "authorization_code",
+      "client_credentials"
+    ],
+    "applicationType" : "web",
+    "clientName" : "ForTest_b75ad2fb-d8f1-457b-bb18-4539539ef704",
+    "jwks_uri" : "https://service.directory.sandbox.lloydsbanking.com:443/api/software-statement/b75ad2fb-d8f1-457b-bb18-4539539ef704/application/jwk_uri",
+    "subjectType" : "pairwise",
+    "idTokenSignedResponseAlg" : "PS256",
+    "idTokenEncryptedResponseAlg" : "RSA1_5",
+    "idTokenEncryptedResponseEnc" : "A128CBC_HS256",
+    "userinfoSignedResponseAlg" : "",
+    "userinfoEncryptedResponseAlg" : "",
+    "requestObjectSigningAlg" : "PS256",
+    "requestObjectEncryptionAlg" : "RSA-OAEP-256",
+    "requestObjectEncryptionEnc" : "A128CBC-HS256",
+    "tokenEndpointAuthMethod" : "client_secret_basic",
+    "tokenEndpointAuthSigningAlg" : "PS256",
+    "defaultMaxAge" : "1",
+    "softwareStatement" : "eyJraWQiOiI2ODdmNzJkZWE4MDM0OTI4OTgxMmY4NTYxYjRlMDExN2FhZTA3ZGYxIiwiYWxnIjoiUFMyNTYifQ.eyJvcmdfandrc19lbmRwb2ludCI6IlRPRE8iLCJzb2Z0d2FyZV9tb2RlIjoiVEVTVCIsInNvZnR3YXJlX3JlZGlyZWN0X3VyaXMiOltdLCJvcmdfc3RhdHVzIjoiQWN0aXZlIiwic29mdHdhcmVfY2xpZW50X25hbWUiOiJGb3JUZXN0X2I3NWFkMmZiLWQ4ZjEtNDU3Yi1iYjE4LTQ1Mzk1MzllZjcwNCIsInNvZnR3YXJlX2NsaWVudF9pZCI6ImI3NWFkMmZiLWQ4ZjEtNDU3Yi1iYjE4LTQ1Mzk1MzllZjcwNCIsImlzcyI6IkZvcmdlUm9jayIsInNvZnR3YXJlX2p3a3NfZW5kcG9pbnQiOiJodHRwczpcL1wvc2VydmljZS5kaXJlY3Rvcnkuc2FuZGJveC5sbG95ZHNiYW5raW5nLmNvbTo0NDNcL2FwaVwvc29mdHdhcmUtc3RhdGVtZW50XC9iNzVhZDJmYi1kOGYxLTQ1N2ItYmIxOC00NTM5NTM5ZWY3MDRcL2FwcGxpY2F0aW9uXC9qd2tfdXJpIiwic29mdHdhcmVfaWQiOiJiNzVhZDJmYi1kOGYxLTQ1N2ItYmIxOC00NTM5NTM5ZWY3MDQiLCJvcmdfY29udGFjdHMiOltdLCJvYl9yZWdpc3RyeV90b3MiOiJodHRwczpcL1wvZGlyZWN0b3J5LnNhbmRib3gubGxveWRzYmFua2luZy5jb206NDQzXC90b3NcLyIsIm9yZ19pZCI6IjVjODY1MTdmZjgxMGRhMDAyZWI3MWU3OSIsInNvZnR3YXJlX2p3a3NfcmV2b2tlZF9lbmRwb2ludCI6IlRPRE8iLCJzb2Z0d2FyZV9yb2xlcyI6WyJEQVRBIiwiUElTUCIsIkNCUElJIiwiQUlTUCJdLCJleHAiOjE1NTI5MTQwODUsIm9yZ19uYW1lIjoibW9uaXRvcmluZy5zYW5kYm94Lmxsb3lkc2JhbmtpbmcuY29tIiwib3JnX2p3a3NfcmV2b2tlZF9lbmRwb2ludCI6IlRPRE8iLCJpYXQiOjE1NTIzMDkyODUsImp0aSI6ImUzYjlhOGE4LWMxZGQtNDgyNC05OWU1LTAzOGU3MGJiZmU0NCJ9.XiU8cnARSnLn_LVy5RwjdCyPG5q3Db_oBQZXP8LPkHw-mtyzUqFc6K8OCoqfUFDGhDCSUZg8QXXIIHWpQHSK5FUaG873iSEzEDDrFBySTaJ0bDc_wk1VPJc_XeZ14fufynflzMtyTXasqvZBfXQT9mAYrP7SSQDlY84Cu-CNNNZ-jXrEX7fQ2kv_iG9rUsBeLmQqdtPEDF4RTi8sfkw2xoGbq1kAM07C4vrVeYRK0ISN6xXcaNUONWxJN1iGsSRO7PFOZCS4QjTQA-azT3_llbUtk1rQVWD6Rb5QIFxFpF0aKSA9xaeuMtn-JMJ2UlszAlw7YLmDPDAtTf8owXbk0w"
+  },
+  "created" : ISODate("2019-03-11T13:01:29.729Z"),
+  "updated" : ISODate("2019-03-11T13:01:29.729Z"),
+  "types" : [
+    "DATA",
+    "CBPII",
+    "PISP",
+    "AISP"
+  ],
+  "_class" : "com.forgerock.openbanking.commons.model.tpp.Tpp"
+}
+
