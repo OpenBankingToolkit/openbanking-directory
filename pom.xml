@@ -45,9 +45,9 @@
     </modules>
 
     <properties>
-        <ob-clients.version>1.2.4</ob-clients.version>
-        <ob-common.version>1.2.5</ob-common.version>
-        <ob-auth.version>1.1.4</ob-auth.version>
+        <ob-clients.version>1.2.6</ob-clients.version>
+        <ob-common.version>1.2.6</ob-common.version>
+        <ob-auth.version>1.1.5</ob-auth.version>
     </properties>
 
     <dependencyManagement>
