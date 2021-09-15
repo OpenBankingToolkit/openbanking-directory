@@ -103,7 +103,8 @@ public class SoftwareStatementApiControllerIT {
 
                 // Then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(softwareStatement.getId()));
+                .andExpect(jsonPath("$.id").value(softwareStatement.getId()))
+                .andExpect(jsonPath("$.iss").value("ForgeRock"));
     }
 
     @Test
