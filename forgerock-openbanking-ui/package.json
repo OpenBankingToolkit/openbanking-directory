@@ -51,7 +51,7 @@
     "date-fns": "^2.9.0",
     "debug": "^4.1.1",
     "file-saver": "^2.0.0",
-    "lodash-es": "^4.17.15",
+    "lodash-es": "^4.17.21",
     "ngx-build-plus": "^9.0.6",
     "ngx-clipboard": "^12.3.1",
     "ngx-cookie": "^4.0.2",
